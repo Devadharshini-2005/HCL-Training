@@ -1,0 +1,48 @@
+.container{
+  display: flex;
+  flex-direction: column;
+  margin:20vh auto;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  width: 40vw;
+  border: 2px solid whitesmoke;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px whitesmoke;
+  position: relative;
+}
+
+body{
+  background: linear-gradient(to right,rgb(127, 30, 236),rgb(181, 114, 243),rgb(115, 5, 204),rgb(47, 2, 73));
+}
+.btn{
+  padding: 10px 30px;
+  font-weight:bold;
+  border-radius: 30px;
+  border:1px solid rgb(46, 33, 56);
+  box-shadow: 6px 10px 50px rgb(16, 0, 31);
+}
+
+#res{
+  font-size: larger;
+  color:aliceblue;
+}
+#height,#weight{
+  height: 5vh;
+  width: 25vw;
+  border:2px solid white;
+  border-radius: 5px ;
+}
+
+.brand{
+  color:black;
+}
+
+.label{
+  font-size: 20px;
+}
+
+.btn:hover{
+  cursor: pointer;
+}

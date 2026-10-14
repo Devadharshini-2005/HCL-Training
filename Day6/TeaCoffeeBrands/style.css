@@ -1,0 +1,141 @@
+body{
+  background-color: whitesmoke;
+  color: black;
+  margin: 0px 10px 0px 10px;
+}
+.head{
+  position: fixed;
+}
+.nav{
+  width: 99vw;
+  position: absolute;
+  z-index: 1;
+}
+#home,
+#about,
+#tea,
+#coffee,
+#contact{
+  position: relative;
+  height: 96vh;
+  width: 99vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 10vh;
+}
+.home-cart{
+  height: 83vh;
+  width: 100%;
+}
+.card-img{
+  height: 83vh;
+}
+
+
+
+.about-img{
+  height: 50vh;
+  width: 98%;
+}
+#about{
+  overflow: scroll;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+#about::-webkit-scrollbar{
+  display: none;
+}
+.about-cart{
+  height: 83vh;
+  display: flex;
+  flex-direction: column;
+}
+.about-top{
+  display: flex;
+}
+.about-feed{
+  height: 25vh;
+  width: 40vw;
+}
+.about-cards{
+  display: flex;
+  flex-wrap: wrap;
+}
+
+
+
+.t-products{
+  display: flex;
+  flex-direction: column;
+  height: 96vh;
+  width: 99vw;
+}
+.t-cards{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 50px;
+}
+#tea{
+  overflow: scroll;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+#tea::-webkit-scrollbar{
+  display: none;
+}
+
+
+.c-products{
+  display: flex;
+  flex-direction: column;
+  height: 96vh;
+  width: 99vw;
+}
+.c-cards{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 50px;
+}
+#coffee{
+  overflow: scroll;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+#coffee::-webkit-scrollbar{
+  display: none;
+}
+
+
+
+.contact-items{
+  display: flex;
+  flex-direction: column;
+}
+.contact-top{
+  display: flex;
+  flex-direction: column;
+}
+.contact-inside{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  height: 81vh;
+  width: 99vw;
+}
+.img{
+  height: 81vh;
+  width: 99vw;
+}
+
+
+
+
+
+
+
+

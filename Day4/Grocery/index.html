@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<head>
+  <title>Grocery Calculation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<boby>
+  <div class="box">
+    <center><h2>Grocery Calculator</h2></center>
+  <label>Choose the Product</label>
+  <br>
+  <br>
+  <select id="product">
+    <option>Basmati Rice</option>
+    <option>Toor dal</option>
+    <option>Rava</option>
+    <option>SunFlower Oil</option>
+    <option>Salt</option>
+    <option>Wheat flour</option>
+    <option>Sugar</option>
+    <option>Onions</option>
+    <option>Tomato</option>
+    <option>Potato</option>
+  </select>
+  <br>
+  <br>
+  <label>Quantity : </label>
+  <br>
+  <br>
+  <input type="number" id="quantity">
+  <br>
+  <br>
+  <button class="add-btn" onclick="addPrice()">Add</button>
+  <br>
+  <br>
+  <button class="total-btn" onclick="total()">Total Amount</button>
+  <br>
+  <br>
+  <table id="total">
+
+  </table>
+  </div>
+  <script src="script.js"></script>
+</boby>
+</html>

@@ -1,0 +1,50 @@
+label{
+  font-size: 20px;
+  color: #374151;
+}
+body{
+  background-color: #F8F5EE;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.box{
+  height: auto;
+  width: 40vw;
+  border: 1px solid black;
+  padding: 20px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10%;
+}
+h2{
+  color: #173F35;
+}
+#product{
+  height: 5vh;
+  width: 40vw;
+  border: 1px solid #B7C9BE;
+}
+#quantity{
+  height: 4vh;
+  width: 40vw;
+  border: 1px solid #B7C9BE;
+}
+.add-btn{
+  border: 1px solid darkgreen;
+  background-color: #2F6B4F;
+  padding: 5px 46px;
+  border-radius: 3px;
+}
+.total-btn{
+  border: 1px solid darkgreen;
+  background-color: darkgreen;
+  padding: 5px 20px;
+  border-radius: 3px;
+}
+#total{
+  color: #26332E;
+  font-size: 15px;
+}
