@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace AsyncPractice
@@ -50,6 +51,33 @@ namespace AsyncPractice
 
             Console.WriteLine("Main method completed");
         }
+
+        // ============================================
+        // 3. SEQUENTIAL EXECUTION
+        // ============================================
+
+        public async Task SequentialAsync()
+        {
+            Stopwatch sw = Stopwatch.StartNew();
+
+            await DownloadFileAsync("File A", 2000);
+            await DownloadFileAsync("File B", 3000);
+
+            sw.Stop();
+
+            Console.WriteLine(
+                $"Sequential execution: {sw.ElapsedMilliseconds} ms");
+        }
+        private async Task DownloadFileAsync(string fileName, int delay)
+        {
+
+            Console.WriteLine($"{fileName}: Started");
+
+            await Task.Delay(delay);
+
+            Console.WriteLine($"{fileName}: Completed");
+        }
+
 
 
 
