@@ -1,0 +1,23 @@
+CREATE DATABASE StudentCourseDB;
+GO
+ 
+USE StudentCourseDB;
+GO
+ 
+CREATE TABLE Students
+(
+    StudentId INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(100) NOT NULL,
+    Email NVARCHAR(150) NOT NULL UNIQUE,
+    Age INT NOT NULL CHECK (Age BETWEEN 17 AND 60)
+);
+GO
+ 
+CREATE TABLE Courses
+(
+    CourseId INT IDENTITY(1,1) PRIMARY KEY,
+    CourseName NVARCHAR(100) NOT NULL,
+    DurationMonths INT NOT NULL CHECK (DurationMonths > 0),
+    Fee DECIMAL(10,2) NOT NULL CHECK (Fee >= 0)
+);
+GO
