@@ -1,6 +1,4 @@
 ﻿
-
-
 namespace AsyncPractice
 {
     public class Program
@@ -8,7 +6,7 @@ namespace AsyncPractice
         public static async Task Main(string[] args)
         {
             LearnAsyncProgramming learnAsync = new LearnAsyncProgramming();
-            await learnAsync.BasicAsync();
+            await learnAsync.Run();
         }
 
 
