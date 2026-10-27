@@ -5,7 +5,9 @@ using System.Text;
 
 namespace AsyncPractice
 {
-    internal class LearnAsyncProgramming
+
+
+    public class LearnAsyncProgramming
     {
         // ============================================
         // 1. BASIC ASYNC / AWAIT
@@ -20,6 +22,7 @@ namespace AsyncPractice
             Console.WriteLine("Task 1 completed");
             Console.WriteLine("Task 2 started");
         }
+
 
         // ============================================
         // 2. TASK<T> - RETURNING A VALUE
@@ -52,6 +55,7 @@ namespace AsyncPractice
             Console.WriteLine("Main method completed");
         }
 
+
         // ============================================
         // 3. SEQUENTIAL EXECUTION
         // ============================================
@@ -68,15 +72,7 @@ namespace AsyncPractice
             Console.WriteLine(
                 $"Sequential execution: {sw.ElapsedMilliseconds} ms");
         }
-        private async Task DownloadFileAsync(string fileName, int delay)
-        {
 
-            Console.WriteLine($"{fileName}: Started");
-
-            await Task.Delay(delay);
-
-            Console.WriteLine($"{fileName}: Completed");
-        }
 
         // ============================================
         // 4. CONCURRENT EXECUTION
@@ -97,6 +93,16 @@ namespace AsyncPractice
 
             Console.WriteLine(
                 $"Concurrent execution: {sw.ElapsedMilliseconds} ms");
+        }
+
+        private async Task DownloadFileAsync(string fileName, int delay)
+        {
+
+            Console.WriteLine($"{fileName}: Started");
+
+            await Task.Delay(delay);
+
+            Console.WriteLine($"{fileName}: Completed");
         }
 
 
@@ -131,6 +137,7 @@ namespace AsyncPractice
             await Task.Delay(delay);
             return value * 10;
         }
+
 
         // ============================================
         // 6. TASK.WHENANY - FIRST TASK TO COMPLETE
@@ -167,5 +174,106 @@ namespace AsyncPractice
         }
 
 
+        // ============================================
+        // 7. EXCEPTION HANDLING
+        // ============================================
+
+        public async Task ExceptionHandlingAsync()
+        {
+            try
+            {
+                Console.WriteLine("Starting operation...");
+
+                await RiskyOperationAsync();
+
+                Console.WriteLine("Operation succeeded");
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"Operation error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Unexpected error: {ex.Message}");
+            }
+            finally
+            {
+                Console.WriteLine("Cleanup completed");
+            }
+        }
+
+        private async Task RiskyOperationAsync()
+        {
+            await Task.Delay(1000);
+
+            throw new InvalidOperationException(
+                "Learner could not be registered");
+        }
+
+
+        // ============================================
+        // 8. CANCELLATION TOKEN
+        // ============================================
+
+        public async Task CancellationAsync()
+        {
+            using CancellationTokenSource cts =
+                new CancellationTokenSource();
+
+            Task operation = ProcessLearnersAsync(cts.Token);
+
+            // Demonstration: request cancellation after 2 seconds.
+            await Task.Delay(2000);
+
+            cts.Cancel();
+
+            try
+            {
+                await operation;
+            }
+            catch (OperationCanceledException)
+            {
+                Console.WriteLine("Operation was cancelled");
+            }
+        }
+
+        private async Task ProcessLearnersAsync(
+            CancellationToken token)
+        {
+            for (int i = 1; i <= 10; i++)
+            {
+                token.ThrowIfCancellationRequested();
+
+                Console.WriteLine($"Processing learner {i}");
+
+                await Task.Delay(1000, token);
+            }
+
+            Console.WriteLine("All learners processed");
+        }
+
+        // ============================================
+        // 9. ASYNC MAIN PRACTICE SELECTOR
+        // ============================================
+
+        public async Task Run()
+        {
+
+
+            // await BasicAsync();
+
+            await TaskTrackingAsync();
+            // await SequentialAsync();
+            // await ConcurrentAsync();
+            // await WhenAllAsync();
+            // await WhenAnyAsync();
+            // await ExceptionHandlingAsync();
+            // await CancellationAsync();
+
+        }
     }
+
+
+
+
 }
