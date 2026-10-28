@@ -9,7 +9,7 @@ public class Program
             Console.WriteLine("-------------E-Commerce Management System--------------");
             Console.WriteLine("1.Category Management");
             Console.WriteLine("2.Product Management");
-            Console.WriteLine("3.Order Management");
+            Console.WriteLine("3.Customer Management");
             Console.WriteLine("4.Shopping Cart");
             Console.WriteLine("5.Order Management");
             Console.WriteLine("6.Reports");
@@ -28,12 +28,13 @@ public class Program
                     await ProductManagement();
                     break;
                 case 3:
-                    await OrderManagement();
+                   
                     break;
                 case 4:
                     // Shopping Cart logic
                     break;
                 case 5:
+                    await OrderManagement();
                     // Order Management logic
                     break;
                 case 6:
@@ -142,6 +143,45 @@ public class Program
 
     static async Task OrderManagement()
     {
-        // Implement order management logic here
+        OrderService orderService = new OrderService();
+        while (true)
+        {
+            Console.WriteLine("-------------Order Management--------------");
+            Console.WriteLine("1.Place Order");
+            Console.WriteLine("2.Update Order Status");
+            Console.WriteLine("3.View All Orders");
+            Console.WriteLine("4.View Orders by Customer ID");
+            Console.WriteLine("5.Delete Order");
+            Console.WriteLine("6.Back to Main Menu");
+            Console.WriteLine("Enter your choice");
+            int choice = Convert.ToInt32(Console.ReadLine());
+            switch (choice)
+            {
+                case 1:
+                    Console.WriteLine("Enter Customer ID:");
+                    int customerId = Convert.ToInt32(Console.ReadLine());
+                    Console.WriteLine("Enter Total Amount:");
+                    decimal totalAmount = Convert.ToDecimal(Console.ReadLine());
+                    await orderService.PlaceOrder(customerId, totalAmount);
+                    break;
+                case 2:
+                    await orderService.UpdateOrderStatus();
+                    break;
+                case 3:
+                    await orderService.ViewAllOrders();
+                    break;
+                case 4:
+                    await orderService.ViewOrdersByCustomerId();
+                    break;
+                case 5:
+                    await orderService.DeleteOrder();
+                    break;
+                case 6:
+                    return;
+                default:
+                    Console.WriteLine("Invalid choice. Please try again.");
+                    break;
+            }
+        }
     }
 }
