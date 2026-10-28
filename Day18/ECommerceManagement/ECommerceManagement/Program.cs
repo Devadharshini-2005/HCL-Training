@@ -10,7 +10,7 @@ public class Program
             Console.WriteLine("1.Category Management");
             Console.WriteLine("2.Product Management");
             Console.WriteLine("3.Order Management");
-            Console.WriteLine("4. Shopping Cart");
+            Console.WriteLine("4.Shopping Cart");
             Console.WriteLine("5.Order Management");
             Console.WriteLine("6.Reports");
             Console.WriteLine("7.View Audit Logs");
@@ -28,7 +28,7 @@ public class Program
                     await ProductManagement();
                     break;
                 case 3:
-                    // Order Management logic
+                    await OrderManagement();
                     break;
                 case 4:
                     // Shopping Cart logic
@@ -80,6 +80,7 @@ public class Program
                 case 4:
                     await categoryService.ViewAllCategories();
                     break;
+ 
                 case 5:
                     return;
                 default:
@@ -101,9 +102,9 @@ public class Program
             Console.WriteLine("2.Update Product");
             Console.WriteLine("3.Delete Product");
             Console.WriteLine("4.View All Products");
-            Console.WriteLine("5. Search Product by ID" +
-                "6. View Products by Category" +
-                "7. View Low-Stock Products");
+            Console.WriteLine("5.Search Product by ID\n" +
+                "6.View Products by Category\n" +
+                "7.View Low-Stock Products");
             Console.WriteLine("8.Back to Main Menu");
             Console.WriteLine("Enter your choice");
             int choice = Convert.ToInt32(Console.ReadLine());
@@ -137,5 +138,10 @@ public class Program
                     break;
             }
         }
+    }
+
+    static async Task OrderManagement()
+    {
+        // Implement order management logic here
     }
 }

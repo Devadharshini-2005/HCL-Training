@@ -86,5 +86,25 @@ namespace ECommerceManagement.Repositories
             }
             return categories;
         }
+
+        public async Task<Category?> GetCategoryByIdAsync(int categoryId)
+        {
+            var connection = DatabaseHelper.CreateConnection();
+            await connection.OpenAsync();
+            using SqlCommand command = new SqlCommand("SELECT * FROM Categories WHERE CategoryId = @CategoryId", connection);
+            command.Parameters.AddWithValue("@CategoryId", categoryId);
+            using SqlDataReader reader = await command.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+            {
+                Category category = new Category(
+                    Convert.ToInt32(reader["CategoryId"]),
+                    reader["CategoryName"].ToString() ?? string.Empty,
+                    reader["Description"].ToString() ?? string.Empty,
+                    Convert.ToBoolean(reader["IsActive"]));
+
+                return category;
+            }
+            return null;
+        }
     }
 }

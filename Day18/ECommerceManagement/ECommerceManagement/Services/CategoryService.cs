@@ -68,5 +68,21 @@ namespace ECommerceManagement.Services
                 Console.WriteLine($"ID: {category.CategoryId}, Name: {category.CategoryName}, Description: {category.Description}");
             }
         }
+
+        public async Task<bool> GetCategoryById(int categoryId)
+        {
+            
+  
+            var category = await categoryrepository.GetCategoryByIdAsync(categoryId);
+
+            if (category != null)
+            { 
+                return true;    
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
