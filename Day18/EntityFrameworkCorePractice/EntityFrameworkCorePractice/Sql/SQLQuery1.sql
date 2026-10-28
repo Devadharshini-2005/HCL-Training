@@ -1,0 +1,2 @@
+Create Database EFCoreDB;
+Go
