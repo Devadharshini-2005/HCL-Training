@@ -1,4 +1,4 @@
-﻿
+﻿using ECommerceManagement.Models;
 using ECommerceManagement.Services;
 public class Program
 {
@@ -25,7 +25,7 @@ public class Program
                     await CategoryManagement();
                     break;
                 case 2:
-                    // Product Management logic
+                    await ProductManagement();
                     break;
                 case 3:
                     // Order Management logic
@@ -81,6 +81,56 @@ public class Program
                     await categoryService.ViewAllCategories();
                     break;
                 case 5:
+                    return;
+                default:
+                    Console.WriteLine("Invalid choice. Please try again.");
+                    break;
+            }
+
+        }
+    }
+
+    static async Task ProductManagement()
+    {
+        ProductService productService = new ProductService();
+
+        while (true)
+        {
+            Console.WriteLine("-------------Product Management--------------");
+            Console.WriteLine("1.Add Product");
+            Console.WriteLine("2.Update Product");
+            Console.WriteLine("3.Delete Product");
+            Console.WriteLine("4.View All Products");
+            Console.WriteLine("5. Search Product by ID" +
+                "6. View Products by Category" +
+                "7. View Low-Stock Products");
+            Console.WriteLine("8.Back to Main Menu");
+            Console.WriteLine("Enter your choice");
+            int choice = Convert.ToInt32(Console.ReadLine());
+            switch (choice)
+            {
+                case 1:
+                    await productService.AddProduct();
+                    break;
+                case 2:
+                    await productService.UpdateProduct();
+                    break;
+                case 3:
+                    await productService.DeleteProduct();
+                    break;
+                case 4:
+                    await productService.ViewAllProducts();
+                    break;
+                case 5:
+                    await productService.SearchProductById();
+                    break;
+                case 6:
+                    await productService.ViewProductsByCategory();
+                    break;
+                case 7:
+                    await productService.ViewLowStockProducts();
+                    break;
+                case 8:
                     return;
                 default:
                     Console.WriteLine("Invalid choice. Please try again.");
