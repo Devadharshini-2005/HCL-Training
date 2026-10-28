@@ -10,7 +10,7 @@ namespace ECommerceManagement.Services
     {
 
         Categoryrepository categoryrepository = new Categoryrepository();
-
+        Category category1 = new Category();
         public async Task AddCategory()
         {
             Console.WriteLine("Add Category");
@@ -24,7 +24,7 @@ namespace ECommerceManagement.Services
                 Console.WriteLine("Invalid category information. Please try again.");
                 return;
             }
-            Category category = new Category(categoryName,categoryDescription);
+            Category category = new Category(category1.CategoryId++,categoryName,categoryDescription,category1.IsActive);
 
             await categoryrepository.AddCategoryAsync(category);
 
@@ -61,7 +61,12 @@ namespace ECommerceManagement.Services
 
         public async Task ViewAllCategories()
         {
-            
+            var categories = await categoryrepository.GetAllCategoriesAsync();
+            Console.WriteLine("All Categories:");
+            foreach (var category in categories)
+            {
+                Console.WriteLine($"ID: {category.CategoryId}, Name: {category.CategoryName}, Description: {category.Description}");
+            }
         }
     }
 }

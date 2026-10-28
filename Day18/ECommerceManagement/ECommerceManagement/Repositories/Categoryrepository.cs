@@ -47,13 +47,14 @@ namespace ECommerceManagement.Repositories
             }
         }
 
-        public async Task DeleteCategoryAsync(int categoryId)
+       public async Task DeleteCategoryAsync(int categoryId)
         {
             var connection = DatabaseHelper.CreateConnection();
             await connection.OpenAsync();
-            using SqlCommand command = new SqlCommand("DELETE FROM Categories WHERE CategoryId = @CategoryId", connection);
+            using SqlCommand command = new SqlCommand("UPDATE Categories SET IsActive = 0 WHERE CategoryId = @CategoryId", connection);
 
-            command.Parameters.AddWithValue("@CategoryId", categoryId);
+            SqlParameter sqlParameter = command.Parameters.AddWithValue("@CategoryId", categoryId);
+
             int rowsAffected = await command.ExecuteNonQueryAsync();
             if (rowsAffected > 0)
             {
@@ -64,7 +65,6 @@ namespace ECommerceManagement.Repositories
                 Console.WriteLine($"No category found with ID '{categoryId}'.");
             }
         }
-
         public async Task<List<Category>> GetAllCategoriesAsync()
         {
             var connection = DatabaseHelper.CreateConnection();
@@ -77,13 +77,11 @@ namespace ECommerceManagement.Repositories
             while (await reader.ReadAsync())
             {
                 Category category = new Category(
+                    Convert.ToInt32(reader["CategoryId"]),
                     reader["CategoryName"].ToString() ?? string.Empty,
-                    reader["Description"].ToString() ?? string.Empty
-                )
-                {
-                    CategoryId = Convert.ToInt32(reader["CategoryId"]),
-                    IsActive = Convert.ToBoolean(reader["IsActive"])
-                };
+                    reader["Description"].ToString() ?? string.Empty,
+                    Convert.ToBoolean(reader["IsActive"]));
+                
                 categories.Add(category);
             }
             return categories;
