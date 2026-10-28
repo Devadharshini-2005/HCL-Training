@@ -1,5 +1,5 @@
 ﻿using StudentCourseManagement.Models;
-using StudentCourseManagement.Repository;
+using StudentCourseManagement.Repositories;
 
 namespace StudentCourseManagement.Services;
 
@@ -12,30 +12,31 @@ public class CourseService
         _repository = repository;
     }
 
-    public async Task AddCourseAsync(Course course)
+    public Task<List<Course>> GetAllAsync()
+        => _repository.GetAllAsync();
+
+    public Task<int> AddAsync(Course course)
     {
         if (string.IsNullOrWhiteSpace(course.CourseName))
             throw new ArgumentException("Course name is required.");
 
         if (course.DurationMonths <= 0)
-            throw new ArgumentException("Duration must be greater than zero.");
+            throw new ArgumentException("Duration must be positive.");
 
         if (course.Fee < 0)
-            throw new ArgumentException("Course fee cannot be negative.");
+            throw new ArgumentException("Fee cannot be negative.");
 
-        await _repository.AddCourseAsync(course);
+        if (course.DepartmentId <= 0)
+            throw new ArgumentException("Select a valid department.");
+
+        return _repository.AddAsync(course);
     }
 
-    public Task<List<Course>> GetAllCoursesAsync()
-    {
-        return _repository.GetAllCoursesAsync();
-    }
-
-    public async Task<Course?> GetCourseByIdAsync(int id)
+    public Task<bool> DeactivateAsync(int id)
     {
         if (id <= 0)
-            throw new ArgumentException("Course ID must be greater than zero.");
+            throw new ArgumentException("Invalid course ID.");
 
-        return await _repository.GetCourseByIdAsync(id);
+        return _repository.DeactivateAsync(id);
     }
 }

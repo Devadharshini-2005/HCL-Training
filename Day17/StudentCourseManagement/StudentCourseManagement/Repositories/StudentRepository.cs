@@ -1,50 +1,43 @@
 ﻿using Microsoft.Data.SqlClient;
+using StudentCourseManagement.Helpers;
 using StudentCourseManagement.Models;
 
-namespace StudentCourseManagement.Repository;
+namespace StudentCourseManagement.Repositories;
 
 public class StudentRepository
 {
-    private readonly string _connectionString;
-
-    public StudentRepository(string connectionString)
+    public async Task<int> AddAsync(Student student)
     {
-        _connectionString = connectionString;
-    }
-
-    public async Task AddStudentAsync(Student student)
-    {
-        const string query = """
-            INSERT INTO Students (Name, Email, Age)
-            VALUES (@Name, @Email, @Age)
+        const string sql = """
+            INSERT INTO Students (Name, Email, Age, DepartmentId)
+            VALUES (@Name, @Email, @Age, @DepartmentId);
+            SELECT CAST(SCOPE_IDENTITY() AS INT);
             """;
 
-        await using var connection = new SqlConnection(_connectionString);
-        await using var command = new SqlCommand(query, connection);
+        await using var con = DatabaseHelper.CreateConnection();
+        await con.OpenAsync();
 
-        command.Parameters.AddWithValue("@Name", student.Name);
-        command.Parameters.AddWithValue("@Email", student.Email);
-        command.Parameters.AddWithValue("@Age", student.Age);
+        await using var cmd = new SqlCommand(sql, con);
 
-        await connection.OpenAsync();
-        await command.ExecuteNonQueryAsync();
+        cmd.Parameters.AddWithValue("@Name", student.Name);
+        cmd.Parameters.AddWithValue("@Email", student.Email);
+        cmd.Parameters.AddWithValue("@Age", student.Age);
+        cmd.Parameters.AddWithValue("@DepartmentId", student.DepartmentId);
+
+        return Convert.ToInt32(await cmd.ExecuteScalarAsync());
     }
 
-    public async Task<List<Student>> GetAllStudentsAsync()
+    public async Task<List<Student>> GetAllAsync()
     {
-        const string query = """
-            SELECT StudentId, Name, Email, Age
-            FROM Students
-            ORDER BY StudentId
-            """;
+        const string sql = "SELECT * FROM Students ORDER BY StudentId";
 
         var students = new List<Student>();
 
-        await using var connection = new SqlConnection(_connectionString);
-        await using var command = new SqlCommand(query, connection);
+        await using var con = DatabaseHelper.CreateConnection();
+        await con.OpenAsync();
 
-        await connection.OpenAsync();
-        await using var reader = await command.ExecuteReaderAsync();
+        await using var cmd = new SqlCommand(sql, con);
+        await using var reader = await cmd.ExecuteReaderAsync();
 
         while (await reader.ReadAsync())
         {
@@ -53,39 +46,58 @@ public class StudentRepository
                 StudentId = reader.GetInt32(0),
                 Name = reader.GetString(1),
                 Email = reader.GetString(2),
-                Age = reader.GetInt32(3)
+                Age = reader.GetInt32(3),
+                DepartmentId = reader.GetInt32(4),
+                AdmissionDate = reader.GetDateTime(5),
+                IsActive = reader.GetBoolean(6)
             });
         }
 
         return students;
     }
 
-    public async Task<Student?> GetStudentByIdAsync(int id)
+    public async Task<Student?> GetByIdAsync(int id)
     {
-        const string query = """
-            SELECT StudentId, Name, Email, Age
-            FROM Students
-            WHERE StudentId = @StudentId
+        const string sql =
+            "SELECT * FROM Students WHERE StudentId = @Id";
+
+        await using var con = DatabaseHelper.CreateConnection();
+        await con.OpenAsync();
+
+        await using var cmd = new SqlCommand(sql, con);
+        cmd.Parameters.AddWithValue("@Id", id);
+
+        await using var reader = await cmd.ExecuteReaderAsync();
+
+        if (!await reader.ReadAsync())
+            return null;
+
+        return new Student
+        {
+            StudentId = reader.GetInt32(0),
+            Name = reader.GetString(1),
+            Email = reader.GetString(2),
+            Age = reader.GetInt32(3),
+            DepartmentId = reader.GetInt32(4),
+            AdmissionDate = reader.GetDateTime(5),
+            IsActive = reader.GetBoolean(6)
+        };
+    }
+
+    public async Task<bool> DeactivateAsync(int id)
+    {
+        const string sql = """
+            UPDATE Students
+            SET IsActive = 0
+            WHERE StudentId = @Id AND IsActive = 1
             """;
 
-        await using var connection = new SqlConnection(_connectionString);
-        await using var command = new SqlCommand(query, connection);
-        command.Parameters.AddWithValue("@StudentId", id);
+        await using var con = DatabaseHelper.CreateConnection();
+        await con.OpenAsync();
 
-        await connection.OpenAsync();
-        await using var reader = await command.ExecuteReaderAsync();
+        await using var cmd = new SqlCommand(sql, con);
+        cmd.Parameters.AddWithValue("@Id", id);
 
-        if (await reader.ReadAsync())
-        {
-            return new Student
-            {
-                StudentId = reader.GetInt32(0),
-                Name = reader.GetString(1),
-                Email = reader.GetString(2),
-                Age = reader.GetInt32(3)
-            };
-        }
-
-        return null;
+        return await cmd.ExecuteNonQueryAsync() > 0;
     }
 }
