@@ -16,6 +16,8 @@ public class AppDbContext : DbContext
 
     public DbSet<Book> Books { get; set; }
 
+    public DbSet<Member> Members { get; set; }
+
     protected override void OnConfiguring(
         DbContextOptionsBuilder optionsBuilder)
     {
@@ -84,6 +86,36 @@ public class AppDbContext : DbContext
 
             // Available copies
             entity.Property(b => b.AvailableCopies)
+                  .IsRequired();
+        });
+
+
+        modelBuilder.Entity<Member>(entity =>
+        {
+            entity.ToTable("Members");
+
+            entity.HasKey(m => m.MemberId);
+
+            entity.Property(m => m.MemberId)
+                  .ValueGeneratedOnAdd();
+
+            entity.Property(m => m.Name)
+                  .IsRequired()
+                  .HasMaxLength(100);
+
+            entity.Property(m => m.Email)
+                  .IsRequired()
+                  .HasMaxLength(150);
+
+            entity.HasIndex(m => m.Email)
+                  .IsUnique();
+
+            entity.Property(m => m.PhoneNumber)
+                  .IsRequired()
+                  .HasMaxLength(15);
+
+            entity.Property(m => m.MembershipDate)
+                  .HasColumnType("date")
                   .IsRequired();
         });
     }
