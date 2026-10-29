@@ -18,6 +18,8 @@ public class AppDbContext : DbContext
 
     public DbSet<Member> Members { get; set; }
 
+    public DbSet<Borrowing> Borrowings { get; set; }
+
     protected override void OnConfiguring(
         DbContextOptionsBuilder optionsBuilder)
     {
@@ -117,6 +119,42 @@ public class AppDbContext : DbContext
             entity.Property(m => m.MembershipDate)
                   .HasColumnType("date")
                   .IsRequired();
+        });
+
+        modelBuilder.Entity<Borrowing>(entity =>
+        {
+            entity.ToTable("Borrowings", table =>
+            {
+                table.HasCheckConstraint(
+                    "CK_Borrowings_DueDate",
+                    "[DueDate] >= CONVERT(date, [BorrowedAt])");
+            });
+
+            entity.HasKey(b => b.BorrowingId);
+
+            entity.Property(b => b.BorrowingId)
+                  .ValueGeneratedOnAdd();
+
+            entity.Property(b => b.BorrowedAt)
+                  .HasColumnType("date")
+                  .IsRequired();
+
+            entity.Property(b => b.DueDate)
+                  .HasColumnType("date")
+                  .IsRequired();
+
+            entity.Property(b => b.ReturnedAt)
+                  .HasColumnType("date");
+
+            entity.HasOne(b => b.Book)
+                  .WithMany()
+                  .HasForeignKey(b => b.BookId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(b => b.Member)
+                  .WithMany()
+                  .HasForeignKey(b => b.MemberId)
+                  .OnDelete(DeleteBehavior.Restrict);
         });
     }
 }
