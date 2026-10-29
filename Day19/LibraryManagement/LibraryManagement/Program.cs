@@ -11,8 +11,11 @@ var builder = Host.CreateApplicationBuilder(args);
 // Register database context
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(
-        @"Server=.\SQLEXPRESS;Database=LibraryManagementDB;Trusted_Connection=True;TrustServerCertificate=True;"));
-
+        @"Server=.\SQLEXPRESS;Database=LibraryManagementDB;Trusted_Connection=True;TrustServerCertificate=True;",
+        sqlOptions => sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 3,
+            maxRetryDelay: TimeSpan.FromSeconds(5),
+            errorNumbersToAdd: null)));
 // Register repositories
 builder.Services.AddScoped<BookRepository>();
 builder.Services.AddScoped<MemberRepository>();
