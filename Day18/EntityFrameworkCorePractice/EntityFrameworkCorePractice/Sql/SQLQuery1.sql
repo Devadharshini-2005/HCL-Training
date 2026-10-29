@@ -1,2 +1,8 @@
-Create Database EFCoreDB;
-Go
+--Create Database EFCoreDB;
+--Go
+USE EFCoreDB;
+GO
+
+SELECT TABLE_SCHEMA, TABLE_NAME
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_NAME = 'Departments';

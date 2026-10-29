@@ -28,7 +28,7 @@ public class Program
                     await ProductManagement();
                     break;
                 case 3:
-                   
+                    await CustomerManagement();
                     break;
                 case 4:
                     // Shopping Cart logic
@@ -184,4 +184,41 @@ public class Program
             }
         }
     }
+
+    static async Task CustomerManagement()
+    {
+        CustomerService customerService = new CustomerService();
+
+        while (true)
+        {
+            Console.WriteLine("---------Customer Management-----------");
+            Console.WriteLine("1.Add Customer");
+            Console.WriteLine("2.Update Customer by Id");
+            Console.WriteLine("3.Delete Customer");
+            Console.WriteLine("4.View Customer");
+            Console.WriteLine("5.Back to Main menu");
+
+            Console.WriteLine("Enter the Choice : ");
+            int choice = Convert.ToInt32(Console.ReadLine());
+
+            switch (choice)
+            {
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    return;
+                default:
+                    Console.WriteLine("Invalid choice. Please try again.");
+                    break;
+            }
+        }
+    }
+
+
 }

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
+using System;
 using EntityFrameworkCorePractice.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace EntityFrameworkCorePractice.Data1
 {
@@ -10,14 +10,21 @@ namespace EntityFrameworkCorePractice.Data1
     {
         public DbSet<Department> Departments => Set<Department>();
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnConfiguring(
+            DbContextOptionsBuilder optionsBuilder)
         {
-            if(!optionsBuilder.IsConfigured)
+            if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=.\\SQLEXPRESS;Database=EFCoreDB;Trusted_Connection=True;");
-                optionsBuilder.LogTo(Console.WriteLine);
+                optionsBuilder.UseSqlServer(
+                    "Server=.\\SQLEXPRESS;" +
+                    "Database=EFCoreDB;" +
+                    "Trusted_Connection=True;" +
+                    "TrustServerCertificate=True;");
+
+                optionsBuilder.LogTo(
+                    Console.WriteLine,
+                    LogLevel.Warning);
             }
         }
-
     }
 }
