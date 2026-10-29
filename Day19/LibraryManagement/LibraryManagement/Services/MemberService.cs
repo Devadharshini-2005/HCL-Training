@@ -8,9 +8,10 @@ public class MemberService
 {
     private readonly MemberRepository _memberRepository;
 
-    public MemberService()
+    
+    public MemberService(MemberRepository memberRepository)
     {
-        _memberRepository = new MemberRepository();
+        _memberRepository = memberRepository;
     }
 
     public void AddMember(Member member)

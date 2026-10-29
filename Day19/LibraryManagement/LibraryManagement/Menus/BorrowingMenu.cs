@@ -7,9 +7,9 @@ public class BorrowingMenu
 {
     private readonly BorrowingService _borrowingService;
 
-    public BorrowingMenu()
+    public BorrowingMenu(BorrowingService borrowingService)
     {
-        _borrowingService = new BorrowingService();
+        _borrowingService = borrowingService;
     }
 
     public void ShowMenu()

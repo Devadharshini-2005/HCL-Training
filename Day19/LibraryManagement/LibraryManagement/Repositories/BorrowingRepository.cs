@@ -6,6 +6,13 @@ namespace LibraryManagement.Repositories;
 
 public class BorrowingRepository
 {
+    private readonly AppDbContext _context;
+
+    public BorrowingRepository(AppDbContext context)
+    {
+        _context = context;
+    }
+
     public List<Borrowing> GetAllBorrowings()
     {
         using var context = new AppDbContext();
@@ -32,7 +39,7 @@ public class BorrowingRepository
     public void BorrowBook(int bookId, int memberId, DateTime dueDate)
     {
         using var context = new AppDbContext();
-        using var transaction = context.Database.BeginTransaction();
+        using var transaction = _context.Database.BeginTransaction();
 
         var book = context.Books
             .FirstOrDefault(b => b.BookId == bookId);
@@ -81,7 +88,7 @@ public class BorrowingRepository
     public void ReturnBook(int borrowingId)
     {
         using var context = new AppDbContext();
-        using var transaction = context.Database.BeginTransaction();
+        using var transaction = _context.Database.BeginTransaction();
 
         var borrowing = context.Borrowings
             .FirstOrDefault(b => b.BorrowingId == borrowingId);

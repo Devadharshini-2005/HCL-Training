@@ -8,9 +8,9 @@ public class MemberMenu
 {
     private readonly MemberService _memberService;
 
-    public MemberMenu()
+    public MemberMenu(MemberService memberService)
     {
-        _memberService = new MemberService();
+        _memberService = memberService;
     }
 
     public void ShowMenu()

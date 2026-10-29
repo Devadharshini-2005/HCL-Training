@@ -8,9 +8,9 @@ public class BookMenu
 {
     private readonly BookService _bookService;
 
-    public BookMenu()
+    public BookMenu(BookService bookService)
     {
-        _bookService = new BookService();
+        _bookService = bookService;
     }
 
     public void ShowMenu()

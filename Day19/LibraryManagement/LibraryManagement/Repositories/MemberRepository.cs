@@ -7,6 +7,12 @@ namespace LibraryManagement.Repositories;
 
 public class MemberRepository
 {
+    private readonly AppDbContext _context;
+
+    public MemberRepository(AppDbContext context)
+    {
+        _context = context;
+    }
     public void AddMember(Member member)
     {
         using var context = new AppDbContext();

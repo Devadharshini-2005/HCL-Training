@@ -8,9 +8,9 @@ public class BookService
 {
     private readonly BookRepository _bookRepository;
 
-    public BookService()
+    public BookService(BookRepository bookRepository)
     {
-        _bookRepository = new BookRepository();
+        _bookRepository = bookRepository;
     }
 
     public void AddBook(Book book)

@@ -7,6 +7,13 @@ namespace LibraryManagement.Repositories;
 
 public class BookRepository
 {
+    private readonly AppDbContext _context;
+
+    public BookRepository(AppDbContext context)
+    {
+        _context = context;
+    }
+
     public void AddBook(Book book)
     {
         using var context = new AppDbContext();

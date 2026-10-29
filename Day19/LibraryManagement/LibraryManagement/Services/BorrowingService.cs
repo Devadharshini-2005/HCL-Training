@@ -7,9 +7,9 @@ public class BorrowingService
 {
     private readonly BorrowingRepository _borrowingRepository;
 
-    public BorrowingService()
+    public BorrowingService(BorrowingRepository borrowingRepository)
     {
-        _borrowingRepository = new BorrowingRepository();
+        _borrowingRepository = borrowingRepository;
     }
 
     public List<Borrowing> GetAllBorrowings()
