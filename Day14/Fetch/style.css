@@ -1,0 +1,164 @@
+
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* PAGE */
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+    padding: 30px;
+}
+
+
+/* HEADER */
+h1 {
+    background: linear-gradient(135deg, #111827, #312e81);
+    color: white;
+    padding: 24px 30px;
+    border-radius: 14px;
+    margin-bottom: 25px;
+    font-size: 28px;
+    box-shadow: 0 5px 15px #0f172a15;
+}
+
+
+/* TWO-COLUMN DASHBOARD */
+.dashboard {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+}
+
+
+/* PANELS */
+.operations-panel,
+.result-panel {
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05);
+    min-width: 0;
+}
+
+
+/* SECTION HEADINGS */
+h2 {
+    font-size: 21px;
+    margin-bottom: 22px;
+    color: #0f172a;
+}
+
+
+h3 {
+    font-size: 15px;
+    margin-bottom: 12px;
+    color: #475569;
+}
+
+
+/* SEPARATORS */
+hr {
+    border: none;
+    border-top: 1px solid #e2e8f0;
+    margin: 23px 0;
+}
+
+
+/* LOAD BUTTON */
+#loadBtn {
+    width: 100%;
+    background: #0f766e;
+}
+
+
+/* FORMS */
+form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+
+/* INPUTS */
+input {
+    flex: 1 1 150px;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    background: #f8fafc;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+}
+
+
+input:focus {
+    border-color: #6366f1;
+    background: white;
+    box-shadow: 0 0 0 3px #6366f120;
+}
+
+
+/* BUTTONS */
+button {
+    padding: 11px 16px;
+    border: none;
+    border-radius: 7px;
+    background: #4f46e5;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+
+button:hover {
+    background: #3730a3;
+    transform: translateY(-1px);
+}
+
+
+#loadBtn:hover {
+    background: #115e59;
+}
+
+
+/* RESULT PANEL */
+.result-panel {
+    position: sticky;
+    top: 20px;
+}
+
+
+.result-description {
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+
+/* API RESPONSE CONSOLE */
+#output {
+    background: #0f172a;
+    color: #a7f3d0;
+    padding: 20px;
+    border-radius: 10px;
+    min-height: 350px;
+    max-height: 75vh;
+    overflow: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 13px;
+    line-height: 1.8;
+}

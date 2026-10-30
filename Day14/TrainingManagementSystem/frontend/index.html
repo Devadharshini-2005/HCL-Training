@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Training Management System</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark">T</div>
+    <div><strong>Trainly</strong><small>Training Management System</small></div>
+    <span class="top-spacer"></span>
+    <span id="userBadge" class="user-badge hidden"></span>
+    <button id="logoutBtn" class="btn btn-outline hidden">Log out</button>
+  </header>
+
+  <main>
+    <section id="authView" class="auth-layout">
+      <div class="hero">
+        <div class="eyebrow">LEARN • BUILD • GROW</div>
+        <h1>Make your next<br><span>skill move.</span></h1>
+        <p>Explore practical courses, manage enrollments and keep track of your training journey in one place.</p>
+        <div class="hero-stats">
+          <div><strong>05+</strong><small>Courses</small></div>
+          <div><strong>100%</strong><small>Learning focus</small></div>
+          <div><strong>24/7</strong><small>Access</small></div>
+        </div>
+      </div>
+      <div class="auth-card">
+        <div class="tabs">
+          <button class="tab active" data-role="Student">Student</button>
+          <button class="tab" data-role="Admin">Admin</button>
+        </div>
+        <h2 id="authTitle">Welcome back</h2>
+        <p class="muted" id="authSubtitle">Sign in to your student workspace.</p>
+        <form id="loginForm">
+          <label>Email address</label>
+          <input id="email" type="email" placeholder="you@example.com" required>
+          <label>Password</label>
+          <input id="password" type="password" placeholder="Enter your password" required>
+          <button class="btn btn-primary full" type="submit">Sign in <span>→</span></button>
+        </form>
+        <div id="registerLinkWrap" class="register-note">New student? <button id="showRegister" class="text-button">Create an account</button></div>
+        <div class="demo-note"><strong>Demo access</strong><br>Student: student@training.local / Student@123<br>Admin: admin@training.local / Admin@123</div>
+        <p id="authMessage" class="message" role="status"></p>
+        <form id="registerForm" class="hidden">
+          <h3>Create student account</h3>
+          <label>Full name</label><input id="regName" required placeholder="Your full name">
+          <label>Contact number</label><input id="regPhone" required maxlength="10" placeholder="10-digit mobile number">
+          <label>Email address</label><input id="regEmail" required type="email" placeholder="you@example.com">
+          <label>Password</label><input id="regPassword" required type="password" minlength="6" placeholder="Create a password">
+          <button class="btn btn-primary full" type="submit">Create account</button>
+          <button id="cancelRegister" type="button" class="text-button">Back to sign in</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="appView" class="hidden">
+      <div class="welcome-row">
+        <div><div class="eyebrow" id="dashboardEyebrow">YOUR WORKSPACE</div><h1 id="dashboardTitle">Course catalogue</h1><p class="muted" id="dashboardSubtitle">Find a course that moves you forward.</p></div>
+        <div class="welcome-icon">✦</div>
+      </div>
+      <div id="adminStats" class="stats-grid hidden"></div>
+      <div class="toolbar">
+        <div class="search-box"><span>⌕</span><input id="courseSearch" placeholder="Search courses by title or code..."></div>
+        <select id="courseSort" aria-label="Sort courses"><option value="">Sort by fee</option><option value="asc">Fee: low to high</option><option value="desc">Fee: high to low</option></select>
+      </div>
+      <div id="courseGrid" class="course-grid"></div>
+
+      <section class="panel">
+        <div class="section-heading"><div><div class="eyebrow">ACTIVITY</div><h2 id="recordsTitle">My enrollments</h2></div><button id="refreshBtn" class="btn btn-outline">Refresh</button></div>
+        <div class="table-wrap"><table><thead id="recordsHead"></thead><tbody id="recordsBody"></tbody></table></div>
+      </section>
+
+      <section id="adminTools" class="panel hidden">
+        <div class="section-heading"><div><div class="eyebrow">ADMINISTRATION</div><h2>Add a course</h2></div></div>
+        <form id="courseForm" class="course-form">
+          <div><label>Course code</label><input id="newCode" required placeholder="e.g. PY101"></div>
+          <div><label>Course title</label><input id="newTitle" required placeholder="Python Programming"></div>
+          <div><label>Fee (₹)</label><input id="newFee" required type="number" min="0" step="0.01"></div>
+          <div><label>Duration (days)</label><input id="newDuration" required type="number" min="1"></div>
+          <div><label>Total seats</label><input id="newSeats" required type="number" min="1"></div>
+          <button class="btn btn-primary" type="submit">Add course</button>
+        </form>
+        <p id="adminMessage" class="message"></p>
+      </section>
+
+      <section id="adminReports" class="panel hidden">
+        <div class="section-heading"><div><div class="eyebrow">OVERVIEW</div><h2>Training reports</h2></div><button id="reportBtn" class="btn btn-outline">Load reports</button></div>
+        <div id="reportContent" class="report-grid"></div>
+      </section>
+    </section>
+  </main>
+  <footer>© 2026 Trainly · Training Management System <span>Built for learning</span></footer>
+  <script src="js/config.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

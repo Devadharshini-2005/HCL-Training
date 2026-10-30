@@ -1,0 +1,117 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>REST API Demo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body>
+    <h1>Product Management API</h1>
+
+
+    <div class="dashboard">
+
+
+        <!-- LEFT: OPERATIONS -->
+        <section class="operations-panel">
+            <h2>API Operations</h2>
+
+
+            <button id="loadBtn">Load Products</button>
+
+
+            <hr>
+
+
+            <h3>Get Product</h3>
+            <form id="getForm">
+                <input type="number" id="getId"
+                    placeholder="Enter Product ID" required>
+                <button type="submit">Get Product</button>
+            </form>
+
+
+            <hr>
+
+
+            <h3>Add Product</h3>
+            <form id="addForm">
+                <input type="text" id="addName"
+                    placeholder="Product Name" required>
+                <input type="number" id="addPrice"
+                    placeholder="Price" required>
+                <input type="text" id="addColor"
+                    placeholder="Color" required>
+                <button type="submit">Add Product</button>
+            </form>
+
+
+            <hr>
+
+
+            <h3>Update Product</h3>
+            <form id="updateForm">
+                <input type="number" id="updateId"
+                    placeholder="Product ID" required>
+                <input type="text" id="updateName"
+                    placeholder="Product Name" required>
+                <input type="number" id="updatePrice"
+                    placeholder="Price" required>
+                <input type="text" id="updateColor"
+                    placeholder="Color" required>
+                <button type="submit">Update Product</button>
+            </form>
+
+
+            <hr>
+
+
+            <h3>Delete Product</h3>
+            <form id="deleteForm">
+                <input type="number" id="deleteId"
+                    placeholder="Product ID" required>
+                <button type="submit">Delete Product</button>
+            </form>
+        </section>
+
+
+        <!-- RIGHT: RESULTS -->
+        <section class="result-panel">
+            <h2>API Response</h2>
+            <p class="result-description">
+                API responses and error messages will appear here.
+            </p>
+            <pre id="output">Waiting for API request...</pre>
+        </section>
+
+
+    </div>
+
+
+    <script src="script.js"></script>
+</body>
+
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
