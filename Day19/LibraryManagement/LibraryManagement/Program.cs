@@ -32,6 +32,11 @@ builder.Services.AddScoped<BookMenu>();
 builder.Services.AddScoped<MemberMenu>();
 builder.Services.AddScoped<BorrowingMenu>();
 builder.Services.AddScoped<MainMenu>();
+builder.Services.AddScoped<AuditLogMenu>();
+
+//Register AduitLog files
+builder.Services.AddScoped<AuditLogRepository>();
+builder.Services.AddScoped<AuditLogService>();
 
 // Build the application
 using var host = builder.Build();

@@ -7,12 +7,15 @@ namespace LibraryManagement.Services;
 public class BookService
 {
     private readonly BookRepository _bookRepository;
+    private readonly AuditLogService _auditLogService;
 
-    public BookService(BookRepository bookRepository)
+    public BookService(
+    BookRepository bookRepository,
+    AuditLogService auditLogService)
     {
         _bookRepository = bookRepository;
+        _auditLogService = auditLogService;
     }
-
     public void AddBook(Book book)
     {
         ValidateBook(book);
@@ -35,6 +38,13 @@ public class BookService
         book.ISBN = book.ISBN.Trim();
 
         _bookRepository.AddBook(book);
+        _auditLogService.AddAuditLog(new AuditLog
+        {
+            Action = "INSERT",
+            EntityName = "Book",
+            EntityId = book.BookId,
+            Description = $"Book '{book.Title}' was added."
+        });
     }
 
     public List<Book> GetAllBooks()

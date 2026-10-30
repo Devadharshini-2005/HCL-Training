@@ -7,15 +7,18 @@ public class MainMenu
     private readonly BookMenu _bookMenu;
     private readonly MemberMenu _memberMenu;
     private readonly BorrowingMenu _borrowingMenu;
+    private readonly AuditLogMenu _auditLogMenu;
 
     public MainMenu(
-        BookMenu bookMenu,
-        MemberMenu memberMenu,
-        BorrowingMenu borrowingMenu)
+    BookMenu bookMenu,
+    MemberMenu memberMenu,
+    BorrowingMenu borrowingMenu,
+    AuditLogMenu auditLogMenu)
     {
         _bookMenu = bookMenu;
         _memberMenu = memberMenu;
         _borrowingMenu = borrowingMenu;
+        _auditLogMenu = auditLogMenu;
     }
 
     public void ShowMenu()
@@ -30,6 +33,7 @@ public class MainMenu
             Console.WriteLine("1. Book Management");
             Console.WriteLine("2. Member Management");
             Console.WriteLine("3. Borrowing and Returning");
+            Console.WriteLine("4. View Audit Logs");
             Console.WriteLine("0. Exit");
             Console.WriteLine("====================================");
             Console.Write("Enter your choice: ");
@@ -48,6 +52,10 @@ public class MainMenu
 
                 case "3":
                     _borrowingMenu.ShowMenu();
+                    break;
+
+                case "4":
+                    _auditLogMenu.ShowMenu();
                     break;
 
                 case "0":
