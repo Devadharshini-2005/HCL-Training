@@ -20,6 +20,7 @@ public class AppDbContext : DbContext
 
     public DbSet<Borrowing> Borrowings { get; set; }
 
+    public DbSet<AuditLog> AuditLogs { get; set; }
     protected override void OnConfiguring(
         DbContextOptionsBuilder optionsBuilder)
     {
@@ -155,6 +156,34 @@ public class AppDbContext : DbContext
                   .WithMany()
                   .HasForeignKey(b => b.MemberId)
                   .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<AuditLog>(entity =>
+        {
+            entity.ToTable("AuditLogs");
+
+            entity.HasKey(a => a.AuditLogId);
+
+            entity.Property(a => a.AuditLogId)
+                .ValueGeneratedOnAdd();
+
+            entity.Property(a => a.Action)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            entity.Property(a => a.EntityName)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(a => a.EntityId)
+                .IsRequired();
+
+            entity.Property(a => a.Description)
+                .IsRequired()
+                .HasMaxLength(500);
+
+            entity.Property(a => a.CreatedAt)
+                .IsRequired();
         });
     }
 }

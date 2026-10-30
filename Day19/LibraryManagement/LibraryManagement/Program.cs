@@ -16,6 +16,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
             maxRetryCount: 3,
             maxRetryDelay: TimeSpan.FromSeconds(5),
             errorNumbersToAdd: null)));
+
 // Register repositories
 builder.Services.AddScoped<BookRepository>();
 builder.Services.AddScoped<MemberRepository>();

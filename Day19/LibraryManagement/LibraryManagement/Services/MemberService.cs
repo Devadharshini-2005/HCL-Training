@@ -8,7 +8,6 @@ public class MemberService
 {
     private readonly MemberRepository _memberRepository;
 
-    
     public MemberService(MemberRepository memberRepository)
     {
         _memberRepository = memberRepository;
