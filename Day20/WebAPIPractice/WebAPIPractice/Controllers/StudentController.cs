@@ -12,9 +12,8 @@ namespace WebAPIPractice.Controllers
     public class StudentController : ControllerBase
     {
 
-        private readonly StudentService _studentService;
-
-        public StudentController(StudentService studentService)
+        private readonly IStudentService _studentService;
+        public StudentController(IStudentService studentService)
         {
             _studentService = studentService;
         }

@@ -3,7 +3,7 @@ using WebAPIPractice.Models;
 
 namespace WebAPIPractice.Services
 {
-    public class StudentService
+    public class StudentService : IStudentService
     {
         private readonly List<Student> _students = new()
     {

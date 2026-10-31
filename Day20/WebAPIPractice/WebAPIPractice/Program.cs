@@ -12,6 +12,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddSingleton<StudentService>();
 
+builder.Services.AddSingleton<IStudentService, StudentService>();
 
 var app = builder.Build();
 
