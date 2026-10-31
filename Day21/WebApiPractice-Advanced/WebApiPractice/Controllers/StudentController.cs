@@ -144,4 +144,18 @@ public class StudentController : ControllerBase
         return Ok(students);
     }
 
+    [HttpGet("department")]
+    public async Task<ActionResult<List<StudentDto>>> GetStudentsByDepartment(
+    [FromQuery] int departmentId)
+    {
+        if (departmentId <= 0)
+            return BadRequest("Department ID must be greater than zero.");
+
+        var students = await _studentService
+            .GetStudentsByDepartmentIdAsync(departmentId);
+
+        return Ok(students);
+    }
+
+
 }
