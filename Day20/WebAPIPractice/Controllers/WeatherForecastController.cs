@@ -1,18 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebAPIPractice.Controllers
+namespace WebApiPractice.Controllers
 {
-    [ApiController] 
+    [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        
         private static readonly string[] Summaries =
         [
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         ];
 
-        /*
+        
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
@@ -23,19 +22,6 @@ namespace WebAPIPractice.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
-        }
-       */
-
-        [HttpGet ("Save")]
-        public ActionResult<string> Save()
-        {
-            return BadRequest("Hello, World!");
-        }
-
-        [HttpGet("Run")]
-        public ActionResult<string> Run()
-        {
-            return BadRequest("Run Called");
         }
     }
 }
