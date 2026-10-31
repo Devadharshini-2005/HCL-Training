@@ -71,4 +71,21 @@ public class StudentRepository : IStudentRepository
             .Where(s => s.DepartmentId == departmentId)
             .ToListAsync();
     }
+
+    public async Task<List<Student>> GetPagedAsync(
+    int pageNumber,
+    int pageSize)
+    {
+        return await _context.Students
+            .Include(s => s.Department)
+            .OrderBy(s => s.Id)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+    }
+
+    public async Task<int> GetTotalCountAsync()
+    {
+        return await _context.Students.CountAsync();
+    }
 }
