@@ -29,7 +29,6 @@
     <Folder Include="DTOs\Screens\" />
     <Folder Include="DTOs\Seats\" />
     <Folder Include="DTOs\Shows\" />
-    <Folder Include="DTOs\Theatres\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 
