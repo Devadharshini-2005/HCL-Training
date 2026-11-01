@@ -1,19 +1,25 @@
 using Microsoft.EntityFrameworkCore;
 using MovieTicketBooking.Data;
+using MovieTicketBooking.Repositories;
+using MovieTicketBooking.Repositories.Interfaces;
+using MovieTicketBooking.Services;
+using MovieTicketBooking.Services.Interfaces;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Register controllers
 builder.Services.AddControllers();
 
-// Register OpenAPI
 builder.Services.AddOpenApi();
 
-// Register ApplicationDbContext
+// Database connection
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Dependency Injection
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+builder.Services.AddScoped<IMovieService, MovieService>();
 
 var app = builder.Build();
 
