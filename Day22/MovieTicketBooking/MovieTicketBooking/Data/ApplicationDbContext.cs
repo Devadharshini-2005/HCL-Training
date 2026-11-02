@@ -20,6 +20,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<Booking> Bookings { get; set; }
     public DbSet<BookingSeat> BookingSeats { get; set; }
 
+    public DbSet<User> Users { get; set; }
+    public DbSet<Role> Roles { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -259,5 +262,75 @@ public class ApplicationDbContext : DbContext
                 .HasForeignKey(bs => bs.SeatId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
+
+        // Role Configuration
+        modelBuilder.Entity<Role>(entity =>
+        {
+            entity.HasKey(r => r.RoleId);
+
+            entity.Property(r => r.RoleName)
+                  .IsRequired()
+                  .HasMaxLength(50);
+
+            entity.HasIndex(r => r.RoleName)
+                  .IsUnique();
+        });
+
+        // User Configuration
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(u => u.UserId);
+
+            entity.Property(u => u.FullName)
+                  .IsRequired()
+                  .HasMaxLength(100);
+
+            entity.Property(u => u.Email)
+                  .IsRequired()
+                  .HasMaxLength(150);
+
+            entity.HasIndex(u => u.Email)
+                  .IsUnique();
+
+            entity.Property(u => u.PasswordHash)
+                  .IsRequired();
+
+            entity.Property(u => u.PhoneNumber)
+                  .HasMaxLength(15);
+
+            entity.Property(u => u.CreatedAt)
+                  .HasColumnType("datetime2");
+
+            // One Role can have many Users
+            entity.HasOne(u => u.Role)
+                  .WithMany(r => r.Users)
+                  .HasForeignKey(u => u.RoleId)
+                  .OnDelete(DeleteBehavior.Restrict);
+        });
+        // Seed Default Roles
+        modelBuilder.Entity<Role>().HasData(
+            new Role
+            {
+                RoleId = 1,
+                RoleName = "Admin"
+            },
+            new Role
+            {
+                RoleId = 2,
+                RoleName = "Customer"
+            }
+        );
+
+        modelBuilder.Entity<Booking>(entity =>
+        {
+            // Keep your existing Booking configuration here.
+
+            entity.HasOne(b => b.User)
+                  .WithMany()
+                  .HasForeignKey(b => b.UserId)
+                  .OnDelete(DeleteBehavior.Restrict);
+        });
+       
+
     }
 }
