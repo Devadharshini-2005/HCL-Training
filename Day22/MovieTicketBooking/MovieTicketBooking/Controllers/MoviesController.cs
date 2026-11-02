@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieTicketBooking.DTOs.Movies;
 using MovieTicketBooking.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace MovieTicketBooking.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class MoviesController : ControllerBase
@@ -31,6 +34,7 @@ public class MoviesController : ControllerBase
 
     // GET: api/movies
     // Get all movies with pagination and optional title filter
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAllMovies(
         [FromQuery] int pageNumber = 1,
@@ -76,6 +80,8 @@ public class MoviesController : ControllerBase
 
     // PUT: api/movies/1
     // Update movie
+
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateMovie(
         int id,
@@ -96,6 +102,8 @@ public class MoviesController : ControllerBase
 
     // DELETE: api/movies/1
     // Delete movie
+
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteMovie(int id)
     {

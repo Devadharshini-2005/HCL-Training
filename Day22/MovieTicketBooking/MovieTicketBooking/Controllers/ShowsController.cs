@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MovieTicketBooking.DTOs.Shows;
 using MovieTicketBooking.Services.Interfaces;
 
@@ -16,6 +17,8 @@ public class ShowsController : ControllerBase
     }
 
     // POST: api/shows
+    [Authorize(Roles = "Admin")]
+
     [HttpPost]
     public async Task<IActionResult> CreateShow(
         [FromBody] CreateShowRequest request)
@@ -36,6 +39,8 @@ public class ShowsController : ControllerBase
     }
 
     // GET: api/shows
+
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAllShows(
         [FromQuery] DateTime? date,
@@ -49,6 +54,8 @@ public class ShowsController : ControllerBase
     }
 
     // GET: api/shows/{id}
+
+    [AllowAnonymous]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetShowById(int id)
     {
@@ -63,6 +70,7 @@ public class ShowsController : ControllerBase
     }
 
     // GET: api/shows/movie/{movieId}
+    [AllowAnonymous]
     [HttpGet("movie/{movieId:int}")]
     public async Task<IActionResult> GetShowsByMovie(int movieId)
     {
@@ -72,6 +80,7 @@ public class ShowsController : ControllerBase
     }
 
     // GET: api/shows/theatre/{theatreId}
+    [AllowAnonymous]
     [HttpGet("theatre/{theatreId:int}")]
     public async Task<IActionResult> GetShowsByTheatre(int theatreId)
     {
@@ -81,6 +90,7 @@ public class ShowsController : ControllerBase
     }
 
     // GET: api/shows/search?date=2026-11-01
+    [AllowAnonymous]
     [HttpGet("search")]
     public async Task<IActionResult> SearchShowsByDate(
         [FromQuery] DateTime date)
@@ -91,6 +101,7 @@ public class ShowsController : ControllerBase
     }
 
     // PUT: api/shows/{id}
+    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateShow(
         int id,
@@ -114,6 +125,7 @@ public class ShowsController : ControllerBase
     }
 
     // DELETE: api/shows/{id}
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteShow(int id)
     {

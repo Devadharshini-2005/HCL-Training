@@ -22,5 +22,10 @@ public interface IBookingService
         int showId);
 
     // Cancel a booking
-    Task<BookingResponse?> CancelBookingAsync(int bookingId);
+
+    //Task<BookingResponse?> CancelBookingAsync(int bookingId);
+    Task<BookingResponse?> GetMyBookingByIdAsync(int bookingId);
+
+    Task<BookingResponse> CancelMyBookingAsync(int bookingId);
+
 }

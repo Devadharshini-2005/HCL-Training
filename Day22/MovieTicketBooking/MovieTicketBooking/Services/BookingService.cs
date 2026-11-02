@@ -3,6 +3,7 @@ using MovieTicketBooking.Exceptions;
 using MovieTicketBooking.Models;
 using MovieTicketBooking.Repositories.Interfaces;
 using MovieTicketBooking.Services.Interfaces;
+using System.Security.Claims;
 
 namespace MovieTicketBooking.Services;
 
@@ -10,15 +11,32 @@ public class BookingService : IBookingService
 {
     private readonly IBookingRepository _bookingRepository;
 
-    public BookingService(IBookingRepository bookingRepository)
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    private readonly IAuthRepository _authRepository;
+
+    public BookingService(
+    IBookingRepository bookingRepository,
+    IHttpContextAccessor httpContextAccessor,
+    IAuthRepository authRepository)
     {
         _bookingRepository = bookingRepository;
+        _httpContextAccessor = httpContextAccessor;
+        _authRepository = authRepository;
     }
 
     // Create a booking
     public async Task<BookingResponse> CreateBookingAsync(
         CreateBookingRequest request)
     {
+        int userId = GetLoggedInUserId();
+
+        var user = await _authRepository.GetByIdAsync(userId);
+
+        if (user == null)
+        {
+            throw new NotFoundException("User not found.");
+        }
         // Validate seat selection
         if (request.SeatIds == null || request.SeatIds.Count == 0)
         {
@@ -70,12 +88,15 @@ public class BookingService : IBookingService
         {
             BookingReference = "TEMP" + Guid.NewGuid().ToString("N")[..10],
             ShowId = request.ShowId,
-            CustomerName = request.CustomerName,
-            CustomerEmail = request.CustomerEmail,
-            CustomerPhone = request.CustomerPhone,
+
+            CustomerName = user.FullName,
+            CustomerEmail = user.Email,
+            CustomerPhone = user.PhoneNumber!,
+
             BookingDate = DateTime.UtcNow,
             TotalAmount = totalAmount,
-            Status = BookingStatus.Confirmed
+            Status = BookingStatus.Confirmed,
+            UserId = userId
         };
 
         // Create booking seat records
@@ -133,15 +154,20 @@ public class BookingService : IBookingService
     }
 
     // Cancel a booking
-    public async Task<BookingResponse?> CancelBookingAsync(
+    // Cancel a booking belonging to the logged-in customer
+    public async Task<BookingResponse> CancelMyBookingAsync(
         int bookingId)
     {
-        var booking = await _bookingRepository.GetByIdAsync(
-            bookingId);
+        // Get logged-in customer's ID
+        int userId = GetLoggedInUserId();
+
+        // Find booking belonging to this customer only
+        var booking = await _bookingRepository
+            .GetByIdAndUserIdAsync(bookingId, userId);
 
         if (booking == null)
         {
-            return null;
+            throw new NotFoundException("Booking not found.");
         }
 
         // Only confirmed bookings can be cancelled
@@ -191,4 +217,32 @@ public class BookingService : IBookingService
                 .ToList()
         };
     }
+
+    private int GetLoggedInUserId()
+    {
+        var userIdValue = _httpContextAccessor.HttpContext?
+            .User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrEmpty(userIdValue) ||
+            !int.TryParse(userIdValue, out int userId))
+        {
+            throw new UnauthorizedAccessException(
+                "Unable to identify the logged-in user.");
+        }
+
+        return userId;
+    }
+
+    public async Task<BookingResponse?> GetMyBookingByIdAsync(int bookingId)
+    {
+        int userId = GetLoggedInUserId();
+
+        var booking = await _bookingRepository
+            .GetByIdAndUserIdAsync(bookingId, userId);
+
+        if (booking == null)
+            throw new NotFoundException("Booking not found.");
+
+        return MapToResponse(booking);
+    }  
 }

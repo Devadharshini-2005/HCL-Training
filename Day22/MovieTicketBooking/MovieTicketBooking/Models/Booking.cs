@@ -18,6 +18,11 @@ public class Booking
     public Show? Show { get; set; }
 
     public ICollection<BookingSeat> BookingSeats { get; set; } = new List<BookingSeat>();
+
+    public int? UserId { get; set; }
+
+    public User? User { get; set; }
+
 }
 
 public enum BookingStatus

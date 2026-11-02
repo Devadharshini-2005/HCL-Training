@@ -155,4 +155,17 @@ public class BookingRepository : IBookingRepository
             throw;
         }
     }
+
+    public async Task<Booking?> GetByIdAndUserIdAsync(
+    int bookingId,
+    int userId)
+    {
+        return await _context.Bookings
+            .Include(b => b.BookingSeats)
+                .ThenInclude(bs => bs.Seat)
+            .FirstOrDefaultAsync(b =>
+                b.BookingId == bookingId &&
+                b.UserId == userId);
+    }
+
 }

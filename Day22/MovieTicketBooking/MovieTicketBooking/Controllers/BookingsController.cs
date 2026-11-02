@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MovieTicketBooking.DTOs.Bookings;
 using MovieTicketBooking.Models;
 using MovieTicketBooking.Services.Interfaces;
@@ -17,6 +18,8 @@ public class BookingsController : ControllerBase
     }
 
     // POST: api/bookings
+
+    [Authorize(Roles = "Customer")]
     [HttpPost]
     public async Task<IActionResult> CreateBooking(
     CreateBookingRequest request)
@@ -30,6 +33,7 @@ public class BookingsController : ControllerBase
     }
 
     // GET: api/bookings?showId=1&status=Confirmed
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> GetAllBookings(
         [FromQuery] int? showId,
@@ -43,20 +47,28 @@ public class BookingsController : ControllerBase
     }
 
     // GET: api/bookings/1
+    [Authorize(Roles = "Customer,Admin")]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetBookingById(int id)
     {
-        var booking = await _bookingService.GetBookingByIdAsync(id);
-
-        if (booking == null)
+        if (User.IsInRole("Admin"))
         {
-            return NotFound(new { message = "Booking not found." });
+            var adminBooking = await _bookingService.GetBookingByIdAsync(id);
+
+            if (adminBooking == null)
+                return NotFound(new { message = "Booking not found." });
+
+            return Ok(adminBooking);
         }
 
-        return Ok(booking);
+        var customerBooking =
+            await _bookingService.GetMyBookingByIdAsync(id);
+
+        return Ok(customerBooking);
     }
 
     // GET: api/bookings/show/1
+    [Authorize(Roles = "Admin")]
     [HttpGet("show/{showId}")]
     public async Task<IActionResult> GetBookingsByShowId(int showId)
     {
@@ -67,14 +79,13 @@ public class BookingsController : ControllerBase
     }
 
     // PUT: api/bookings/1/cancel
+    [Authorize(Roles = "Customer")]
     [HttpPut("{id}/cancel")]
     public async Task<IActionResult> CancelBooking(int id)
     {
-        var booking = await _bookingService.CancelBookingAsync(id);
-
-        if (booking == null)
-            return NotFound();
+        var booking = await _bookingService.CancelMyBookingAsync(id);
 
         return Ok(booking);
     }
+
 }
