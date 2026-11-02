@@ -6,11 +6,11 @@ namespace WebApiPractice.Controllers;
 
 [ApiController]
 [Route("api/students")]
-public class StudentController : ControllerBase
+public class StudentsController : ControllerBase
 {
     private readonly IStudentService _studentService;
 
-    public StudentController(IStudentService studentService)
+    public StudentsController(IStudentService studentService)
     {
         _studentService = studentService;
     }
@@ -148,7 +148,7 @@ public class StudentController : ControllerBase
     public async Task<ActionResult<List<StudentDto>>> GetStudentsByDepartment(
     [FromQuery] int departmentId)
     {
-        if (departmentId <= 0)
+        if(departmentId <= 0)
             return BadRequest("Department ID must be greater than zero.");
 
         var students = await _studentService
@@ -157,5 +157,67 @@ public class StudentController : ControllerBase
         return Ok(students);
     }
 
+    [HttpGet("paged")]
+    public async Task<ActionResult<PagedResult<StudentDto>>> GetPagedStudents(
+    [FromQuery] int pageNumber = 1,
+    [FromQuery] int pageSize = 10)
+    {
+        if (pageNumber < 1)
+            return BadRequest("Page number must be at least 1.");
 
+        if (pageSize < 1 || pageSize > 100)
+            return BadRequest("Page size must be between 1 and 100.");
+
+        var result = await _studentService.GetPagedStudentsAsync(
+            pageNumber,
+            pageSize);
+
+        return Ok(result);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<PagedResult<StudentDto>>> GetStudents(
+    [FromQuery] string? search = null,
+    [FromQuery] int? departmentId = null,
+    [FromQuery] string? sortBy = "id",
+    [FromQuery] string? sortOrder = "asc",
+    [FromQuery] int pageNumber = 1,
+    [FromQuery] int pageSize = 10)
+    {
+        // Validate pagination
+        if (pageNumber < 1)
+            return BadRequest("Page number must be at least 1.");
+
+        if (pageSize < 1 || pageSize > 100)
+            return BadRequest("Page size must be between 1 and 100.");
+
+        // Normalize sorting parameters
+        sortBy = string.IsNullOrWhiteSpace(sortBy)
+            ? "id"
+            : sortBy.Trim().ToLower();
+
+        sortOrder = string.IsNullOrWhiteSpace(sortOrder)
+            ? "asc"
+            : sortOrder.Trim().ToLower();
+
+        // Validate sorting
+        if (sortBy != "id" && sortBy != "name" && sortBy != "age")
+            return BadRequest("sortBy must be id, name, or age.");
+
+        if (sortOrder != "asc" && sortOrder != "desc")
+            return BadRequest("sortOrder must be asc or desc.");
+
+        if (departmentId.HasValue && departmentId.Value < 1)
+            return BadRequest("Department ID must be greater than 0.");
+
+        var result = await _studentService.GetFilteredAndPagedStudentsAsync(
+            search,
+            departmentId,
+            sortBy,
+            sortOrder,
+            pageNumber,
+            pageSize);
+
+        return Ok(result);
+    }
 }

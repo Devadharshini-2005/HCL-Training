@@ -88,4 +88,73 @@ public class StudentRepository : IStudentRepository
     {
         return await _context.Students.CountAsync();
     }
+
+    public async Task<List<Student>> GetFilteredAndPagedAsync(
+    string? search,
+    int? departmentId,
+    string sortBy,
+    string sortOrder,
+    int pageNumber,
+    int pageSize)
+    {
+        IQueryable<Student> query = _context.Students
+            .Include(s => s.Department);
+
+        // 1. Search by student name
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(s => s.Name.Contains(search));
+        }
+
+        // 2. Filter by department
+        if (departmentId.HasValue)
+        {
+            query = query.Where(s => s.DepartmentId == departmentId.Value);
+        }
+
+        // 3. Sorting
+        bool descending = sortOrder == "desc";
+
+        query = sortBy.ToLower() switch
+        {
+            "name" => descending
+                ? query.OrderByDescending(s => s.Name)
+                : query.OrderBy(s => s.Name),
+
+            "age" => descending
+                ? query.OrderByDescending(s => s.Age)
+                : query.OrderBy(s => s.Age),
+
+            _ => descending
+                ? query.OrderByDescending(s => s.Id)
+                : query.OrderBy(s => s.Id)
+        };
+
+        // 4. Pagination
+        return await query
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+    }
+
+    public async Task<int> GetFilteredCountAsync(
+    string? search,
+    int? departmentId)
+    {
+        IQueryable<Student> query = _context.Students;
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            query = query.Where(s => s.Name.Contains(search));
+        }
+
+        if (departmentId.HasValue)
+        {
+            query = query.Where(s => s.DepartmentId == departmentId.Value);
+        }
+
+        return await query.CountAsync();
+    }
+
 }
+

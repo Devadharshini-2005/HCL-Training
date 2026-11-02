@@ -25,6 +25,15 @@ public interface IStudentRepository
     Task<List<Student>> GetPagedAsync(int pageNumber, int pageSize);
     Task<int> GetTotalCountAsync();
 
+    Task<List<Student>> GetFilteredAndPagedAsync(
+    string? search,
+    int? departmentId,
+    string sortBy,
+    string sortOrder,
+    int pageNumber,
+    int pageSize);
 
-
+    Task<int> GetFilteredCountAsync(
+        string? search,
+        int? departmentId);
 }
