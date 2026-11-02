@@ -1,4 +1,5 @@
 ﻿using MovieTicketBooking.DTOs.Screens;
+using MovieTicketBooking.Exceptions;
 using MovieTicketBooking.Models;
 using MovieTicketBooking.Repositories.Interfaces;
 using MovieTicketBooking.Services.Interfaces;
@@ -23,7 +24,7 @@ public class ScreenService : IScreenService
 
         if (!theatreExists)
         {
-            throw new InvalidOperationException(
+            throw new NotFoundException(
                 $"Theatre with ID {request.TheatreId} does not exist.");
         }
 
@@ -91,7 +92,7 @@ public class ScreenService : IScreenService
 
         if (!theatreExists)
         {
-            throw new InvalidOperationException(
+            throw new NotFoundException(
                 $"Theatre with ID {request.TheatreId} does not exist.");
         }
 
@@ -119,8 +120,10 @@ public class ScreenService : IScreenService
 
         if (hasShows)
         {
-            throw new InvalidOperationException(
-                "Cannot delete this screen because shows are associated with it.");
+
+            throw new BusinessRuleException(
+    "Cannot delete this screen because seats or shows are associated with it.");
+
         }
 
         bool hasSeats =
@@ -128,7 +131,7 @@ public class ScreenService : IScreenService
 
         if (hasSeats)
         {
-            throw new InvalidOperationException(
+            throw new BusinessRuleException(
                 "Cannot delete this screen because seats are associated with it.");
         }
 

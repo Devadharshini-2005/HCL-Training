@@ -1,4 +1,5 @@
 ﻿using MovieTicketBooking.DTOs.Shows;
+using MovieTicketBooking.Exceptions;
 using MovieTicketBooking.Models;
 using MovieTicketBooking.Repositories.Interfaces;
 using MovieTicketBooking.Services.Interfaces;
@@ -20,24 +21,24 @@ public class ShowService : IShowService
     {
         if (request.EndTime <= request.StartTime)
         {
-            throw new InvalidOperationException(
+            throw new BusinessRuleException(
                 "End time must be later than start time.");
         }
 
         if (request.TicketPrice < 0)
         {
-            throw new InvalidOperationException(
+            throw new BusinessRuleException(
                 "Ticket price cannot be negative.");
         }
 
         if (!await _showRepository.MovieExistsAsync(request.MovieId))
         {
-            throw new InvalidOperationException("Movie not found.");
+            throw new NotFoundException("Movie not found.");
         }
 
         if (!await _showRepository.ScreenExistsAsync(request.ScreenId))
         {
-            throw new InvalidOperationException("Screen not found.");
+            throw new NotFoundException("Screen not found.");
         }
 
         bool hasOverlap =
@@ -48,7 +49,7 @@ public class ShowService : IShowService
 
         if (hasOverlap)
         {
-            throw new InvalidOperationException(
+            throw new BusinessRuleException(
                 "This screen already has a show scheduled during this time.");
         }
 
@@ -57,7 +58,7 @@ public class ShowService : IShowService
 
         if (seats.Count == 0)
         {
-            throw new InvalidOperationException(
+            throw new BusinessRuleException(
                 "No seats are configured for this screen.");
         }
 
@@ -138,24 +139,24 @@ public class ShowService : IShowService
 
         if (request.EndTime <= request.StartTime)
         {
-            throw new InvalidOperationException(
+            throw new BusinessRuleException(
                 "End time must be later than start time.");
         }
 
         if (request.TicketPrice < 0)
         {
-            throw new InvalidOperationException(
+            throw new BusinessRuleException(
                 "Ticket price cannot be negative.");
         }
 
         if (!await _showRepository.MovieExistsAsync(request.MovieId))
         {
-            throw new InvalidOperationException("Movie not found.");
+            throw new NotFoundException("Movie not found.");
         }
 
         if (!await _showRepository.ScreenExistsAsync(request.ScreenId))
         {
-            throw new InvalidOperationException("Screen not found.");
+            throw new NotFoundException("Screen not found.");
         }
 
         bool hasOverlap =
@@ -167,8 +168,9 @@ public class ShowService : IShowService
 
         if (hasOverlap)
         {
-            throw new InvalidOperationException(
-                "This screen already has a show scheduled during this time.");
+            throw new BusinessRuleException(
+    "The selected screen already has a show scheduled during this time.");
+
         }
 
         show.MovieId = request.MovieId;
@@ -194,8 +196,9 @@ public class ShowService : IShowService
 
         if (await _showRepository.HasBookingsAsync(showId))
         {
-            throw new InvalidOperationException(
-                "Cannot delete a show that has booking history.");
+            throw new BusinessRuleException(
+    "Cannot delete this show because bookings are associated with it.");
+
         }
 
         await _showRepository.DeleteAsync(show);
@@ -223,7 +226,7 @@ public class ShowService : IShowService
     {
         if (!await _showRepository.ShowExistsAsync(showId))
         {
-            throw new InvalidOperationException("Show not found.");
+            throw new NotFoundException("Show not found.");
         }
 
         var showSeats = await _showRepository.GetShowSeatsAsync(showId);
@@ -237,7 +240,7 @@ public class ShowService : IShowService
     {
         if (!await _showRepository.ShowExistsAsync(showId))
         {
-            throw new InvalidOperationException("Show not found.");
+            throw new NotFoundException("Show not found.");
         }
 
         var showSeats =
@@ -254,7 +257,7 @@ public class ShowService : IShowService
     {
         if (!await _showRepository.ShowExistsAsync(showId))
         {
-            throw new InvalidOperationException("Show not found.");
+            throw new NotFoundException("Show not found.");
         }
 
         var showSeats =

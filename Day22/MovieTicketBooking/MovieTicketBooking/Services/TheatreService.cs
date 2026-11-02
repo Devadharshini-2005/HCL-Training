@@ -1,4 +1,5 @@
 ﻿using MovieTicketBooking.DTOs.Theatres;
+using MovieTicketBooking.Exceptions;
 using MovieTicketBooking.Models;
 using MovieTicketBooking.Repositories.Interfaces;
 using MovieTicketBooking.Services.Interfaces;
@@ -89,8 +90,9 @@ public class TheatreService : ITheatreService
 
         if (hasScreens)
         {
-            throw new InvalidOperationException(
-                "Cannot delete this theatre because screens are associated with it.");
+            throw new BusinessRuleException(
+    "Cannot delete this theatre because screens are associated with it.");
+
         }
 
         await _theatreRepository.DeleteAsync(theatre);

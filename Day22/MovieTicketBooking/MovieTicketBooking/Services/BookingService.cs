@@ -1,4 +1,5 @@
 ﻿using MovieTicketBooking.DTOs.Bookings;
+using MovieTicketBooking.Exceptions;
 using MovieTicketBooking.Models;
 using MovieTicketBooking.Repositories.Interfaces;
 using MovieTicketBooking.Services.Interfaces;
@@ -21,14 +22,14 @@ public class BookingService : IBookingService
         // Validate seat selection
         if (request.SeatIds == null || request.SeatIds.Count == 0)
         {
-            throw new InvalidOperationException(
+            throw new BusinessRuleException(
                 "Please select at least one seat.");
         }
 
         // Check duplicate seat IDs
         if (request.SeatIds.Distinct().Count() != request.SeatIds.Count)
         {
-            throw new InvalidOperationException(
+            throw new BusinessRuleException(
                 "Duplicate seat IDs are not allowed.");
         }
 
@@ -38,7 +39,7 @@ public class BookingService : IBookingService
 
         if (show == null)
         {
-            throw new InvalidOperationException(
+            throw new NotFoundException(
                 "Show not found.");
         }
 
@@ -50,14 +51,14 @@ public class BookingService : IBookingService
         // Check whether all requested seats belong to this show
         if (showSeats.Count != request.SeatIds.Count)
         {
-            throw new InvalidOperationException(
+            throw new BusinessRuleException(
                 "One or more selected seats do not belong to this show.");
         }
 
         // Check seat availability
         if (showSeats.Any(ss => ss.Status != ShowSeatStatus.Available))
         {
-            throw new InvalidOperationException(
+            throw new BusinessRuleException(
                 "One or more selected seats are already booked.");
         }
 
@@ -146,7 +147,7 @@ public class BookingService : IBookingService
         // Only confirmed bookings can be cancelled
         if (booking.Status != BookingStatus.Confirmed)
         {
-            throw new InvalidOperationException(
+            throw new BusinessRuleException(
                 "Only confirmed bookings can be cancelled.");
         }
 
@@ -161,7 +162,7 @@ public class BookingService : IBookingService
 
         if (showSeats.Count != seatIds.Count)
         {
-            throw new InvalidOperationException(
+            throw new NotFoundException(
                 "The booking seat records could not be matched with the show.");
         }
 

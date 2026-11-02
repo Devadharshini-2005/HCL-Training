@@ -1,4 +1,5 @@
 ﻿using MovieTicketBooking.DTOs.Seats;
+using MovieTicketBooking.Exceptions;
 using MovieTicketBooking.Models;
 using MovieTicketBooking.Repositories.Interfaces;
 using MovieTicketBooking.Services.Interfaces;
@@ -23,7 +24,7 @@ public class SeatService : ISeatService
 
         if (!screenExists)
         {
-            throw new InvalidOperationException(
+            throw new NotFoundException(
                 "The specified screen does not exist.");
         }
 
@@ -34,7 +35,7 @@ public class SeatService : ISeatService
 
         if (seatExists)
         {
-            throw new InvalidOperationException(
+            throw new BusinessRuleException(
                 "A seat with this row and seat number already exists in this screen.");
         }
 
@@ -57,7 +58,7 @@ public class SeatService : ISeatService
     {
         if (request.Seats == null || request.Seats.Count == 0)
         {
-            throw new InvalidOperationException(
+            throw new BusinessRuleException(
                 "At least one seat is required.");
         }
 
@@ -72,7 +73,7 @@ public class SeatService : ISeatService
 
         if (duplicateSeats)
         {
-            throw new InvalidOperationException(
+            throw new BusinessRuleException(
                 "Duplicate seat positions were found in the request.");
         }
 
@@ -85,7 +86,7 @@ public class SeatService : ISeatService
 
             if (!screenExists)
             {
-                throw new InvalidOperationException(
+                throw new NotFoundException(
                     $"Screen ID {item.ScreenId} does not exist.");
             }
 
@@ -96,7 +97,7 @@ public class SeatService : ISeatService
 
             if (seatExists)
             {
-                throw new InvalidOperationException(
+                throw new BusinessRuleException(
                     $"Seat {item.RowName}{item.SeatNumber} already exists in Screen ID {item.ScreenId}.");
             }
 
@@ -124,7 +125,7 @@ public class SeatService : ISeatService
 
         if (!screenExists)
         {
-            throw new InvalidOperationException(
+            throw new NotFoundException(
                 "The specified screen does not exist.");
         }
 
@@ -164,7 +165,7 @@ public class SeatService : ISeatService
 
         if (!screenExists)
         {
-            throw new InvalidOperationException(
+            throw new NotFoundException(
                 "The specified screen does not exist.");
         }
 
@@ -176,7 +177,7 @@ public class SeatService : ISeatService
 
         if (seatExists)
         {
-            throw new InvalidOperationException(
+            throw new BusinessRuleException(
                 "A seat with this row and seat number already exists in this screen.");
         }
 
@@ -208,8 +209,9 @@ public class SeatService : ISeatService
 
         if (hasShowSeats || hasBookingSeats)
         {
-            throw new InvalidOperationException(
-                "This seat cannot be deleted because it has show or booking history.");
+            throw new BusinessRuleException(
+    "Cannot delete this seat because it is associated with show or booking history.");
+
         }
 
         await _seatRepository.DeleteAsync(seat);

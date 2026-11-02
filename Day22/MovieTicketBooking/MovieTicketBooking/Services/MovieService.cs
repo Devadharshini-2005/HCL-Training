@@ -1,4 +1,5 @@
 ﻿using MovieTicketBooking.DTOs.Movies;
+using MovieTicketBooking.Exceptions;
 using MovieTicketBooking.Models;
 using MovieTicketBooking.Repositories.Interfaces;
 using MovieTicketBooking.Services.Interfaces;
@@ -109,8 +110,8 @@ public class MovieService : IMovieService
 
         if (hasShows)
         {
-            throw new InvalidOperationException(
-                "This movie cannot be deleted because shows are associated with it.");
+            throw new BusinessRuleException(
+     "Cannot delete this movie because shows are associated with it.");
         }
 
         await _movieRepository.DeleteAsync(movie);
