@@ -19,21 +19,14 @@ public class BookingsController : ControllerBase
     // POST: api/bookings
     [HttpPost]
     public async Task<IActionResult> CreateBooking(
-        [FromBody] CreateBookingRequest request)
+    CreateBookingRequest request)
     {
-        try
-        {
-            var booking = await _bookingService.CreateBookingAsync(request);
+        var booking = await _bookingService.CreateBookingAsync(request);
 
-            return CreatedAtAction(
-                nameof(GetBookingById),
-                new { id = booking.BookingId },
-                booking);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
+        return CreatedAtAction(
+            nameof(GetBookingById),
+            new { id = booking.BookingId },
+            booking);
     }
 
     // GET: api/bookings?showId=1&status=Confirmed
@@ -77,20 +70,11 @@ public class BookingsController : ControllerBase
     [HttpPut("{id}/cancel")]
     public async Task<IActionResult> CancelBooking(int id)
     {
-        try
-        {
-            var booking = await _bookingService.CancelBookingAsync(id);
+        var booking = await _bookingService.CancelBookingAsync(id);
 
-            if (booking == null)
-            {
-                return NotFound(new { message = "Booking not found." });
-            }
+        if (booking == null)
+            return NotFound();
 
-            return Ok(booking);
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { message = ex.Message });
-        }
+        return Ok(booking);
     }
 }
