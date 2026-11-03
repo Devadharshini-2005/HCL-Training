@@ -94,6 +94,17 @@ builder.Services.AddHttpContextAccessor();
 // Authorization
 builder.Services.AddAuthorization();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularPolicy", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 // Seed initial Admin account
@@ -117,6 +128,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+
+app.UseCors("AngularPolicy");
 // Authentication must come before Authorization
 app.UseAuthentication();
 app.UseAuthorization();
