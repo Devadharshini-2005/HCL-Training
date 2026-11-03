@@ -1,0 +1,6 @@
+import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { AuthResponse, LoginRequest, RegisterRequest } from './models';
+@Injectable({providedIn:'root'}) export class AuthService { private base=environment.apiUrl+'/Auth'; current=signal<AuthResponse|null>(this.read()); constructor(private http:HttpClient){} private read():AuthResponse|null { try { const s=localStorage.getItem('cinemabook_auth'); return s?JSON.parse(s) as AuthResponse:null; } catch{return null;} } login(data:LoginRequest):Observable<AuthResponse>{return this.http.post<AuthResponse>(this.base+'/login',data).pipe(tap(x=>{localStorage.setItem('cinemabook_auth',JSON.stringify(x));this.current.set(x);}));} register(data:RegisterRequest):Observable<unknown>{return this.http.post(this.base+'/register',data);} logout(){localStorage.removeItem('cinemabook_auth');this.current.set(null);} isAdmin(){return this.current()?.role?.toLowerCase()==='admin';} isCustomer(){return this.current()?.role?.toLowerCase()==='customer';} }
