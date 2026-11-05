@@ -1,0 +1,4 @@
+import { Routes } from '@angular/router';
+import { HomeComponent, LoginComponent, RegisterComponent, ShowsComponent, SeatsComponent, BookingsComponent, AdminComponent } from './pages';
+import { adminGuard, authGuard, customerGuard } from './core/guards';
+export const routes:Routes=[{path:'',component:HomeComponent},{path:'login',component:LoginComponent},{path:'register',component:RegisterComponent},{path:'shows',component:ShowsComponent},{path:'shows/:showId/seats',component:SeatsComponent,canActivate:[customerGuard]},{path:'bookings',component:BookingsComponent,canActivate:[authGuard]},{path:'admin',component:AdminComponent,canActivate:[adminGuard]},{path:'**',redirectTo:''}];

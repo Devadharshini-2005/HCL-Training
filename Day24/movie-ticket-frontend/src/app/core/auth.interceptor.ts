@@ -1,0 +1,2 @@
+import { HttpInterceptorFn } from '@angular/common/http';
+export const authInterceptor:HttpInterceptorFn=(req,next)=>{let token:string|null=null;try{const raw=localStorage.getItem('cinemabook_auth');token=raw?(JSON.parse(raw) as {token:string}).token:null;}catch{} return next(token?req.clone({setHeaders:{Authorization:`Bearer ${token}`}}):req);};
