@@ -10,6 +10,7 @@ using CampusPlacementManagement.Services.Interfaces;
 using CampusPlacementManagement.Services.Implementations;
 using CampusPlacementManagement.Repositories.Interfaces;
 using CampusPlacementManagement.Repositories.Implementations;
+using CampusPlacementManagement.Middleware;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -150,6 +151,9 @@ builder.Services.AddScoped<
     InterviewScheduleService>();
 
 var app = builder.Build();
+
+// Global Exception Middleware
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 // Seed Identity roles
 using (var scope = app.Services.CreateScope())
