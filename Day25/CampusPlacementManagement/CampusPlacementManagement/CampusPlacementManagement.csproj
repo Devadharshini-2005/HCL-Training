@@ -39,7 +39,6 @@
     <Folder Include="DTOs\Interviews\" />
     <Folder Include="DTOs\Jobs\" />
     <Folder Include="DTOs\RecruitmentDrives\" />
-    <Folder Include="DTOs\Students\" />
     <Folder Include="Middleware\" />
     <Folder Include="Migrations\" />
     <Folder Include="Validators\" />
