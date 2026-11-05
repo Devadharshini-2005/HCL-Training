@@ -14,9 +14,12 @@ public class StudentsController : ControllerBase
 {
     private readonly IStudentService _studentService;
 
-    public StudentsController(IStudentService studentService)
+    private readonly IAuthorizationService _authorizationService;
+
+    public StudentsController(IStudentService studentService, IAuthorizationService authorizationService)
     {
         _studentService = studentService;
+        _authorizationService = authorizationService;
     }
 
     // GET: api/students
@@ -44,16 +47,30 @@ public class StudentsController : ControllerBase
         return Ok(student);
     }
 
+
     // GET: api/students/college/1
     [HttpGet("college/{collegeId}")]
-    [Authorize(Roles = "SuperAdmin")]
+    [Authorize(Roles = "SuperAdmin,PlacementOfficer")]
     public async Task<IActionResult> GetByCollegeId(int collegeId)
     {
+        // Check whether the logged-in user can access this college.
+        var authorizationResult =
+            await _authorizationService.AuthorizeAsync(
+                User,
+                collegeId,
+                "CollegeAccess");
+
+        if (!authorizationResult.Succeeded)
+        {
+            return Forbid();
+        }
+
         var students =
             await _studentService.GetByCollegeIdAsync(collegeId);
 
         return Ok(students);
     }
+
 
     // GET: api/students/pending
     // Placement Officer can view pending students in their own college
