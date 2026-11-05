@@ -122,6 +122,33 @@ builder.Services.AddScoped<
     IJobApplicationService,
     JobApplicationService>();
 
+// Recruitment Drive
+builder.Services.AddScoped<
+    IRecruitmentDriveRepository,
+    RecruitmentDriveRepository>();
+
+builder.Services.AddScoped<
+    IRecruitmentDriveService,
+    RecruitmentDriveService>();
+
+// Interview Round
+builder.Services.AddScoped<
+    IInterviewRoundRepository,
+    InterviewRoundRepository>();
+
+builder.Services.AddScoped<
+    IInterviewRoundService,
+    InterviewRoundService>();
+
+// Interview Schedule
+builder.Services.AddScoped<
+    IInterviewScheduleRepository,
+    InterviewScheduleRepository>();
+
+builder.Services.AddScoped<
+    IInterviewScheduleService,
+    InterviewScheduleService>();
+
 var app = builder.Build();
 
 // Seed Identity roles
