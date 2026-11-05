@@ -35,7 +35,6 @@
   <ItemGroup>
     <Folder Include="Authorization\Handlers\" />
     <Folder Include="Authorization\Requirements\" />
-    <Folder Include="Middleware\" />
     <Folder Include="Migrations\" />
     <Folder Include="Validators\" />
   </ItemGroup>
