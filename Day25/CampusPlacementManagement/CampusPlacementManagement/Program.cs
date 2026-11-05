@@ -1,16 +1,19 @@
+using CampusPlacementManagement.Authorization.Handlers;
+using CampusPlacementManagement.Authorization.Requirements;
 using CampusPlacementManagement.Data;
-using Microsoft.EntityFrameworkCore;
-using CampusPlacementManagement.Models.Identity;
-using Microsoft.AspNetCore.Identity;
 using CampusPlacementManagement.Data.Seed;
+using CampusPlacementManagement.Middleware;
+using CampusPlacementManagement.Models.Identity;
+using CampusPlacementManagement.Repositories.Implementations;
+using CampusPlacementManagement.Repositories.Interfaces;
+using CampusPlacementManagement.Services.Implementations;
+using CampusPlacementManagement.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using CampusPlacementManagement.Services.Interfaces;
-using CampusPlacementManagement.Services.Implementations;
-using CampusPlacementManagement.Repositories.Interfaces;
-using CampusPlacementManagement.Repositories.Implementations;
-using CampusPlacementManagement.Middleware;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -74,8 +77,14 @@ builder.Services
     });
 
 // Configure Authorization
-builder.Services.AddAuthorization();
-
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("CollegeAccess", policy =>
+    {
+        policy.Requirements.Add(
+            new CollegeAccessRequirement());
+    });
+});
 
 // Register JWT Token Service
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
@@ -149,6 +158,8 @@ builder.Services.AddScoped<
 builder.Services.AddScoped<
     IInterviewScheduleService,
     InterviewScheduleService>();
+
+builder.Services.AddScoped<IAuthorizationHandler, CollegeAccessHandler>();
 
 var app = builder.Build();
 
