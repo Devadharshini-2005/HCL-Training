@@ -103,6 +103,9 @@ builder.Services.AddScoped<
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 
+builder.Services.AddScoped<ICompanyHRRepository, CompanyHRRepository>();
+builder.Services.AddScoped<ICompanyHRService, CompanyHRService>();
+
 var app = builder.Build();
 
 // Seed Identity roles
