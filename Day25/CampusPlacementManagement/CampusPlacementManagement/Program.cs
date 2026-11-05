@@ -1,5 +1,9 @@
 using CampusPlacementManagement.Data;
 using Microsoft.EntityFrameworkCore;
+using CampusPlacementManagement.Models.Identity;
+using Microsoft.AspNetCore.Identity;
+using CampusPlacementManagement.Data.Seed;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +21,26 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     )
 );
 
+// Register Data Protection services
+builder.Services.AddDataProtection();
+
+// Configure ASP.NET Core Identity
+builder.Services
+    .AddIdentityCore<ApplicationUser>()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
 var app = builder.Build();
+
+// Seed Identity roles
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider
+        .GetRequiredService<RoleManager<IdentityRole>>();
+
+    await IdentitySeeder.SeedRolesAsync(roleManager);
+}
 
 // Configure middleware
 if (app.Environment.IsDevelopment())

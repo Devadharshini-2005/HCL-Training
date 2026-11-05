@@ -35,8 +35,6 @@
     <Folder Include="Authorization\Handlers\" />
     <Folder Include="Authorization\Requirements\" />
     <Folder Include="Controllers\" />
-    <Folder Include="Data\Configurations\" />
-    <Folder Include="Data\Seed\" />
     <Folder Include="DTOs\Applications\" />
     <Folder Include="DTOs\Auth\" />
     <Folder Include="DTOs\Colleges\" />
@@ -49,8 +47,6 @@
     <Folder Include="DTOs\Students\" />
     <Folder Include="Middleware\" />
     <Folder Include="Migrations\" />
-    <Folder Include="Models\Enums\" />
-    <Folder Include="Models\Identity\" />
     <Folder Include="Repositories\Implementations\" />
     <Folder Include="Repositories\Interfaces\" />
     <Folder Include="Services\Implementations\" />

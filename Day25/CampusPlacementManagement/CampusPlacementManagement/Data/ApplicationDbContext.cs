@@ -50,4 +50,12 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<InterviewRound> InterviewRounds { get; set; }
 
     public DbSet<InterviewSchedule> InterviewSchedules { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        builder.ApplyConfigurationsFromAssembly(
+            typeof(ApplicationDbContext).Assembly);
+    }
 }
