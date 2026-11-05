@@ -120,7 +120,7 @@ using (var scope = app.Services.CreateScope())
 
 app.UseExceptionHandler();
 
-if (app.Environment.IsDevelopment())
+/*if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
@@ -136,4 +136,52 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.Run();*/
+
+// 1. HTTPS Redirection
+app.UseHttpsRedirection();
+
+// 2. Routing
+//app.UseRouting();
+
+// 3. Endpoint Metadata Diagnostics
+if (app.Environment.IsDevelopment())
+{
+    app.UseMiddleware<EndpointMetadataMiddleware>();
+}
+
+// 4. Authentication
+// Validates JWT and populates HttpContext.User
+app.UseAuthentication();
+
+// 5. Authentication and Authorization Diagnostics
+if (app.Environment.IsDevelopment())
+{
+    app.UseMiddleware<AuthenticationDiagnosticsMiddleware>();
+
+    app.UseMiddleware<AuthorizationDiagnosticsMiddleware>();
+}
+
+// 6. Authorization
+// Checks endpoint access permissions
+app.UseAuthorization();
+
+
+// ==========================================
+// 12. MAP CONTROLLERS
+// ==========================================
+
+app.MapControllers();
+
+
+// ==========================================
+// 13. RUN APPLICATION
+// ==========================================
+
 app.Run();
+
+
+
+
+
+
