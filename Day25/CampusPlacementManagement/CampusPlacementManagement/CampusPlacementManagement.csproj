@@ -40,7 +40,6 @@
     <Folder Include="DTOs\CompanyHRs\" />
     <Folder Include="DTOs\Interviews\" />
     <Folder Include="DTOs\Jobs\" />
-    <Folder Include="DTOs\PlacementOfficers\" />
     <Folder Include="DTOs\RecruitmentDrives\" />
     <Folder Include="DTOs\Students\" />
     <Folder Include="Middleware\" />

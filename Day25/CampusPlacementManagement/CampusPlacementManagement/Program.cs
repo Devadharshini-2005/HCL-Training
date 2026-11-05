@@ -89,6 +89,16 @@ builder.Services.AddScoped<ICollegeRepository, CollegeRepository>();
 // College Service
 builder.Services.AddScoped<ICollegeService, CollegeService>();
 
+// Placement Officer Repository
+builder.Services.AddScoped<
+    IPlacementOfficerRepository,
+    PlacementOfficerRepository>();
+
+// Placement Officer Service
+builder.Services.AddScoped<
+    IPlacementOfficerService,
+    PlacementOfficerService>();
+
 var app = builder.Build();
 
 // Seed Identity roles
