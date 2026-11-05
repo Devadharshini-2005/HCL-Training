@@ -1,10 +1,11 @@
-﻿namespace CampusPlacementManagement.Models;
+﻿
+namespace CampusPlacementManagement.Models;
 
 public class InterviewRound
 {
     public int Id { get; set; }
 
-    public int RecruitmentDriveId { get; set; }
+    public int JobOpeningId { get; set; }
 
     public string RoundName { get; set; } = string.Empty;
 
@@ -14,7 +15,8 @@ public class InterviewRound
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-    // Navigation property
+    public JobOpening JobOpening { get; set; } = null!;
 
-    public RecruitmentDrive RecruitmentDrive { get; set; } = null!;
+    public ICollection<InterviewSchedule> InterviewSchedules { get; set; }
+        = new List<InterviewSchedule>();
 }

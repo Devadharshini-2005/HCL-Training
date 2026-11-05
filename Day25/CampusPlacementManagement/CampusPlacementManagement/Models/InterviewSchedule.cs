@@ -1,4 +1,5 @@
-﻿using CampusPlacementManagement.Models.Enums;
+﻿
+using CampusPlacementManagement.Models.Enums;
 
 namespace CampusPlacementManagement.Models;
 
@@ -14,14 +15,13 @@ public class InterviewSchedule
 
     public string? MeetingLink { get; set; }
 
-    public string? Location { get; set; }
+    public string? Venue { get; set; }
 
-    public InterviewStatus Status { get; set; }
-        = InterviewStatus.Scheduled;
+    public InterviewStatus Status { get; set; } = InterviewStatus.Scheduled;
+
+    public string? Feedback { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-    // Navigation properties
 
     public JobApplication JobApplication { get; set; } = null!;
 

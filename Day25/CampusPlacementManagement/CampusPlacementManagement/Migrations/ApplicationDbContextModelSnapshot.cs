@@ -292,7 +292,7 @@ namespace CampusPlacementManagement.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RecruitmentDriveId")
+                    b.Property<int>("JobOpeningId")
                         .HasColumnType("int");
 
                     b.Property<string>("RoundName")
@@ -304,7 +304,7 @@ namespace CampusPlacementManagement.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RecruitmentDriveId");
+                    b.HasIndex("JobOpeningId");
 
                     b.ToTable("InterviewRounds");
                 });
@@ -320,14 +320,14 @@ namespace CampusPlacementManagement.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Feedback")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("InterviewRoundId")
                         .HasColumnType("int");
 
                     b.Property<int>("JobApplicationId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Location")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MeetingLink")
                         .HasColumnType("nvarchar(max)");
@@ -337,6 +337,9 @@ namespace CampusPlacementManagement.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<string>("Venue")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -550,6 +553,9 @@ namespace CampusPlacementManagement.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DriveDate")
                         .HasColumnType("datetime2");
 
@@ -560,8 +566,10 @@ namespace CampusPlacementManagement.Migrations
                     b.Property<int>("JobOpeningId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
                     b.Property<string>("Venue")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -832,19 +840,19 @@ namespace CampusPlacementManagement.Migrations
 
             modelBuilder.Entity("CampusPlacementManagement.Models.InterviewRound", b =>
                 {
-                    b.HasOne("CampusPlacementManagement.Models.RecruitmentDrive", "RecruitmentDrive")
+                    b.HasOne("CampusPlacementManagement.Models.JobOpening", "JobOpening")
                         .WithMany()
-                        .HasForeignKey("RecruitmentDriveId")
+                        .HasForeignKey("JobOpeningId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("RecruitmentDrive");
+                    b.Navigation("JobOpening");
                 });
 
             modelBuilder.Entity("CampusPlacementManagement.Models.InterviewSchedule", b =>
                 {
                     b.HasOne("CampusPlacementManagement.Models.InterviewRound", "InterviewRound")
-                        .WithMany()
+                        .WithMany("InterviewSchedules")
                         .HasForeignKey("InterviewRoundId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -882,7 +890,7 @@ namespace CampusPlacementManagement.Migrations
             modelBuilder.Entity("CampusPlacementManagement.Models.JobEligibleDepartment", b =>
                 {
                     b.HasOne("CampusPlacementManagement.Models.JobOpening", "JobOpening")
-                        .WithMany()
+                        .WithMany("EligibleDepartments")
                         .HasForeignKey("JobOpeningId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -893,7 +901,7 @@ namespace CampusPlacementManagement.Migrations
             modelBuilder.Entity("CampusPlacementManagement.Models.JobEligibleGraduationYear", b =>
                 {
                     b.HasOne("CampusPlacementManagement.Models.JobOpening", "JobOpening")
-                        .WithMany()
+                        .WithMany("EligibleGraduationYears")
                         .HasForeignKey("JobOpeningId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -921,7 +929,7 @@ namespace CampusPlacementManagement.Migrations
                         .IsRequired();
 
                     b.HasOne("CampusPlacementManagement.Models.JobOpening", "JobOpening")
-                        .WithMany()
+                        .WithMany("TargetColleges")
                         .HasForeignKey("JobOpeningId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1048,6 +1056,20 @@ namespace CampusPlacementManagement.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CampusPlacementManagement.Models.InterviewRound", b =>
+                {
+                    b.Navigation("InterviewSchedules");
+                });
+
+            modelBuilder.Entity("CampusPlacementManagement.Models.JobOpening", b =>
+                {
+                    b.Navigation("EligibleDepartments");
+
+                    b.Navigation("EligibleGraduationYears");
+
+                    b.Navigation("TargetColleges");
                 });
 #pragma warning restore 612, 618
         }
