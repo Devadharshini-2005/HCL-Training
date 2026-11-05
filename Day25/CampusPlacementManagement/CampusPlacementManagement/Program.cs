@@ -3,6 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using CampusPlacementManagement.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using CampusPlacementManagement.Data.Seed;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using CampusPlacementManagement.Services.Interfaces;
+using CampusPlacementManagement.Services.Implementations;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +36,51 @@ builder.Services
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+// Configure JWT Authentication
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+
+var secretKey = jwtSettings["Key"]
+    ?? throw new InvalidOperationException("JWT Key is missing.");
+
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme =
+            JwtBearerDefaults.AuthenticationScheme;
+
+        options.DefaultChallengeScheme =
+            JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+
+            ValidIssuer = jwtSettings["Issuer"],
+            ValidAudience = jwtSettings["Audience"],
+
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(secretKey)),
+
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+// Configure Authorization
+builder.Services.AddAuthorization();
+
+
+// Register JWT Token Service
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+
 var app = builder.Build();
 
 // Seed Identity roles
@@ -39,7 +89,14 @@ using (var scope = app.Services.CreateScope())
     var roleManager = scope.ServiceProvider
         .GetRequiredService<RoleManager<IdentityRole>>();
 
+    var userManager = scope.ServiceProvider
+        .GetRequiredService<UserManager<ApplicationUser>>();
+
     await IdentitySeeder.SeedRolesAsync(roleManager);
+
+    await IdentitySeeder.SeedSuperAdminAsync(
+        userManager,
+        app.Configuration);
 }
 
 // Configure middleware
@@ -50,6 +107,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
