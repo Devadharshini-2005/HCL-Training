@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿
+using System.Security.Claims;
 using CampusPlacementManagement.DTOs.Applications;
 using CampusPlacementManagement.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -12,11 +13,17 @@ namespace CampusPlacementManagement.Controllers;
 public class JobApplicationsController : ControllerBase
 {
     private readonly IJobApplicationService _applicationService;
+    private readonly IJobService _jobService;
+    private readonly IAuthorizationService _authorizationService;
 
     public JobApplicationsController(
-        IJobApplicationService applicationService)
+        IJobApplicationService applicationService,
+        IJobService jobService,
+        IAuthorizationService authorizationService)
     {
         _applicationService = applicationService;
+        _jobService = jobService;
+        _authorizationService = authorizationService;
     }
 
     // Student applies for a job
@@ -34,9 +41,7 @@ public class JobApplicationsController : ControllerBase
             jobOpeningId,
             userId);
 
-        return CreatedAtAction(
-            nameof(GetMyApplications),
-            application);
+        return Ok(application);
     }
 
     // Student views their own applications
@@ -56,12 +61,26 @@ public class JobApplicationsController : ControllerBase
         return Ok(applications);
     }
 
-    // Company HR views applications for a particular job
+    // Company HR views applications for one job
     // GET: api/jobapplications/job/1
     [HttpGet("job/{jobOpeningId}")]
     [Authorize(Roles = "CompanyHR")]
     public async Task<IActionResult> GetApplicationsByJob(int jobOpeningId)
     {
+        var job = await _jobService.GetByIdAsync(jobOpeningId);
+
+        if (job == null)
+            return NotFound(new { message = "Job not found." });
+
+        var authorizationResult =
+            await _authorizationService.AuthorizeAsync(
+                User,
+                job.CompanyId,
+                "CompanyAccess");
+
+        if (!authorizationResult.Succeeded)
+            return Forbid();
+
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (string.IsNullOrEmpty(userId))
@@ -86,6 +105,7 @@ public class JobApplicationsController : ControllerBase
         if (string.IsNullOrEmpty(userId))
             return Unauthorized();
 
+        // The service filters applications by the HR's own company.
         var applications =
             await _applicationService.GetApplicationsByCompanyAsync(userId);
 
@@ -105,15 +125,35 @@ public class JobApplicationsController : ControllerBase
         if (string.IsNullOrEmpty(userId))
             return Unauthorized();
 
-        var application = await _applicationService.UpdateStatusAsync(
-            applicationId,
-            request,
-            userId);
+        // Get application history with its associated job and company.
+        // The service's existing GetApplicationHistoryAsync is not used here.
+        // We use the job service after retrieving the application through
+        // a new read-only lookup method exposed by the application service.
+        var application = await _applicationService
+            .GetApplicationForAuthorizationAsync(applicationId);
 
         if (application == null)
             return NotFound(new { message = "Application not found." });
 
-        return Ok(application);
+        var authorizationResult =
+            await _authorizationService.AuthorizeAsync(
+                User,
+                application.CompanyId,
+                "CompanyAccess");
+
+        if (!authorizationResult.Succeeded)
+            return Forbid();
+
+        var updatedApplication =
+            await _applicationService.UpdateStatusAsync(
+                applicationId,
+                request,
+                userId);
+
+        if (updatedApplication == null)
+            return NotFound(new { message = "Application not found." });
+
+        return Ok(updatedApplication);
     }
 
     // Student withdraws their own application
@@ -134,7 +174,10 @@ public class JobApplicationsController : ControllerBase
         if (!result)
             return NotFound(new { message = "Application not found." });
 
-        return Ok(new { message = "Application withdrawn successfully." });
+        return Ok(new
+        {
+            message = "Application withdrawn successfully."
+        });
     }
 
     // View application status history
@@ -150,6 +193,27 @@ public class JobApplicationsController : ControllerBase
             string.IsNullOrEmpty(userRole))
             return Unauthorized();
 
+        // CompanyHR must pass resource-based authorization.
+        if (userRole == "CompanyHR")
+        {
+            var application = await _applicationService
+                .GetApplicationForAuthorizationAsync(applicationId);
+
+            if (application == null)
+                return NotFound(new { message = "Application not found." });
+
+            var authorizationResult =
+                await _authorizationService.AuthorizeAsync(
+                    User,
+                    application.CompanyId,
+                    "CompanyAccess");
+
+            if (!authorizationResult.Succeeded)
+                return Forbid();
+        }
+
+        // Student ownership and SuperAdmin access are still checked
+        // inside the service.
         var history =
             await _applicationService.GetApplicationHistoryAsync(
                 applicationId,

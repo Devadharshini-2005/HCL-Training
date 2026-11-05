@@ -389,4 +389,39 @@ public class JobApplicationService : IJobApplicationService
             UpdatedAt = application.UpdatedAt
         };
     }
+
+
+    // Get the company ID associated with a job.
+    public async Task<int?> GetCompanyIdByJobIdAsync(int jobOpeningId)
+    {
+        var job = await _jobRepository.GetByIdAsync(jobOpeningId);
+
+        return job?.CompanyId;
+    }
+
+    // Get the company ID associated with an application.
+    public async Task<int?> GetCompanyIdByApplicationIdAsync(int applicationId)
+    {
+        var application =
+            await _applicationRepository.GetByIdAsync(applicationId);
+
+        return application?.JobOpening.CompanyId;
+    }
+
+    public async Task<ApplicationAuthorizationDto?>
+    GetApplicationForAuthorizationAsync(int applicationId)
+    {
+        var application =
+            await _applicationRepository.GetByIdAsync(applicationId);
+
+        if (application == null)
+            return null;
+
+        return new ApplicationAuthorizationDto
+        {
+            CompanyId = application.JobOpening.CompanyId
+        };
+    }
+
+
 }

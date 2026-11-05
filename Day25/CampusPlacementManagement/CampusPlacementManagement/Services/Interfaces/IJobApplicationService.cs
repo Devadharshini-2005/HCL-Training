@@ -32,4 +32,11 @@ public interface IJobApplicationService
             int applicationId,
             string userId,
             string userRole);
+
+    Task<int?> GetCompanyIdByJobIdAsync(int jobOpeningId);
+
+    Task<int?> GetCompanyIdByApplicationIdAsync(int applicationId);
+
+    Task<ApplicationAuthorizationDto?> GetApplicationForAuthorizationAsync(
+    int applicationId);
 }
