@@ -170,6 +170,21 @@ builder.Services.AddScoped<IAuthorizationHandler, CollegeAccessHandler>();
 
 builder.Services.AddScoped<IAuthorizationHandler, CompanyAccessHandler>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularClient", policy =>
+    {
+        var allowedOrigins = builder.Configuration
+            .GetSection("AllowedOrigins")
+            .Get<string[]>() ?? Array.Empty<string>();
+
+        policy
+            .WithOrigins(allowedOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 // Global Exception Middleware
@@ -199,6 +214,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AngularClient");
 
 app.UseAuthentication();
 
