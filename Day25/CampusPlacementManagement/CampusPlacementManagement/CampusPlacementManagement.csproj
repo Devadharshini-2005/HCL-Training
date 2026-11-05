@@ -34,6 +34,7 @@
   <ItemGroup>
     <Folder Include="Authorization\Handlers\" />
     <Folder Include="Authorization\Requirements\" />
+    <Folder Include="Controllers\" />
     <Folder Include="Data\Configurations\" />
     <Folder Include="Data\Seed\" />
     <Folder Include="DTOs\Applications\" />
