@@ -8,6 +8,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using CampusPlacementManagement.Services.Interfaces;
 using CampusPlacementManagement.Services.Implementations;
+using CampusPlacementManagement.Repositories.Interfaces;
+using CampusPlacementManagement.Repositories.Implementations;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -80,6 +82,12 @@ builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+
+// College Repository
+builder.Services.AddScoped<ICollegeRepository, CollegeRepository>();
+
+// College Service
+builder.Services.AddScoped<ICollegeService, CollegeService>();
 
 var app = builder.Build();
 

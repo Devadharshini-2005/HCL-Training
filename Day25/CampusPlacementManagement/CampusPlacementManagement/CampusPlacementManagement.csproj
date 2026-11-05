@@ -35,9 +35,7 @@
   <ItemGroup>
     <Folder Include="Authorization\Handlers\" />
     <Folder Include="Authorization\Requirements\" />
-    <Folder Include="Controllers\" />
     <Folder Include="DTOs\Applications\" />
-    <Folder Include="DTOs\Colleges\" />
     <Folder Include="DTOs\Companies\" />
     <Folder Include="DTOs\CompanyHRs\" />
     <Folder Include="DTOs\Interviews\" />
@@ -47,8 +45,6 @@
     <Folder Include="DTOs\Students\" />
     <Folder Include="Middleware\" />
     <Folder Include="Migrations\" />
-    <Folder Include="Repositories\Implementations\" />
-    <Folder Include="Repositories\Interfaces\" />
     <Folder Include="Validators\" />
   </ItemGroup>
 
