@@ -36,7 +36,6 @@
     <Folder Include="Authorization\Handlers\" />
     <Folder Include="Authorization\Requirements\" />
     <Folder Include="DTOs\Applications\" />
-    <Folder Include="DTOs\Companies\" />
     <Folder Include="DTOs\CompanyHRs\" />
     <Folder Include="DTOs\Interviews\" />
     <Folder Include="DTOs\Jobs\" />

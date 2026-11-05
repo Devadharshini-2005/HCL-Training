@@ -99,6 +99,10 @@ builder.Services.AddScoped<
     IPlacementOfficerService,
     PlacementOfficerService>();
 
+// Company Management
+builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+builder.Services.AddScoped<ICompanyService, CompanyService>();
+
 var app = builder.Build();
 
 // Seed Identity roles
