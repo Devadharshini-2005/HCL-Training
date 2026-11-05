@@ -77,17 +77,24 @@ builder.Services
     });
 
 // Configure Authorization
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("CollegeAccess", policy =>
-    {
-        policy.Requirements.Add(
-            new CollegeAccessRequirement());
-    });
-});
 
-// Register JWT Token Service
-builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+    builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy("CollegeAccess", policy =>
+        {
+            policy.Requirements.Add(
+                new CollegeAccessRequirement());
+        });
+
+        options.AddPolicy("CompanyAccess", policy =>
+        {
+            policy.Requirements.Add(
+                new CompanyAccessRequirement());
+        });
+    });
+
+    // Register JWT Token Service
+    builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
@@ -160,6 +167,8 @@ builder.Services.AddScoped<
     InterviewScheduleService>();
 
 builder.Services.AddScoped<IAuthorizationHandler, CollegeAccessHandler>();
+
+builder.Services.AddScoped<IAuthorizationHandler, CompanyAccessHandler>();
 
 var app = builder.Build();
 
