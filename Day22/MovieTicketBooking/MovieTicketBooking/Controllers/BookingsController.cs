@@ -12,9 +12,14 @@ public class BookingsController : ControllerBase
 {
     private readonly IBookingService _bookingService;
 
-    public BookingsController(IBookingService bookingService)
+    private readonly IAuthorizationService _authorizationService;
+
+    public BookingsController(
+    IBookingService bookingService,
+    IAuthorizationService authorizationService)
     {
         _bookingService = bookingService;
+        _authorizationService = authorizationService;
     }
 
     // POST: api/bookings
@@ -68,7 +73,7 @@ public class BookingsController : ControllerBase
     }
 
     // GET: api/bookings/show/1
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Customer")]
     [HttpGet("show/{showId}")]
     public async Task<IActionResult> GetBookingsByShowId(int showId)
     {
@@ -78,14 +83,26 @@ public class BookingsController : ControllerBase
         return Ok(bookings);
     }
 
+
     // PUT: api/bookings/1/cancel
     [Authorize(Roles = "Customer")]
     [HttpPut("{id}/cancel")]
     public async Task<IActionResult> CancelBooking(int id)
     {
-        var booking = await _bookingService.CancelMyBookingAsync(id);
+        var booking = await _bookingService.GetBookingEntityByIdAsync(id);
 
-        return Ok(booking);
+        if (booking == null)
+            return NotFound();
+
+        var result = await _authorizationService.AuthorizeAsync(
+            User, booking, "BookingOwner");
+
+        if (!result.Succeeded)
+            return Forbid();
+
+        var cancelledBooking = await _bookingService.CancelMyBookingAsync(id);
+
+        return Ok(cancelledBooking);
     }
 
 }

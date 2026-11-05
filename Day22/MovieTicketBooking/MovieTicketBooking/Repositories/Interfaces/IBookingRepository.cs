@@ -35,4 +35,6 @@ public interface IBookingRepository
         List<ShowSeat> showSeats);
 
     Task<Booking?> GetByIdAndUserIdAsync(int bookingId, int userId);
+
+    
 }

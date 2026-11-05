@@ -244,5 +244,11 @@ public class BookingService : IBookingService
             throw new NotFoundException("Booking not found.");
 
         return MapToResponse(booking);
-    }  
+    }
+
+    public async Task<Booking?> GetBookingEntityByIdAsync(int bookingId)
+    {
+        return await _bookingRepository.GetByIdAsync(bookingId);
+    }
+
 }

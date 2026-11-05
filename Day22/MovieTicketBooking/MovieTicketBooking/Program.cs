@@ -9,6 +9,8 @@ using MovieTicketBooking.Middleware;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
+using MovieTicketBooking.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,6 +61,7 @@ var jwtSettings = builder.Configuration.GetSection("Jwt");
 
 var secretKey = jwtSettings["SecretKey"]!;
 
+
 builder.Services
     .AddAuthentication(options =>
     {
@@ -88,11 +91,22 @@ builder.Services
             };
     });
 
-builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<IAuthorizationHandler,
+    BookingOwnerHandler>();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("BookingOwner", policy =>
+    {
+        policy.Requirements.Add(
+            new BookingOwnerRequirement());
+    });
+});
 
 builder.Services.AddHttpContextAccessor();
+
 // Authorization
-builder.Services.AddAuthorization();
+//builder.Services.AddAuthorization();
 
 builder.Services.AddCors(options =>
 {
@@ -132,6 +146,7 @@ app.UseHttpsRedirection();
 app.UseCors("AngularPolicy");
 // Authentication must come before Authorization
 app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();

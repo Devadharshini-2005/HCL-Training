@@ -28,4 +28,6 @@ public interface IBookingService
 
     Task<BookingResponse> CancelMyBookingAsync(int bookingId);
 
+    Task<Booking?> GetBookingEntityByIdAsync(int bookingId);
+
 }
