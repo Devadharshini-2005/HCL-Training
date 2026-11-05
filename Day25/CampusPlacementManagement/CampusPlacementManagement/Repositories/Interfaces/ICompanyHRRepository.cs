@@ -16,4 +16,8 @@ public interface ICompanyHRRepository
     Task UpdateAsync(CompanyHR companyHR);
 
     Task<bool> ExistsAsync(int id);
+
+
+    Task<CompanyHR?> GetByUserIdAsync(string userId);
+
 }

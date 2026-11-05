@@ -37,7 +37,6 @@
     <Folder Include="Authorization\Requirements\" />
     <Folder Include="DTOs\Applications\" />
     <Folder Include="DTOs\Interviews\" />
-    <Folder Include="DTOs\Jobs\" />
     <Folder Include="DTOs\RecruitmentDrives\" />
     <Folder Include="Middleware\" />
     <Folder Include="Migrations\" />

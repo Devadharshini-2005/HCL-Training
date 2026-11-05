@@ -66,4 +66,14 @@ public class CompanyHRRepository : ICompanyHRRepository
         return await _context.CompanyHRs
             .AnyAsync(hr => hr.Id == id);
     }
+
+
+    public async Task<CompanyHR?> GetByUserIdAsync(string userId)
+    {
+        return await _context.CompanyHRs
+            .Include(hr => hr.User)
+            .Include(hr => hr.Company)
+            .FirstOrDefaultAsync(hr => hr.UserId == userId);
+    }
+
 }

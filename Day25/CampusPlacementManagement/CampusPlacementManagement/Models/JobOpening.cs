@@ -29,4 +29,15 @@ public class JobOpening
     // Navigation property
 
     public Company Company { get; set; } = null!;
+
+
+    public ICollection<JobTargetCollege> TargetColleges { get; set; }
+        = new List<JobTargetCollege>();
+
+    public ICollection<JobEligibleDepartment> EligibleDepartments { get; set; }
+        = new List<JobEligibleDepartment>();
+
+    public ICollection<JobEligibleGraduationYear> EligibleGraduationYears { get; set; }
+        = new List<JobEligibleGraduationYear>();
+
 }
