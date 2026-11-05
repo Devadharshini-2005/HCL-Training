@@ -1,14 +1,18 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using MovieTicketBooking.Authorization;
 using MovieTicketBooking.Data;
+using MovieTicketBooking.Middleware;
 using MovieTicketBooking.Repositories;
 using MovieTicketBooking.Repositories.Interfaces;
 using MovieTicketBooking.Services;
 using MovieTicketBooking.Services.Interfaces;
 using Scalar.AspNetCore;
-using MovieTicketBooking.Middleware;
+
 using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -94,6 +98,19 @@ builder.Services.AddHttpContextAccessor();
 // Authorization
 builder.Services.AddAuthorization();
 
+builder.Services.AddScoped<
+    IAuthorizationHandler,
+    BookingOwnerHandler>();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("BookingOwner", policy =>
+    {
+        policy.Requirements.Add(
+            new BookingOwnerRequirement());
+    });
+});
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AngularPolicy", policy =>
@@ -141,6 +158,11 @@ app.Run();*/
 // 1. HTTPS Redirection
 app.UseHttpsRedirection();
 
+app.UseCors("AngularPolicy");
+// Authentication must come before Authorization
+app.UseAuthentication();
+app.UseAuthorization();
+
 // 2. Routing
 //app.UseRouting();
 
@@ -157,6 +179,9 @@ app.UseAuthentication();
 // 5. Authentication and Authorization Diagnostics
 if (app.Environment.IsDevelopment())
 {
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+
     app.UseMiddleware<AuthenticationDiagnosticsMiddleware>();
 
     app.UseMiddleware<AuthorizationDiagnosticsMiddleware>();
