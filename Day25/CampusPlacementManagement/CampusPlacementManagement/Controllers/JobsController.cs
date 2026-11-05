@@ -13,10 +13,30 @@ namespace CampusPlacementManagement.Controllers;
 public class JobsController : ControllerBase
 {
     private readonly IJobService _jobService;
+    private readonly IAuthorizationService _authorizationService;
 
-    public JobsController(IJobService jobService)
+    public JobsController(
+        IJobService jobService,
+        IAuthorizationService authorizationService)
     {
         _jobService = jobService;
+        _authorizationService = authorizationService;
+    }
+
+    // Checks whether the logged-in HR can access the job's company.
+    private async Task<bool> HasCompanyAccessAsync(int jobId)
+    {
+        var job = await _jobService.GetByIdAsync(jobId);
+
+        if (job == null)
+            return false;
+
+        var result = await _authorizationService.AuthorizeAsync(
+            User,
+            job.CompanyId,
+            "CompanyAccess");
+
+        return result.Succeeded;
     }
 
     // GET: api/jobs
@@ -25,7 +45,6 @@ public class JobsController : ControllerBase
     public async Task<IActionResult> GetAll()
     {
         var jobs = await _jobService.GetAllAsync();
-
         return Ok(jobs);
     }
 
@@ -52,13 +71,12 @@ public class JobsController : ControllerBase
         if (string.IsNullOrEmpty(userId))
             return Unauthorized();
 
-        var companyHR = await _jobService.GetByCompanyUserIdAsync(userId);
+        var jobs = await _jobService.GetByCompanyUserIdAsync(userId);
 
-        return Ok(companyHR);
+        return Ok(jobs);
     }
 
     // GET: api/jobs/published
-
     [HttpGet("published")]
     [Authorize(Roles = "Student")]
     public async Task<IActionResult> GetPublished()
@@ -73,12 +91,11 @@ public class JobsController : ControllerBase
         return Ok(jobs);
     }
 
-
     // POST: api/jobs
     [HttpPost]
     [Authorize(Roles = "CompanyHR")]
     public async Task<IActionResult> Create(
-        CreateJobRequestDto request)
+        [FromBody] CreateJobRequestDto request)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -98,8 +115,11 @@ public class JobsController : ControllerBase
     [Authorize(Roles = "CompanyHR")]
     public async Task<IActionResult> Update(
         int id,
-        UpdateJobRequestDto request)
+        [FromBody] UpdateJobRequestDto request)
     {
+        if (!await HasCompanyAccessAsync(id))
+            return Forbid();
+
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (string.IsNullOrEmpty(userId))
@@ -118,6 +138,9 @@ public class JobsController : ControllerBase
     [Authorize(Roles = "CompanyHR")]
     public async Task<IActionResult> Publish(int id)
     {
+        if (!await HasCompanyAccessAsync(id))
+            return Forbid();
+
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (string.IsNullOrEmpty(userId))
@@ -136,6 +159,9 @@ public class JobsController : ControllerBase
     [Authorize(Roles = "CompanyHR")]
     public async Task<IActionResult> Close(int id)
     {
+        if (!await HasCompanyAccessAsync(id))
+            return Forbid();
+
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (string.IsNullOrEmpty(userId))
