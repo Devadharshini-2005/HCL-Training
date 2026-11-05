@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="CampusPlacementManagement.Tests/CampusPlacementManagement.Tests.csproj" />
+  <Project Path="CampusPlacementManagement/CampusPlacementManagement.csproj" />
+</Solution>
