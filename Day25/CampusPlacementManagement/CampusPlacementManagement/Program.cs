@@ -114,6 +114,13 @@ builder.Services.AddScoped<IJobRepository, JobRepository>();
 
 builder.Services.AddScoped<IJobService, JobService>();
 
+builder.Services.AddScoped<
+    IJobApplicationRepository,
+    JobApplicationRepository>();
+
+builder.Services.AddScoped<
+    IJobApplicationService,
+    JobApplicationService>();
 
 var app = builder.Build();
 
