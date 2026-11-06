@@ -5,33 +5,38 @@ namespace CampusPlacementManagement.DTOs.Companies;
 
 public class CreateCompanyRequestDto
 {
-    [Required]
-    [StringLength(200)]
+    [Required(ErrorMessage = "Company name is required.")]
+    [StringLength(200, MinimumLength = 2,
+        ErrorMessage = "Company name must contain 2 to 200 characters.")]
     public string CompanyName { get; set; } = string.Empty;
 
-    [StringLength(1000)]
+    [StringLength(1000,
+        ErrorMessage = "Description cannot exceed 1000 characters.")]
     public string? Description { get; set; }
 
-    [Url]
+    [Url(ErrorMessage = "Enter a valid website URL.")]
+    [StringLength(500)]
     public string? Website { get; set; }
 
-    [Required]
+    [Required(ErrorMessage = "Company address is required.")]
     [StringLength(300)]
     public string Address { get; set; } = string.Empty;
 
-    [Required]
+    [Required(ErrorMessage = "City is required.")]
     [StringLength(100)]
     public string City { get; set; } = string.Empty;
 
-    [Required]
+    [Required(ErrorMessage = "State is required.")]
     [StringLength(100)]
     public string State { get; set; } = string.Empty;
 
-    [Required]
-    [EmailAddress]
+    [Required(ErrorMessage = "Email is required.")]
+    [EmailAddress(ErrorMessage = "Enter a valid email address.")]
+    [StringLength(254)]
     public string Email { get; set; } = string.Empty;
 
-    [Required]
-    [Phone]
+    [Required(ErrorMessage = "Phone number is required.")]
+    [Phone(ErrorMessage = "Enter a valid phone number.")]
+    [StringLength(20)]
     public string PhoneNumber { get; set; } = string.Empty;
 }
