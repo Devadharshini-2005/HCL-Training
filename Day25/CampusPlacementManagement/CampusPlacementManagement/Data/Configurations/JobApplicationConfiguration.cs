@@ -1,4 +1,5 @@
-﻿using CampusPlacementManagement.Models;
+﻿
+using CampusPlacementManagement.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -38,12 +39,14 @@ public class JobApplicationConfiguration
             .IsUnique();
 
         // Relationship with Student
+        // One Student can have many JobApplications
         builder.HasOne(a => a.Student)
-            .WithMany()
+            .WithMany(s => s.JobApplications)
             .HasForeignKey(a => a.StudentId)
             .OnDelete(DeleteBehavior.Restrict);
 
         // Relationship with JobOpening
+        // One JobOpening can have many JobApplications
         builder.HasOne(a => a.JobOpening)
             .WithMany()
             .HasForeignKey(a => a.JobOpeningId)
