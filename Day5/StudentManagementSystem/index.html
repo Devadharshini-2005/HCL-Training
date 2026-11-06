@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<head>
+  <title>Student Management System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div>
+    <header class="navigation-bar">
+      <h3 class="clg-name">PSNA College of Engineering and Technology</h3>
+      <nav class="nav-items">
+        <a class="nav-btn" href="#home">Home</a>
+        <a class="nav-btn" href="#admission">Admission</a>
+        <a class="nav-btn" href="#department">Department</a>
+        <a class="nav-btn" href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <!-- Home -->
+
+    <section id="home">
+
+    </section>
+
+    <!-- Admission -->
+
+    <section id="admission">
+      <div class="admission-nav">
+        <h3>Admission</h3>
+        <a href="viewStudents.html" onclick="viewStudentDetails()"><button id="view-btn" type="button">View</button></a>
+      </div>
+      <br>
+      
+      <div class="main">
+        <div>
+          <label class="label">Register Number</label>
+      <input id="student-reg" type="number" required>
+      <br>
+      <br>
+      <label class="label">Student Name</label>
+      <input id="student-name" type="text" required>
+      <br>
+      <br>
+      <label class="label">Department</label>
+      <input id="student-dept" type="text" required>
+      <br>
+      <br>
+      <label class="label">Student Email ID</label>
+      <input id="student-email" type="email" required>
+      <br>
+      <br>
+      <label class="label">Phone Number</label>
+      <input id="student-phoneno" type="tel" required>
+      <br>
+      <br>
+      <label class="label">Address</label>
+      <br>
+      <br>
+      <textarea id="student-address" rows="5px" cols="30px" type="textarea" required></textarea>
+      <br>
+      <br>
+      <button onclick="addStudentDetails()" id="add-btn" type="button">Add</button>
+      <br>
+      <br>
+      <button onclick="removeStudentDetails()" id="remove-btn" type="button">Remove</button>
+      <br>
+      <br>
+        </div>
+
+        
+      </div>
+
+    </section>
+
+    <!-- Department -->
+
+    <section id="department">
+
+    </section>
+
+    <!-- Contact -->
+
+    <section id="contact">
+
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
