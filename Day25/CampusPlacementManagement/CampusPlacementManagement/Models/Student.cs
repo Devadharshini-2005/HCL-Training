@@ -1,4 +1,5 @@
-﻿using CampusPlacementManagement.Models.Identity;
+﻿
+using CampusPlacementManagement.Models.Identity;
 
 namespace CampusPlacementManagement.Models;
 
@@ -25,4 +26,7 @@ public class Student
     public ApplicationUser User { get; set; } = null!;
 
     public College College { get; set; } = null!;
+
+    public ICollection<JobApplication> JobApplications { get; set; }
+        = new List<JobApplication>();
 }

@@ -6,6 +6,7 @@ using CampusPlacementManagement.Middleware;
 using CampusPlacementManagement.Models.Identity;
 using CampusPlacementManagement.Repositories.Implementations;
 using CampusPlacementManagement.Repositories.Interfaces;
+using CampusPlacementManagement.Repositories.Reports;
 using CampusPlacementManagement.Services.Implementations;
 using CampusPlacementManagement.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -184,6 +185,11 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
     });
 });
+
+// Reports Dependency Injection
+builder.Services.AddScoped<IReportRepository, ReportRepository>();
+builder.Services.AddScoped<IReportService, ReportService>();
+
 
 var app = builder.Build();
 
