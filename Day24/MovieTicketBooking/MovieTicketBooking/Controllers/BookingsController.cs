@@ -73,7 +73,7 @@ public class BookingsController : ControllerBase
     }
 
     // GET: api/bookings/show/1
-    [Authorize(Roles = "Admin,Customer")]
+    [Authorize(Roles = "Admin")]
     [HttpGet("show/{showId}")]
     public async Task<IActionResult> GetBookingsByShowId(int showId)
     {

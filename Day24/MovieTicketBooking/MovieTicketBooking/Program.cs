@@ -1,3 +1,4 @@
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -10,20 +11,20 @@ using MovieTicketBooking.Repositories.Interfaces;
 using MovieTicketBooking.Services;
 using MovieTicketBooking.Services.Interfaces;
 using Scalar.AspNetCore;
-
 using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Exception Handling
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
+// Controllers and OpenAPI
 builder.Services.AddControllers();
-
 builder.Services.AddOpenApi();
 
-// Database connection
+// Database Connection
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -57,6 +58,8 @@ builder.Services.AddScoped<PasswordService>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<JwtService>();
+
+builder.Services.AddHttpContextAccessor();
 
 // JWT Authentication Configuration
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -92,12 +95,7 @@ builder.Services
             };
     });
 
-builder.Services.AddScoped<IAuthRepository, AuthRepository>();
-
-builder.Services.AddHttpContextAccessor();
-// Authorization
-builder.Services.AddAuthorization();
-
+// Resource-Based Authorization
 builder.Services.AddScoped<
     IAuthorizationHandler,
     BookingOwnerHandler>();
@@ -111,6 +109,7 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
+// CORS Configuration
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AngularPolicy", policy =>
@@ -124,89 +123,45 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Seed initial Admin account
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-
-    var context = services.GetRequiredService<ApplicationDbContext>();
-    var passwordService = services.GetRequiredService<PasswordService>();
-
-    await DbSeeder.SeedAdminAsync(context, passwordService);
-}
-
+// Exception Handler
 app.UseExceptionHandler();
 
-/*if (app.Environment.IsDevelopment())
+// OpenAPI and Scalar
+if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
 }
 
+// HTTPS Redirection
 app.UseHttpsRedirection();
 
+// Routing
+app.UseRouting();
 
+// CORS
 app.UseCors("AngularPolicy");
-// Authentication must come before Authorization
-app.UseAuthentication();
-app.UseAuthorization();
 
-app.MapControllers();
-
-app.Run();*/
-
-// 1. HTTPS Redirection
-app.UseHttpsRedirection();
-
-app.UseCors("AngularPolicy");
-// Authentication must come before Authorization
-app.UseAuthentication();
-app.UseAuthorization();
-
-// 2. Routing
-//app.UseRouting();
-
-// 3. Endpoint Metadata Diagnostics
+// Endpoint Metadata Diagnostics
 if (app.Environment.IsDevelopment())
 {
     app.UseMiddleware<EndpointMetadataMiddleware>();
 }
 
-// 4. Authentication
-// Validates JWT and populates HttpContext.User
+// Authentication
 app.UseAuthentication();
 
-// 5. Authentication and Authorization Diagnostics
+// Authentication and Authorization Diagnostics
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference();
-
     app.UseMiddleware<AuthenticationDiagnosticsMiddleware>();
-
     app.UseMiddleware<AuthorizationDiagnosticsMiddleware>();
 }
 
-// 6. Authorization
-// Checks endpoint access permissions
+// Authorization
 app.UseAuthorization();
 
-
-// ==========================================
-// 12. MAP CONTROLLERS
-// ==========================================
-
+// Map Controllers
 app.MapControllers();
 
-
-// ==========================================
-// 13. RUN APPLICATION
-// ==========================================
-
 app.Run();
-
-
-
-
-
-

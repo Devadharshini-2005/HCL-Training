@@ -37,7 +37,7 @@
             else
             {
                 _logger.LogInformation(
-                    "Endpoint: {Endpoint}",
+                    "Endpoint: {Endpoinst}",
                     endpoint.DisplayName);
 
                 var allowAnonymous =
