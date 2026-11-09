@@ -1,91 +1,80 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Management System</title>
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+  <header class="navigation-bar">
+    <h3 class="clg-name">PSNA College of Engineering and Technology</h3>
+    <nav class="nav-items">
+      <a class="nav-btn" href="#home">Home</a>
+      <a class="nav-btn" href="#admission">Admission</a>
+      <a class="nav-btn" href="#department">Department</a>
+      <a class="nav-btn" href="#contact">Contact</a>
+    </nav>
+  </header>
 
-  <div>
-    <header class="navigation-bar">
-      <h3 class="clg-name">PSNA College of Engineering and Technology</h3>
-      <nav class="nav-items">
-        <a class="nav-btn" href="#home">Home</a>
-        <a class="nav-btn" href="#admission">Admission</a>
-        <a class="nav-btn" href="#department">Department</a>
-        <a class="nav-btn" href="#contact">Contact</a>
-      </nav>
-    </header>
-
-    <!-- Home -->
-
-    <section id="home">
-
+  <main>
+    <section id="home" class="page-section">
+      <div class="welcome">
+        <h1>Student Management System</h1>
+        <p>Manage student admission details easily.</p>
+      </div>
     </section>
 
-    <!-- Admission -->
-
-    <section id="admission">
+    <section id="admission" class="page-section">
       <div class="admission-nav">
-        <h3>Admission</h3>
-        <a href="viewStudents.html" onclick="viewStudentDetails()"><button id="view-btn" type="button">View</button></a>
-      </div>
-      <br>
-      
-      <div class="main">
         <div>
-          <label class="label">Register Number</label>
-      <input id="student-reg" type="number" required>
-      <br>
-      <br>
-      <label class="label">Student Name</label>
-      <input id="student-name" type="text" required>
-      <br>
-      <br>
-      <label class="label">Department</label>
-      <input id="student-dept" type="text" required>
-      <br>
-      <br>
-      <label class="label">Student Email ID</label>
-      <input id="student-email" type="email" required>
-      <br>
-      <br>
-      <label class="label">Phone Number</label>
-      <input id="student-phoneno" type="tel" required>
-      <br>
-      <br>
-      <label class="label">Address</label>
-      <br>
-      <br>
-      <textarea id="student-address" rows="5px" cols="30px" type="textarea" required></textarea>
-      <br>
-      <br>
-      <button onclick="addStudentDetails()" id="add-btn" type="button">Add</button>
-      <br>
-      <br>
-      <button onclick="removeStudentDetails()" id="remove-btn" type="button">Remove</button>
-      <br>
-      <br>
+          <h2>Student Admission</h2>
+          <p class="subtitle">Enter the student details below.</p>
         </div>
-
-        
+        <a class="button-link" href="viewStudents.html">View Students</a>
       </div>
 
+      <div class="form-card">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="student-reg">Register Number</label>
+            <input id="student-reg" type="number" min="1" required>
+          </div>
+          <div class="form-group">
+            <label for="student-name">Student Name</label>
+            <input id="student-name" type="text" required>
+          </div>
+          <div class="form-group">
+            <label for="student-dept">Department</label>
+            <input id="student-dept" type="text" required>
+          </div>
+          <div class="form-group">
+            <label for="student-email">Student Email ID</label>
+            <input id="student-email" type="email" required>
+          </div>
+          <div class="form-group">
+            <label for="student-phoneno">Phone Number</label>
+            <input id="student-phoneno" type="tel" required>
+          </div>
+          <div class="form-group full-width">
+            <label for="student-address">Address</label>
+            <textarea id="student-address" rows="4" required></textarea>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button onclick="addStudentDetails()" id="add-btn" type="button">Add Student</button>
+          <button onclick="removeStudentDetails()" id="remove-btn" class="secondary-btn" type="button">Remove Student</button>
+        </div>
+      </div>
     </section>
 
-    <!-- Department -->
-
-    <section id="department">
-
+    <section id="department" class="page-section simple-section">
+      <h2>Department</h2>
     </section>
-
-    <!-- Contact -->
-
-    <section id="contact">
-
+    <section id="contact" class="page-section simple-section">
+      <h2>Contact</h2>
     </section>
-  </div>
-
+  </main>
   <script src="script.js"></script>
 </body>
 </html>

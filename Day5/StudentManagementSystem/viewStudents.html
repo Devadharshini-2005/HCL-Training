@@ -1,14 +1,22 @@
 <!DOCTYPE html>
-
+<html lang="en">
 <head>
-  <title>View Admission</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Students</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
-<body>
-  <div id="studentsDetails">
-
-  </div>
-  <a href="index.html"><button>Back</button></a>
+<body class="view-page">
+  <main class="view-container">
+    <div class="admission-nav">
+      <div>
+        <h1>Student Details</h1>
+        <p class="subtitle">List of registered students</p>
+      </div>
+      <a class="button-link" href="index.html#admission">Back to Admission</a>
+    </div>
+    <div id="studentsDetails" class="table-wrapper"></div>
+  </main>
   <script src="script.js"></script>
 </body>
 </html>
