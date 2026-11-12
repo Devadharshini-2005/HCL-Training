@@ -13,10 +13,16 @@ export class Student {
   studentAge:number = 21;
   course: string = "CSE";
 
+ isDisabled:boolean = true;
+
   displayDetails(){
+
     console.log("Student Name : ",this.studentName);
     console.log("Student Age : ",this.studentAge);
     console.log("Course : ",this.course);
+
+    this.isDisabled = false;
+
   }
 
 }
