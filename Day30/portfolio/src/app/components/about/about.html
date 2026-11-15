@@ -1,0 +1,84 @@
+
+<section class="about" id="about">
+
+  <div class="container">
+
+    <div class="section-heading">
+      <p>GET TO KNOW ME</p>
+      <h2>About <span>Me</span></h2>
+    </div>
+
+    <div class="about-content">
+
+      <div class="about-text">
+
+        <h3>Hello! I'm {{ name }}</h3>
+
+        <h4>{{ role }}</h4>
+
+        <p>
+          {{ introduction }}
+        </p>
+
+        <h3>Career Objective</h3>
+
+        <p>
+          {{ careerObjective }}
+        </p>
+
+        <div class="interests">
+
+          <h3>My Interests</h3>
+
+          <div class="interest-list">
+
+            @for (interest of interests; track interest) {
+              <span>{{ interest }}</span>
+            }
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="education-card">
+
+        <h3>Education</h3>
+
+        <h4>{{ education.degree }}</h4>
+
+        <p>{{ education.college }}</p>
+
+        <p>{{ education.location }}</p>
+
+        <div class="education-details">
+
+          <p>
+            <strong>Duration:</strong>
+            {{ education.duration }}
+          </p>
+
+          <p>
+            <strong>CGPA:</strong>
+            {{ education.cgpa }}
+          </p>
+
+        </div>
+
+        <a
+          href="assets/devadharshini-resume.pdf"
+          download
+          class="resume-btn">
+
+          Download Resume
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
