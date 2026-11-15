@@ -1,36 +1,54 @@
 
-<nav class="navbar">
+<header class="navbar">
 
-  <div class="logo">
-    <a href="#home">Devadharshini<span>.</span></a>
+  <div class="navbar-container">
+
+    <!-- Logo -->
+    <a routerLink="/" class="logo" (click)="closeMenu()">
+      <span class="logo-icon">DS</span>
+      <span class="logo-text">Devadharshini<span>.</span></span>
+    </a>
+
+    <!-- Navigation Links -->
+    <nav class="nav-links" [class.active]="isMenuOpen">
+
+      <a
+        *ngFor="let item of navItems"
+        [routerLink]="item.path"
+        routerLinkActive="active-link"
+        [routerLinkActiveOptions]="{ exact: item.path === '/' }"
+        (click)="closeMenu()">
+
+        {{ item.name }}
+
+      </a>
+
+      <!-- Resume Button -->
+      <a
+        href="/assets/devadharshini-resume.pdf"
+        class="resume-btn"
+        target="_blank"
+        rel="noopener noreferrer">
+
+        View Resume
+      </a>
+
+    </nav>
+
+    <!-- Mobile Menu Button -->
+    <button
+      class="menu-toggle"
+      type="button"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="isMenuOpen"
+      aria-label="Toggle navigation menu">
+
+      <span [class.open]="isMenuOpen"></span>
+      <span [class.open]="isMenuOpen"></span>
+      <span [class.open]="isMenuOpen"></span>
+
+    </button>
+
   </div>
 
-  <button
-    class="menu-toggle"
-    (click)="toggleMenu()"
-    aria-label="Toggle navigation menu"
-    [attr.aria-expanded]="isMenuOpen">
-
-    ☰
-
-  </button>
-
-  <ul class="nav-links" [class.active]="isMenuOpen">
-
-    @for (item of navItems; track item) {
-
-      <li>
-        <a
-          [href]="'#' + item.toLowerCase()"
-          (click)="closeMenu()">
-
-          {{ item }}
-
-        </a>
-      </li>
-
-    }
-
-  </ul>
-
-</nav>
+</header>

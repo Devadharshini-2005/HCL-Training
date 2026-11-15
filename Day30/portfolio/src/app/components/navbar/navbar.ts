@@ -1,24 +1,33 @@
 
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  RouterLink,
+  RouterLinkActive
+} from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [],
+  imports: [
+    CommonModule,
+    RouterLink,
+    RouterLinkActive
+  ],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css'
 })
 export class Navbar {
 
-  isMenuOpen: boolean = false;
+  isMenuOpen = false;
 
-  navItems: string[] = [
-    'Home',
-    'About',
-    'Skills',
-    'Education',
-    'Projects',
-    'Contact'
+  navItems = [
+    { name: 'Home', path: '/' },
+    { name: 'About', path: '/about' },
+    { name: 'Skills', path: '/skills' },
+    { name: 'Education', path: '/education' },
+    { name: 'Projects', path: '/projects' },
+    { name: 'Contact', path: '/contact' }
   ];
 
   toggleMenu(): void {
@@ -28,5 +37,4 @@ export class Navbar {
   closeMenu(): void {
     this.isMenuOpen = false;
   }
-
 }
