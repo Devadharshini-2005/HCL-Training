@@ -1,0 +1,38 @@
+
+<section class="home">
+
+  <div class="home-content">
+
+    <p class="greeting">Hello, I'm</p>
+
+    <h1>{{ name }}</h1>
+
+    <h2>{{ role }}</h2>
+
+    <p class="description">
+      {{ description }}
+    </p>
+
+    <div class="buttons">
+      <a href="#projects" class="btn primary">
+        View My Projects
+      </a>
+
+      <a href="#contact" class="btn secondary">
+        Contact Me
+      </a>
+    </div>
+
+    <div class="skills">
+      <h3>Technical Skills</h3>
+
+      <div class="skill-list">
+        @for (skill of skills; track skill) {
+          <span class="skill">{{ skill }}</span>
+        }
+      </div>
+    </div>
+
+  </div>
+
+</section>
