@@ -1,16 +1,22 @@
 # HCL Training – Daily Tasks and Projects
 
-This repository contains the daily tasks, practice programs, and projects completed as part of my **HCL Training Program**. It covers frontend development, C# programming, .NET, Web API, databases, ASP.NET Core MVC, TypeScript, and Angular.
+## About This Repository
 
-## Technologies Covered
+This repository contains my day-wise learning activities, assignments, coding exercises, and practical projects completed during my HCL training.
 
-- **Frontend:** HTML, CSS, JavaScript, Bootstrap, TypeScript, Angular
-- **Programming:** C#, LINQ, Delegates, JSON
-- **Backend:** .NET, ASP.NET Core Web API, ASP.NET Core MVC
-- **Database:** DBMS, ADO.NET
-- **Concepts:** Asynchronous Programming, Middleware, Authorization, Git
+The training covers frontend development, programming fundamentals, C# and .NET development, database management, backend development, ASP.NET Core, and Angular.
 
-## Daily Tasks and Projects
+Each day is organized into separate folders containing the corresponding practice work and project implementations.
+
+## Technologies Used
+
+- **Frontend:** HTML5, CSS3, JavaScript, Bootstrap, TypeScript, Angular
+- **Programming Languages:** C#, JavaScript, TypeScript
+- **Backend:** .NET, ASP.NET Core, Web API, ASP.NET Core MVC, ADO.NET
+- **Database:** SQL Server, DBMS
+- **Tools:** Visual Studio, Visual Studio Code, Git, GitHub
+
+## Day-wise Training Activities
 
 | Day | Task / Project |
 |---|---|
@@ -44,28 +50,96 @@ This repository contains the daily tasks, practice programs, and projects comple
 | Day 29 | Angular Demo |
 | Day 30 | Angular Practice – Pipes, Routing and Portfolio Development |
 
+## Major Projects
+
+### Movie Ticket Booking System
+- Developed using ASP.NET Core Web API and Entity Framework Core.
+- Implemented JWT authentication and role-based authorization.
+- Practiced resource-based authorization for booking operations.
+- Implemented middleware and diagnostic features.
+
+### Campus Placement Management System
+- Developed using ASP.NET Core Web API and SQL Server.
+- Implemented modules for students, colleges, placement officers, companies, jobs, and applications.
+- Practiced JWT authentication, authorization, DTO validation, and exception handling.
+- Implemented unit testing using xUnit.
+
+### Hospital Appointment Management System
+- Practiced application development and hospital appointment management workflows.
+
+### Training Management System
+- Practiced training-related application workflows and management operations.
+
+### Student Course Management System
+- Practiced student and course management using ADO.NET.
+
+### Angular Portfolio
+- Developed a portfolio application using Angular and TypeScript.
+- Practiced components, pipes, routing, navigation, and form validation.
+
+## Concepts Practiced
+
+- HTML, CSS, JavaScript and Bootstrap
+- C# Programming and Object-Oriented Programming
+- Delegates and LINQ
+- JSON Handling
+- Asynchronous Programming
+- ADO.NET
+- SQL and Database Management
+- ASP.NET Core Web API
+- ASP.NET Core MVC
+- Entity Framework Core
+- CRUD Operations
+- Dependency Injection
+- Repository Pattern
+- JWT Authentication
+- Role-Based and Resource-Based Authorization
+- Middleware and Exception Handling
+- DTOs and Validation
+- Unit Testing with xUnit
+- TypeScript and Angular
+- Git and GitHub
+
+## Repository Structure
+
+```text
+HCL-Training/
+│
+├── Day13/
+├── Day14/
+├── Day15/
+├── Day16/
+├── Day17/
+├── ...
+├── Day30/
+│
+├── Assignments/
+│
+└── README.md
+│
+├── Assignments/
+│
+└── README.md
+```
+
 ## Learning Outcomes
 
-Through these daily tasks and projects, I gained practical experience in:
+- Developed a strong foundation in frontend and backend development.
+- Improved C# programming and problem-solving skills.
+- Gained practical experience in .NET and ASP.NET Core.
+- Learned database connectivity and data operations using ADO.NET and Entity Framework Core.
+- Practiced REST API development and application security.
+- Understood authentication, authorization, and middleware.
+- Gained hands-on experience with TypeScript and Angular.
+- Improved Git, GitHub, debugging, and testing skills.
 
-- Building responsive web pages using HTML, CSS and Bootstrap.
-- Implementing interactive features using JavaScript and TypeScript.
-- Understanding C# programming concepts and object-oriented programming.
-- Working with LINQ, Delegates, JSON and asynchronous programming.
-- Developing RESTful APIs using ASP.NET Core Web API.
-- Implementing authentication, authorization and middleware.
-- Working with databases using DBMS and ADO.NET.
-- Developing backend applications using .NET.
-- Understanding ASP.NET Core MVC architecture.
-- Learning Angular components, pipes and routing.
-- Using Git and GitHub for version control.
+## Author
 
-## Purpose
+**Devadharshini S.**
 
-The purpose of this repository is to maintain my daily training work, track my learning progress, and showcase the practical skills and projects developed during my HCL training.
+B.E. Computer Science and Engineering  
+PSNA College of Engineering and Technology
 
 ---
 
-**Training:** HCL Training Program  
-**Domain:** Full Stack Development (.NET)  
-**Repository:** Daily Tasks and Projects
+*Continuously learning, practicing, and building projects to strengthen my software development skills.*
