@@ -6,6 +6,7 @@ import { Navbar } from './components/navbar/navbar';
 import { About } from './components/about/about';
 import { Skills } from './components/skills/skills';
 import { Education } from './components/education/education';
+import { Projects } from './components/projects/projects';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,8 @@ import { Education } from './components/education/education';
     Navbar,
     About,
     Skills,
-    Education
+    Education,
+    Projects
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'

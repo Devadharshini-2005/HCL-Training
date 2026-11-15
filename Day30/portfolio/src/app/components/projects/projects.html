@@ -1,0 +1,94 @@
+
+<section class="projects-section" id="projects">
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <p>MY WORK</p>
+
+      <h2>My <span>Projects</span></h2>
+
+      <p class="subtitle">
+        Here are some of the projects I have developed
+        using different technologies.
+      </p>
+
+    </div>
+
+    <div class="projects-grid">
+
+      @for (project of projectList; track project.title) {
+
+        <div class="project-card">
+
+          <div class="project-header">
+
+            <div class="project-icon">
+              <span>&lt;/&gt;</span>
+            </div>
+
+            <span
+              class="status"
+              [class.completed]="project.status === 'Completed'">
+
+              {{ project.status }}
+
+            </span>
+
+          </div>
+
+          <h3>{{ project.title }}</h3>
+
+          <p class="description">
+            {{ project.description }}
+          </p>
+
+          <h4>Technologies Used</h4>
+
+          <div class="technology-list">
+
+            @for (technology of project.technologies; track technology) {
+
+              <span class="technology">
+                {{ technology }}
+              </span>
+
+            }
+
+          </div>
+
+          <div class="project-footer">
+
+            @if (project.githubUrl) {
+
+              <a
+                [href]="project.githubUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="github-btn">
+
+                View GitHub
+                <span>↗</span>
+
+              </a>
+
+            } @else {
+
+              <span class="github-placeholder">
+                GitHub link coming soon
+              </span>
+
+            }
+
+          </div>
+
+        </div>
+
+      }
+
+    </div>
+
+  </div>
+
+</section>
