@@ -1,0 +1,93 @@
+
+<section class="contact-section" id="contact">
+
+  <div class="section-heading">
+    <h2>Contact <span>Me</span></h2>
+    <p>Let's connect and discuss opportunities!</p>
+  </div>
+
+  <div class="contact-container">
+
+    <!-- Contact Information -->
+    <div class="contact-info">
+
+      <h3>Get In Touch</h3>
+
+      <p>
+        I am interested in learning, collaborating, and exploring
+        software development opportunities.
+      </p>
+
+      <div class="contact-item">
+        <span class="contact-icon">✉</span>
+        <div>
+          <h4>Email</h4>
+          <p>{{ contactEmail }}</p>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <span class="contact-icon">💻</span>
+        <div>
+          <h4>GitHub</h4>
+          <a
+            href="https://github.com/Devadharshini-2005"
+            target="_blank"
+            rel="noopener noreferrer">
+            Visit My GitHub
+          </a>
+        </div>
+      </div>
+
+      <div class="contact-item">
+        <span class="contact-icon">🔗</span>
+        <div>
+          <h4>LinkedIn</h4>
+          <p>Update with your LinkedIn profile URL</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Contact Form -->
+    <div class="contact-form">
+
+      <h3>Send Me a Message</h3>
+
+      <form (submit)="onSubmit($event)">
+
+        <input
+          type="text"
+          name="name"
+          placeholder="Your Name"
+          [(ngModel)]="name"
+          required
+        />
+
+        <input
+          type="email"
+          name="email"
+          placeholder="Your Email"
+          [(ngModel)]="email"
+          required
+        />
+
+        <textarea
+          name="message"
+          placeholder="Your Message"
+          rows="6"
+          [(ngModel)]="message"
+          required>
+        </textarea>
+
+        <button type="submit">
+          Send Message
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</section>
