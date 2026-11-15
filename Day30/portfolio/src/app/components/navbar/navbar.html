@@ -1,0 +1,36 @@
+
+<nav class="navbar">
+
+  <div class="logo">
+    <a href="#home">Devadharshini<span>.</span></a>
+  </div>
+
+  <button
+    class="menu-toggle"
+    (click)="toggleMenu()"
+    aria-label="Toggle navigation menu"
+    [attr.aria-expanded]="isMenuOpen">
+
+    ☰
+
+  </button>
+
+  <ul class="nav-links" [class.active]="isMenuOpen">
+
+    @for (item of navItems; track item) {
+
+      <li>
+        <a
+          [href]="'#' + item.toLowerCase()"
+          (click)="closeMenu()">
+
+          {{ item }}
+
+        </a>
+      </li>
+
+    }
+
+  </ul>
+
+</nav>
