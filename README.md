@@ -113,12 +113,6 @@ HCL-Training/
 ├── ...
 ├── Day30/
 │
-├── Assignments/
-│
-└── README.md
-│
-├── Assignments/
-│
 └── README.md
 ```
 
