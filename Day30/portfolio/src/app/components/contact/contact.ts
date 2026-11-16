@@ -16,7 +16,7 @@ export class Contact {
   message: string = '';
 
   // Replace this with your actual email address.
-  contactEmail: string = 'your.email@example.com';
+  contactEmail: string = 'devadharshinis1308@gmail.com';
 
   onSubmit(event: Event): void {
     event.preventDefault();
@@ -34,6 +34,9 @@ export class Contact {
     const mailtoUrl =
       `mailto:${this.contactEmail}?subject=${subject}&body=${body}`;
 
+      
     window.location.href = mailtoUrl;
+
+    alert('Form is Submitted Successfully');
   }
 }
