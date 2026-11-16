@@ -1,0 +1,43 @@
+
+<div class="container">
+
+  <h1>Student Marks Calculator</h1>
+
+  <div class="card">
+    <h2>Enter Marks</h2>
+
+    <label>Maths</label>
+    <input type="number" min="0" max="100"
+      [value]="maths()"
+      (input)="updateMaths($event)">
+
+    <label>Science</label>
+    <input type="number" min="0" max="100"
+      [value]="science()"
+      (input)="updateScience($event)">
+
+    <label>Computer</label>
+    <input type="number" min="0" max="100"
+      [value]="computer()"
+      (input)="updateComputer($event)">
+  </div>
+
+  <div class="card">
+    <h2>Student Result</h2>
+
+    <p>Maths: {{ maths() }}</p>
+    <p>Science: {{ science() }}</p>
+    <p>Computer: {{ computer() }}</p>
+
+    <hr>
+
+    <h3>Total: {{ total() }} / 300</h3>
+
+    <h3>Average: {{ average().toFixed(2) }}%</h3>
+
+    <h3>Result: {{ result() }}</h3>
+
+    <button (click)="resetMarks()">Reset Marks</button>
+  </div>
+
+</div>
