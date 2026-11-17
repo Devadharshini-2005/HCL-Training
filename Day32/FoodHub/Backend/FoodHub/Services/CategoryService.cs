@@ -63,5 +63,32 @@ public class CategoryService : ICategoryService
         };
     }
 
+    public async Task<CategoryResponseDto?> UpdateAsync(
+    int id,
+    UpdateCategoryDto request)
+    {
+        var category = new Category
+        {
+            CategoryName = request.CategoryName,
+            Description = request.Description
+        };
+
+        var updatedCategory = await _categoryRepository.UpdateAsync(
+            id,
+            category
+        );
+
+        if (updatedCategory == null)
+        {
+            return null;
+        }
+
+        return new CategoryResponseDto
+        {
+            CategoryId = updatedCategory.CategoryId,
+            CategoryName = updatedCategory.CategoryName,
+            Description = updatedCategory.Description
+        };
+    }
 
 }

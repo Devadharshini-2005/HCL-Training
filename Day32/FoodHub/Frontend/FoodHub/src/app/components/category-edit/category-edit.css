@@ -1,0 +1,110 @@
+
+.category-edit-container {
+  max-width: 650px;
+  margin: 40px auto;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+.category-edit-container h2 {
+  color: #222;
+  margin: 25px 0 10px;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.back-link {
+  display: inline-block;
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 15px;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.form-group input[readonly] {
+  background: #f3f4f6;
+  cursor: not-allowed;
+}
+
+.category-edit-container button {
+  padding: 12px 22px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.category-edit-container button:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.category-edit-container button:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.loading-message,
+.error-message,
+.success-message {
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.error-message {
+  color: #dc2626;
+  background: #fef2f2;
+}
+
+.success-message {
+  color: #15803d;
+  background: #f0fdf4;
+}
+
+.error-container button {
+  margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+  .category-edit-container {
+    margin: 20px 12px;
+    padding: 18px;
+  }
+}

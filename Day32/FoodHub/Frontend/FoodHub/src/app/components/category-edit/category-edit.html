@@ -1,0 +1,98 @@
+
+<div class="category-edit-container">
+
+  <a routerLink="/categories" class="back-link">
+    ← Back to Categories
+  </a>
+
+  <h2>Edit Category</h2>
+
+  <p class="subtitle">
+    Update the food category information.
+  </p>
+
+  <!-- Loading -->
+  @if (isLoading) {
+    <p class="loading-message">
+      Loading category details...
+    </p>
+  }
+
+  <!-- Error -->
+  @if (!isLoading && errorMessage && !category.categoryId) {
+    <div class="error-container">
+      <p class="error-message">{{ errorMessage }}</p>
+
+      <button type="button" (click)="loadCategory()">
+        Retry
+      </button>
+    </div>
+  }
+
+  <!-- Edit Form -->
+  @if (!isLoading && category.categoryId > 0) {
+
+    <form (ngSubmit)="updateCategory()" #categoryForm="ngForm">
+
+      <div class="form-group">
+        <label for="categoryId">Category ID</label>
+
+        <input
+          type="text"
+          id="categoryId"
+          [value]="category.categoryId"
+          readonly
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="categoryName">Category Name</label>
+
+        <input
+          type="text"
+          id="categoryName"
+          name="categoryName"
+          [(ngModel)]="category.categoryName"
+          minlength="2"
+          maxlength="100"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+
+        <textarea
+          id="description"
+          name="description"
+          [(ngModel)]="category.description"
+          maxlength="500"
+          rows="4">
+        </textarea>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="isSubmitting || categoryForm.invalid">
+
+        {{ isSubmitting ? 'Updating...' : 'Update Category' }}
+
+      </button>
+
+    </form>
+
+    @if (successMessage) {
+      <p class="success-message">
+        {{ successMessage }}
+      </p>
+    }
+
+    @if (errorMessage) {
+      <p class="error-message">
+        {{ errorMessage }}
+      </p>
+    }
+
+  }
+
+</div>

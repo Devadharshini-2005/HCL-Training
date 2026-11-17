@@ -8,6 +8,7 @@ import { FoodItemEdit } from './components/food-item-edit/food-item-edit';
 import { CategoryList } from './components/category-list/category-list';
 import { CategoryAdd } from './components/category-add/category-add';
 import { CategoryDetails } from './components/category-details/category-details';
+import { CategoryEdit } from './components/category-edit/category-edit';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,10 @@ export const routes: Routes = [
 {
   path: 'categories/:id',
   component: CategoryDetails
+},
+{
+  path: 'categories/edit/:id',
+  component: CategoryEdit
 },
   {
     path: 'food-items/add',

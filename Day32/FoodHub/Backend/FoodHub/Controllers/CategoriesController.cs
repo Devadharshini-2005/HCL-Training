@@ -2,6 +2,9 @@
 using FoodHub.DTOs.Category.Requests;
 using FoodHub.Services;
 using Microsoft.AspNetCore.Mvc;
+using FoodHub.DTOs.Category.Requests;
+using FoodHub.DTOs.Category.Responses;
+using FoodHub.Models;
 
 namespace FoodHub.Controllers;
 
@@ -43,6 +46,24 @@ public class CategoriesController : ControllerBase
     public async Task<IActionResult> GetById(int id)
     {
         var category = await _categoryService.GetByIdAsync(id);
+
+        if (category == null)
+        {
+            return NotFound(new
+            {
+                message = $"Category with ID {id} was not found."
+            });
+        }
+
+        return Ok(category);
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(
+    int id,
+    UpdateCategoryDto request)
+    {
+        var category = await _categoryService.UpdateAsync(id, request);
 
         if (category == null)
         {
