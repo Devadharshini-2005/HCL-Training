@@ -1,7 +1,7 @@
 using FoodHub.Data;
 using Microsoft.EntityFrameworkCore;
-
-
+using FoodHub.Repositories;
+using FoodHub.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +13,9 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<FoodHubDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("FoodHubConnection")));
+
+builder.Services.AddScoped<IFoodItemRepository, FoodItemRepository>();
+builder.Services.AddScoped<IFoodItemService, FoodItemService>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
