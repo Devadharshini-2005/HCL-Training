@@ -1,17 +1,18 @@
 ﻿
-using FoodHub.Models;
+using FoodHub.DTOs.FoodItem.Requests;
+using FoodHub.DTOs.FoodItem.Responses;
 
 namespace FoodHub.Services;
 
 public interface IFoodItemService
 {
-    Task<IEnumerable<FoodItem>> GetAllAsync();
+    Task<IEnumerable<FoodItemResponseDto>> GetAllAsync();
 
-    Task<FoodItem?> GetByIdAsync(int id);
+    Task<FoodItemResponseDto?> GetByIdAsync(int id);
 
-    Task<FoodItem> AddAsync(FoodItem foodItem);
+    Task<FoodItemResponseDto> AddAsync(CreateFoodItemDto foodItemDto);
 
-    Task UpdateAsync(int id, FoodItem foodItem);
+    Task UpdateAsync(int id, UpdateFoodItemDto foodItemDto);
 
     Task DeleteAsync(int id);
 }

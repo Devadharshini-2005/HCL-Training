@@ -1,5 +1,5 @@
 ﻿
-using FoodHub.Models;
+using FoodHub.DTOs.FoodItem.Requests;
 using FoodHub.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,9 +41,11 @@ public class FoodItemsController : ControllerBase
 
     // POST: api/fooditems
     [HttpPost]
-    public async Task<IActionResult> Add(FoodItem foodItem)
+    public async Task<IActionResult> Add(
+        [FromBody] CreateFoodItemDto foodItemDto)
     {
-        var createdFoodItem = await _foodItemService.AddAsync(foodItem);
+        var createdFoodItem =
+            await _foodItemService.AddAsync(foodItemDto);
 
         return CreatedAtAction(
             nameof(GetById),
@@ -53,9 +55,11 @@ public class FoodItemsController : ControllerBase
 
     // PUT: api/fooditems/5
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, FoodItem foodItem)
+    public async Task<IActionResult> Update(
+        int id,
+        [FromBody] UpdateFoodItemDto foodItemDto)
     {
-        await _foodItemService.UpdateAsync(id, foodItem);
+        await _foodItemService.UpdateAsync(id, foodItemDto);
 
         return NoContent();
     }

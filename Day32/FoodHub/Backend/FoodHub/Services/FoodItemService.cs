@@ -1,4 +1,6 @@
 ﻿
+using FoodHub.DTOs.FoodItem.Requests;
+using FoodHub.DTOs.FoodItem.Responses;
 using FoodHub.Models;
 using FoodHub.Repositories;
 
@@ -14,68 +16,89 @@ public class FoodItemService : IFoodItemService
     }
 
     // Get all food items
-    public async Task<IEnumerable<FoodItem>> GetAllAsync()
+    public async Task<IEnumerable<FoodItemResponseDto>> GetAllAsync()
     {
-        return await _foodItemRepository.GetAllAsync();
+        var foodItems = await _foodItemRepository.GetAllAsync();
+
+        return foodItems.Select(MapToResponseDto);
     }
 
     // Get food item by ID
-    public async Task<FoodItem?> GetByIdAsync(int id)
+    public async Task<FoodItemResponseDto?> GetByIdAsync(int id)
     {
         if (id <= 0)
         {
-            throw new ArgumentException("Food item ID must be greater than zero.");
+            throw new ArgumentException(
+                "Food item ID must be greater than zero.");
         }
 
-        return await _foodItemRepository.GetByIdAsync(id);
+        var foodItem = await _foodItemRepository.GetByIdAsync(id);
+
+        return foodItem == null ? null : MapToResponseDto(foodItem);
     }
 
     // Add food item
-    public async Task<FoodItem> AddAsync(FoodItem foodItem)
+    public async Task<FoodItemResponseDto> AddAsync(
+        CreateFoodItemDto foodItemDto)
     {
-        if (string.IsNullOrWhiteSpace(foodItem.FoodName))
+        ValidateFoodItem(
+            foodItemDto.FoodName,
+            foodItemDto.Price);
+
+        var foodItem = new FoodItem
         {
-            throw new ArgumentException("Food name is required.");
+            FoodName = foodItemDto.FoodName,
+            Description = foodItemDto.Description,
+            Price = foodItemDto.Price,
+            ImageUrl = foodItemDto.ImageUrl,
+            CategoryId = foodItemDto.CategoryId
+        };
+
+        var createdFoodItem =
+            await _foodItemRepository.AddAsync(foodItem);
+
+        var savedFoodItem =
+            await _foodItemRepository.GetByIdAsync(
+                createdFoodItem.FoodItemId);
+
+        if (savedFoodItem == null)
+        {
+            throw new InvalidOperationException(
+                "Unable to retrieve the created food item.");
         }
 
-        if (foodItem.Price <= 0)
-        {
-            throw new ArgumentException("Food price must be greater than zero.");
-        }
-
-        return await _foodItemRepository.AddAsync(foodItem);
+        return MapToResponseDto(savedFoodItem);
     }
 
     // Update food item
-    public async Task UpdateAsync(int id, FoodItem foodItem)
+    public async Task UpdateAsync(
+        int id,
+        UpdateFoodItemDto foodItemDto)
     {
         if (id <= 0)
         {
-            throw new ArgumentException("Food item ID must be greater than zero.");
+            throw new ArgumentException(
+                "Food item ID must be greater than zero.");
         }
 
-        if (string.IsNullOrWhiteSpace(foodItem.FoodName))
-        {
-            throw new ArgumentException("Food name is required.");
-        }
+        ValidateFoodItem(
+            foodItemDto.FoodName,
+            foodItemDto.Price);
 
-        if (foodItem.Price <= 0)
-        {
-            throw new ArgumentException("Food price must be greater than zero.");
-        }
-
-        var existingFoodItem = await _foodItemRepository.GetByIdAsync(id);
+        var existingFoodItem =
+            await _foodItemRepository.GetByIdAsync(id);
 
         if (existingFoodItem == null)
         {
-            throw new KeyNotFoundException("Food item not found.");
+            throw new KeyNotFoundException(
+                "Food item not found.");
         }
 
-        existingFoodItem.FoodName = foodItem.FoodName;
-        existingFoodItem.Description = foodItem.Description;
-        existingFoodItem.Price = foodItem.Price;
-        existingFoodItem.ImageUrl = foodItem.ImageUrl;
-        existingFoodItem.CategoryId = foodItem.CategoryId;
+        existingFoodItem.FoodName = foodItemDto.FoodName;
+        existingFoodItem.Description = foodItemDto.Description;
+        existingFoodItem.Price = foodItemDto.Price;
+        existingFoodItem.ImageUrl = foodItemDto.ImageUrl;
+        existingFoodItem.CategoryId = foodItemDto.CategoryId;
 
         await _foodItemRepository.UpdateAsync(existingFoodItem);
     }
@@ -85,16 +108,53 @@ public class FoodItemService : IFoodItemService
     {
         if (id <= 0)
         {
-            throw new ArgumentException("Food item ID must be greater than zero.");
+            throw new ArgumentException(
+                "Food item ID must be greater than zero.");
         }
 
-        var existingFoodItem = await _foodItemRepository.GetByIdAsync(id);
+        var existingFoodItem =
+            await _foodItemRepository.GetByIdAsync(id);
 
         if (existingFoodItem == null)
         {
-            throw new KeyNotFoundException("Food item not found.");
+            throw new KeyNotFoundException(
+                "Food item not found.");
         }
 
         await _foodItemRepository.DeleteAsync(existingFoodItem);
+    }
+
+    // Basic business validation
+    private static void ValidateFoodItem(
+        string foodName,
+        decimal price)
+    {
+        if (string.IsNullOrWhiteSpace(foodName))
+        {
+            throw new ArgumentException(
+                "Food name is required.");
+        }
+
+        if (price <= 0)
+        {
+            throw new ArgumentException(
+                "Food price must be greater than zero.");
+        }
+    }
+
+    // Convert Entity to Response DTO
+    private static FoodItemResponseDto MapToResponseDto(
+        FoodItem foodItem)
+    {
+        return new FoodItemResponseDto
+        {
+            FoodItemId = foodItem.FoodItemId,
+            FoodName = foodItem.FoodName,
+            Description = foodItem.Description,
+            Price = foodItem.Price,
+            ImageUrl = foodItem.ImageUrl,
+            CategoryId = foodItem.CategoryId,
+            CategoryName = foodItem.Category.CategoryName
+        };
     }
 }
