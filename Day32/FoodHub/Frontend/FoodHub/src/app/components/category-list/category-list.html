@@ -1,0 +1,63 @@
+<div class="category-container">
+
+  <h2>Food Categories</h2>
+
+  <p class="subtitle">
+    Explore all available food categories.
+  </p>
+
+  <!-- Loading -->
+  @if (isLoading) {
+    <p class="loading-message">
+      Loading categories...
+    </p>
+  }
+
+  <!-- Error -->
+  @if (!isLoading && errorMessage) {
+    <p class="error-message">
+      {{ errorMessage }}
+    </p>
+
+    <button (click)="loadCategories()">
+      Retry
+    </button>
+  }
+
+  <!-- Category List -->
+  @if (!isLoading && !errorMessage && categories.length > 0) {
+
+    <div class="category-grid">
+
+      @for (category of categories; track category.categoryId) {
+
+        <div class="category-card">
+
+          <h3>{{ category.categoryName }}</h3>
+
+          <p>
+            {{ category.description || 'No description available' }}
+          </p>
+
+          <span>
+            Category ID: {{ category.categoryId }}
+          </span>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+  <!-- Empty State -->
+  @if (!isLoading && !errorMessage && categories.length === 0) {
+
+    <p class="empty-message">
+      No categories available.
+    </p>
+
+  }
+
+</div>
