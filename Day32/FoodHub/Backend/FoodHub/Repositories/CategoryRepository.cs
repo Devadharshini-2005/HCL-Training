@@ -56,5 +56,29 @@ public class CategoryRepository : ICategoryRepository
         return existingCategory;
     }
 
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var category = await _context.Categories
+            .Include(c => c.FoodItems)
+            .FirstOrDefaultAsync(c => c.CategoryId == id);
+
+        if (category == null)
+        {
+            return false;
+        }
+
+        if (category.FoodItems.Any())
+        {
+            throw new InvalidOperationException(
+                "Cannot delete this category because food items are associated with it."
+            );
+        }
+
+        _context.Categories.Remove(category);
+
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
 
 }

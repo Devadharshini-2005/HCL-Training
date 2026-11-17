@@ -90,5 +90,10 @@ public class CategoryService : ICategoryService
             Description = updatedCategory.Description
         };
     }
+    public async Task<bool> DeleteAsync(int id)
+    {
+        return await _categoryRepository.DeleteAsync(id);
+    }
+
 
 }

@@ -99,3 +99,20 @@
 .edit-link:hover {
   background: #15803d;
 }
+.delete-button {
+  display: inline-block;
+  margin-top: 15px;
+  margin-left: 10px;
+  padding: 9px 16px;
+  background: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background: #b91c1c;
+}

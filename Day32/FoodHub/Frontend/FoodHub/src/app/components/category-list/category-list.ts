@@ -61,4 +61,38 @@ export class CategoryList implements OnInit {
 
     });
   }
+
+  deleteCategory(id: number): void {
+
+  const confirmed = window.confirm(
+    'Are you sure you want to delete this category?'
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  this.http.delete<{ message: string }>(
+    `https://localhost:7180/api/categories/${id}`
+  ).subscribe({
+
+    next: (response) => {
+      alert(response.message);
+
+      // Refresh the category list
+      this.loadCategories();
+
+    },
+
+    error: (error) => {
+      console.error('Delete Category Error:', error);
+
+      alert(
+        error.error?.message ||
+        'Unable to delete category.'
+      );
+    }
+
+  });
+}
 }

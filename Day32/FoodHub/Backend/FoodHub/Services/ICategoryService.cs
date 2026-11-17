@@ -13,5 +13,6 @@ public interface ICategoryService
     Task<CategoryResponseDto?> GetByIdAsync(int id);
 
     Task<CategoryResponseDto?> UpdateAsync(int id, UpdateCategoryDto request);
+    Task<bool> DeleteAsync(int id);
 
 }
