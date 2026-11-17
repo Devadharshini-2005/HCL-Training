@@ -1,4 +1,7 @@
-﻿using FoodHub.DTOs.Category.Responses;
+﻿
+using FoodHub.DTOs.Category.Requests;
+using FoodHub.DTOs.Category.Responses;
+using FoodHub.Models;
 using FoodHub.Repositories;
 
 namespace FoodHub.Services;
@@ -22,5 +25,23 @@ public class CategoryService : ICategoryService
             CategoryName = category.CategoryName,
             Description = category.Description
         });
+    }
+
+    public async Task<CategoryResponseDto> CreateAsync(CreateCategoryDto request)
+    {
+        var category = new Category
+        {
+            CategoryName = request.CategoryName,
+            Description = request.Description
+        };
+
+        var createdCategory = await _categoryRepository.CreateAsync(category);
+
+        return new CategoryResponseDto
+        {
+            CategoryId = createdCategory.CategoryId,
+            CategoryName = createdCategory.CategoryName,
+            Description = createdCategory.Description
+        };
     }
 }

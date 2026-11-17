@@ -1,4 +1,6 @@
-﻿using FoodHub.Services;
+﻿
+using FoodHub.DTOs.Category.Requests;
+using FoodHub.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodHub.Controllers;
@@ -21,5 +23,17 @@ public class CategoriesController : ControllerBase
         var categories = await _categoryService.GetAllAsync();
 
         return Ok(categories);
+    }
+
+    // POST: api/categories
+    [HttpPost]
+    public async Task<IActionResult> Create(CreateCategoryDto request)
+    {
+        var category = await _categoryService.CreateAsync(request);
+
+        return CreatedAtAction(
+            nameof(GetAll),
+            category
+        );
     }
 }

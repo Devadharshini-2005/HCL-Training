@@ -1,4 +1,5 @@
-﻿using FoodHub.Data;
+﻿
+using FoodHub.Data;
 using FoodHub.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,5 +19,14 @@ public class CategoryRepository : ICategoryRepository
         return await _context.Categories
             .AsNoTracking()
             .ToListAsync();
+    }
+
+    public async Task<Category> CreateAsync(Category category)
+    {
+        await _context.Categories.AddAsync(category);
+
+        await _context.SaveChangesAsync();
+
+        return category;
     }
 }

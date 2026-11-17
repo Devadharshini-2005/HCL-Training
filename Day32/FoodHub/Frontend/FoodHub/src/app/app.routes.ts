@@ -6,6 +6,7 @@ import { FoodItemForm } from './components/food-item-form/food-item-form';
 import { FoodItemDetails } from './components/food-item-details/food-item-details';
 import { FoodItemEdit } from './components/food-item-edit/food-item-edit';
 import { CategoryList } from './components/category-list/category-list';
+import { CategoryAdd } from './components/category-add/category-add';
 
 export const routes: Routes = [
   {
@@ -15,6 +16,10 @@ export const routes: Routes = [
   {
   path: 'categories',
   component: CategoryList
+},
+{
+  path: 'categories/add',
+  component: CategoryAdd
 },
   {
     path: 'food-items/add',
