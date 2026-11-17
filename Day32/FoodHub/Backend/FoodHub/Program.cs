@@ -1,14 +1,19 @@
 
 using FoodHub.Data;
-using Microsoft.EntityFrameworkCore;
+using FoodHub.Models;
 using FoodHub.Repositories;
+using FoodHub.Repositories.Interfaces;
 using FoodHub.Services;
+using FoodHub.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
 
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AngularFrontend", policy =>
@@ -19,17 +24,27 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Database
 builder.Services.AddDbContext<FoodHubDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("FoodHubConnection")));
 
+// Food Item Services
 builder.Services.AddScoped<IFoodItemRepository, FoodItemRepository>();
 builder.Services.AddScoped<IFoodItemService, FoodItemService>();
 
+// Category Services
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 
-// Configure exception handling
+// Authentication Services
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+// Password Hasher
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+// Exception Handling
 builder.Services.AddExceptionHandler(options =>
 {
     options.ExceptionHandler = async context =>
@@ -68,7 +83,7 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure HTTP request pipeline.
 app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())

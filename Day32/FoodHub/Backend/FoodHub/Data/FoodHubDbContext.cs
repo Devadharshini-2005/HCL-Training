@@ -18,6 +18,8 @@ public class FoodHubDbContext : DbContext
 
     public DbSet<FoodAvailability> FoodAvailabilities { get; set; }
 
+    public DbSet<User> Users { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -40,5 +42,29 @@ public class FoodHubDbContext : DbContext
         modelBuilder.Entity<FoodItem>()
             .Property(f => f.Price)
             .HasPrecision(10, 2);
+
+        // User Configuration
+        modelBuilder.Entity<User>()
+            .Property(u => u.FullName)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        modelBuilder.Entity<User>()
+            .Property(u => u.Email)
+            .IsRequired()
+            .HasMaxLength(150);
+
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
+
+        modelBuilder.Entity<User>()
+            .Property(u => u.PasswordHash)
+            .IsRequired();
+
+        modelBuilder.Entity<User>()
+            .Property(u => u.Role)
+            .IsRequired()
+            .HasMaxLength(30);
     }
 }

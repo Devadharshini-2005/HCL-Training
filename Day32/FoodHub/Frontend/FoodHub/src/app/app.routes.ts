@@ -5,10 +5,13 @@ import { FoodItemList } from './components/food-item-list/food-item-list';
 import { FoodItemForm } from './components/food-item-form/food-item-form';
 import { FoodItemDetails } from './components/food-item-details/food-item-details';
 import { FoodItemEdit } from './components/food-item-edit/food-item-edit';
+
 import { CategoryList } from './components/category-list/category-list';
 import { CategoryAdd } from './components/category-add/category-add';
 import { CategoryDetails } from './components/category-details/category-details';
 import { CategoryEdit } from './components/category-edit/category-edit';
+
+import { Register } from './components/register/register';
 
 export const routes: Routes = [
   {
@@ -16,21 +19,25 @@ export const routes: Routes = [
     component: FoodItemList
   },
   {
-  path: 'categories',
-  component: CategoryList
-},
-{
-  path: 'categories/add',
-  component: CategoryAdd
-},
-{
-  path: 'categories/:id',
-  component: CategoryDetails
-},
-{
-  path: 'categories/edit/:id',
-  component: CategoryEdit
-},
+    path: 'register',
+    component: Register
+  },
+  {
+    path: 'categories',
+    component: CategoryList
+  },
+  {
+    path: 'categories/add',
+    component: CategoryAdd
+  },
+  {
+    path: 'categories/:id',
+    component: CategoryDetails
+  },
+  {
+    path: 'categories/edit/:id',
+    component: CategoryEdit
+  },
   {
     path: 'food-items/add',
     component: FoodItemForm
