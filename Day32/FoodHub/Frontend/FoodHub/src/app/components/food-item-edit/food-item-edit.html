@@ -51,15 +51,45 @@
 
       <div class="form-group">
         <label>Category</label>
-        <select
-          name="categoryId"
-          [(ngModel)]="foodItem.categoryId"
-          required>
-          <option [ngValue]="1">Fast Food</option>
-        </select>
+
+        @if (categoryLoading) {
+          <p>Loading categories...</p>
+        }
+        @else if (categoryError) {
+          <p class="error-message">{{ categoryError }}</p>
+
+          <button
+            type="button"
+            (click)="loadCategories()">
+            Retry
+          </button>
+        }
+        @else {
+          <select
+  name="categoryId"
+  [(ngModel)]="foodItem.categoryId"
+  [compareWith]="compareCategoryIds"
+  required>
+
+  <option [ngValue]="0" disabled>
+    Select category
+  </option>
+
+  @for (category of categories; track category.categoryId) {
+    <option [ngValue]="category.categoryId">
+      {{ category.categoryName }}
+    </option>
+  }
+
+</select>
+        }
       </div>
 
-      <button type="submit">Update Food Item</button>
+      <button
+        type="submit"
+        [disabled]="categoryLoading || categories.length === 0">
+        Update Food Item
+      </button>
 
     </form>
   }

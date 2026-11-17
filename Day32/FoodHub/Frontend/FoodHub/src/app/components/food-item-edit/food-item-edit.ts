@@ -11,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { FoodItem } from '../../models/food-item.model';
+import { Category } from '../../models/category.model';
 
 @Component({
   selector: 'app-food-item-edit',
@@ -28,6 +29,10 @@ export class FoodItemEdit implements OnInit {
 
   foodItemId = 0;
 
+  categories: Category[] = [];
+  categoryLoading = false;
+  categoryError = '';
+
   foodItem = {
     foodName: '',
     description: '',
@@ -41,19 +46,57 @@ export class FoodItemEdit implements OnInit {
   errorMessage = '';
 
   ngOnInit(): void {
+
     this.foodItemId = Number(
       this.route.snapshot.paramMap.get('id')
     );
 
+    this.loadCategories();
     this.loadFoodItem();
+  }
+
+  // Load categories from backend
+  loadCategories(): void {
+
+    this.categoryLoading = true;
+    this.categoryError = '';
+
+    this.http.get<Category[]>(
+      'https://localhost:7180/api/categories'
+    ).subscribe({
+
+      next: (response) => {
+
+        console.log('Edit Form: Categories received:', response);
+
+        this.categories = response;
+        this.categoryLoading = false;
+
+        this.cdr.detectChanges();
+      },
+
+      error: (error) => {
+
+        console.error('Category Loading Error:', error);
+
+        this.categoryError = 'Unable to load categories.';
+        this.categoryLoading = false;
+
+        this.cdr.detectChanges();
+      }
+
+    });
   }
 
   // Load existing food item
   loadFoodItem(): void {
+
     this.http.get<FoodItem>(
       `https://localhost:7180/api/fooditems/${this.foodItemId}`
     ).subscribe({
+
       next: (data) => {
+
         this.foodItem = {
           foodName: data.foodName,
           description: data.description ?? '',
@@ -62,20 +105,30 @@ export class FoodItemEdit implements OnInit {
           categoryId: data.categoryId
         };
 
+        console.log('Edit Form: Food item received:', data);
+console.log('Existing Category ID:', data.categoryId);
+
         this.isLoading = false;
+
         this.cdr.detectChanges();
       },
+
       error: (error) => {
+
         console.error('GET Food Item Error:', error);
+
         this.errorMessage = 'Unable to load food item.';
         this.isLoading = false;
+
         this.cdr.detectChanges();
       }
+
     });
   }
 
   // Update food item
   updateFoodItem(): void {
+
     this.successMessage = '';
     this.errorMessage = '';
 
@@ -88,18 +141,35 @@ export class FoodItemEdit implements OnInit {
       `https://localhost:7180/api/fooditems/${this.foodItemId}`,
       request
     ).subscribe({
+
       next: () => {
+
         this.successMessage = 'Food item updated successfully!';
 
         this.cdr.detectChanges();
 
-        this.router.navigate(['/food-items', this.foodItemId]);
+        this.router.navigate([
+          '/food-items',
+          this.foodItemId
+        ]);
       },
+
       error: (error) => {
+
         console.error('PUT Food Item Error:', error);
-        this.errorMessage = 'Unable to update food item.';
+
+        this.errorMessage =
+          error.error?.message ||
+          'Unable to update food item.';
+
         this.cdr.detectChanges();
       }
+
     });
   }
+
+  compareCategoryIds(id1: number, id2: number): boolean {
+  return id1 === id2;
+}
+
 }

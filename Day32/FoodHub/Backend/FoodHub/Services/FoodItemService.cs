@@ -9,10 +9,14 @@ namespace FoodHub.Services;
 public class FoodItemService : IFoodItemService
 {
     private readonly IFoodItemRepository _foodItemRepository;
+    private readonly ICategoryRepository _categoryRepository;
 
-    public FoodItemService(IFoodItemRepository foodItemRepository)
+    public FoodItemService(
+        IFoodItemRepository foodItemRepository,
+        ICategoryRepository categoryRepository)
     {
         _foodItemRepository = foodItemRepository;
+        _categoryRepository = categoryRepository;
     }
 
     // Get all food items
@@ -44,6 +48,8 @@ public class FoodItemService : IFoodItemService
         ValidateFoodItem(
             foodItemDto.FoodName,
             foodItemDto.Price);
+
+        await ValidateCategoryAsync(foodItemDto.CategoryId);
 
         var foodItem = new FoodItem
         {
@@ -84,6 +90,8 @@ public class FoodItemService : IFoodItemService
         ValidateFoodItem(
             foodItemDto.FoodName,
             foodItemDto.Price);
+
+        await ValidateCategoryAsync(foodItemDto.CategoryId);
 
         var existingFoodItem =
             await _foodItemRepository.GetByIdAsync(id);
@@ -142,6 +150,19 @@ public class FoodItemService : IFoodItemService
         }
     }
 
+    // Validate whether the selected category exists
+    private async Task ValidateCategoryAsync(int categoryId)
+    {
+        var category =
+            await _categoryRepository.GetByIdAsync(categoryId);
+
+        if (category == null)
+        {
+            throw new ArgumentException(
+                $"Category with ID {categoryId} does not exist.");
+        }
+    }
+
     // Convert Entity to Response DTO
     private static FoodItemResponseDto MapToResponseDto(
         FoodItem foodItem)
@@ -159,16 +180,18 @@ public class FoodItemService : IFoodItemService
     }
 
     // Search food items
-    public async Task<IEnumerable<FoodItemResponseDto>> SearchAsync(string searchTerm)
+    public async Task<IEnumerable<FoodItemResponseDto>> SearchAsync(
+        string searchTerm)
     {
         if (string.IsNullOrWhiteSpace(searchTerm))
         {
-            throw new ArgumentException("Search term cannot be empty.");
+            throw new ArgumentException(
+                "Search term cannot be empty.");
         }
 
-        var foodItems = await _foodItemRepository.SearchAsync(searchTerm);
+        var foodItems =
+            await _foodItemRepository.SearchAsync(searchTerm);
 
         return foodItems.Select(MapToResponseDto);
     }
-
 }
