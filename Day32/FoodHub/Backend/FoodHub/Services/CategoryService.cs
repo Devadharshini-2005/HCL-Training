@@ -44,4 +44,24 @@ public class CategoryService : ICategoryService
             Description = createdCategory.Description
         };
     }
+
+
+    public async Task<CategoryResponseDto?> GetByIdAsync(int id)
+    {
+        var category = await _categoryRepository.GetByIdAsync(id);
+
+        if (category == null)
+        {
+            return null;
+        }
+
+        return new CategoryResponseDto
+        {
+            CategoryId = category.CategoryId,
+            CategoryName = category.CategoryName,
+            Description = category.Description
+        };
+    }
+
+
 }

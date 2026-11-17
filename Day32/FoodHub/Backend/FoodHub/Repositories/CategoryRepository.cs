@@ -29,4 +29,14 @@ public class CategoryRepository : ICategoryRepository
 
         return category;
     }
+
+
+    public async Task<Category?> GetByIdAsync(int id)
+    {
+        return await _context.Categories
+            .AsNoTracking()
+            .FirstOrDefaultAsync(category => category.CategoryId == id);
+    }
+
+
 }

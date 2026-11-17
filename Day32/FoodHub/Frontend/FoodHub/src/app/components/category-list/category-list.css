@@ -66,3 +66,19 @@
     padding: 15px;
   }
 }
+
+.details-link {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 9px 16px;
+  background: #2563eb;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.details-link:hover {
+  background: #1d4ed8;
+}

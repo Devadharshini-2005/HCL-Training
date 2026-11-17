@@ -1,0 +1,46 @@
+
+<div class="category-details-container">
+
+  <a routerLink="/categories" class="back-link">
+    ← Back to Categories
+  </a>
+
+  <h2>Category Details</h2>
+
+  @if (isLoading) {
+    <p class="loading-message">Loading category details...</p>
+  }
+
+  @if (!isLoading && errorMessage) {
+    <div class="error-container">
+      <p class="error-message">{{ errorMessage }}</p>
+      <button (click)="loadCategoryDetails()">Retry</button>
+    </div>
+  }
+
+  @if (!isLoading && !errorMessage && category) {
+    <div class="category-card">
+
+      <h3>{{ category.categoryName }}</h3>
+
+      <div class="detail-row">
+        <strong>Category ID:</strong>
+        <span>{{ category.categoryId }}</span>
+      </div>
+
+      <div class="detail-row">
+        <strong>Category Name:</strong>
+        <span>{{ category.categoryName }}</span>
+      </div>
+
+      <div class="detail-row">
+        <strong>Description:</strong>
+        <span>
+          {{ category.description || 'No description available' }}
+        </span>
+      </div>
+
+    </div>
+  }
+
+</div>

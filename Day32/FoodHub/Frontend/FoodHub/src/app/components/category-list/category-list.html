@@ -1,3 +1,4 @@
+
 <div class="category-container">
 
   <h2>Food Categories</h2>
@@ -42,6 +43,12 @@
           <span>
             Category ID: {{ category.categoryId }}
           </span>
+
+          <a
+            [routerLink]="['/categories', category.categoryId]"
+            class="details-link">
+            View Details →
+          </a>
 
         </div>
 

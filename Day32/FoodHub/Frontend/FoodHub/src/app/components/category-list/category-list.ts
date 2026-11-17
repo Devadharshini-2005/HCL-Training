@@ -7,11 +7,12 @@ import {
 
 import { HttpClient } from '@angular/common/http';
 import { Category } from '../../models/category.model';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-category-list',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './category-list.html',
   styleUrl: './category-list.css'
 })

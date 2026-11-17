@@ -8,4 +8,6 @@ public interface ICategoryRepository
     Task<IEnumerable<Category>> GetAllAsync();
 
     Task<Category> CreateAsync(Category category);
+
+    Task<Category?> GetByIdAsync(int id);
 }

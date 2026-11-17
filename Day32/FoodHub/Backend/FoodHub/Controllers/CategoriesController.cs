@@ -36,4 +36,24 @@ public class CategoriesController : ControllerBase
             category
         );
     }
+
+
+    // GET: api/categories/2
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var category = await _categoryService.GetByIdAsync(id);
+
+        if (category == null)
+        {
+            return NotFound(new
+            {
+                message = $"Category with ID {id} was not found."
+            });
+        }
+
+        return Ok(category);
+    }
+
+
 }
