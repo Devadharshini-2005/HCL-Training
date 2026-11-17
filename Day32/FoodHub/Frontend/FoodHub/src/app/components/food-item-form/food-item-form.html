@@ -1,0 +1,69 @@
+<div class="form-container">
+
+  <h2>Add New Food Item</h2>
+
+  <form (ngSubmit)="addFoodItem()">
+
+    <div class="form-group">
+      <label>Food Name</label>
+      <input
+        type="text"
+        name="foodName"
+        [(ngModel)]="foodItem.foodName"
+        placeholder="Enter food name"
+        required>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea
+        name="description"
+        [(ngModel)]="foodItem.description"
+        placeholder="Enter food description">
+      </textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Price (₹)</label>
+      <input
+        type="number"
+        name="price"
+        [(ngModel)]="foodItem.price"
+        placeholder="Enter price"
+        min="1"
+        required>
+    </div>
+
+    <div class="form-group">
+      <label>Image URL</label>
+      <input
+        type="text"
+        name="imageUrl"
+        [(ngModel)]="foodItem.imageUrl"
+        placeholder="Enter image URL">
+    </div>
+
+    <div class="form-group">
+      <label>Category</label>
+      <select
+        name="categoryId"
+        [(ngModel)]="foodItem.categoryId"
+        required>
+        <option [ngValue]="0" disabled>Select category</option>
+        <option [ngValue]="1">Fast Food</option>
+      </select>
+    </div>
+
+    <button type="submit">Add Food Item</button>
+
+  </form>
+
+  @if (successMessage) {
+    <p class="success-message">{{ successMessage }}</p>
+  }
+
+  @if (errorMessage) {
+    <p class="error-message">{{ errorMessage }}</p>
+  }
+
+</div>

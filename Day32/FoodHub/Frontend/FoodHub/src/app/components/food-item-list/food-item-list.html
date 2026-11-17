@@ -1,0 +1,86 @@
+
+<div class="food-section">
+
+  <div class="section-header">
+    <div>
+      <h2>Our Food Menu</h2>
+      <p>Explore delicious food items available today.</p>
+    </div>
+
+    <span class="food-count">
+      {{ foodItems.length }} Items
+    </span>
+  </div>
+
+  @if (isLoading) {
+    <p class="status-message">Loading food items...</p>
+  }
+
+  @if (errorMessage) {
+    <p class="error-message">{{ errorMessage }}</p>
+  }
+
+  @if (!isLoading && !errorMessage && foodItems.length === 0) {
+    <p class="status-message">No food items available.</p>
+  }
+
+  @if (!isLoading && foodItems.length > 0) {
+
+    <div class="food-grid">
+
+      @for (item of foodItems; track item.foodItemId) {
+
+        <div class="food-card">
+
+          <div class="food-image">
+            @if (item.imageUrl) {
+              <img [src]="item.imageUrl"
+                   [alt]="item.foodName">
+            } @else {
+              <span>🍽️</span>
+            }
+          </div>
+
+          <div class="food-details">
+
+            <span class="category">
+              {{ item.categoryName }}
+            </span>
+
+            <h3>{{ item.foodName }}</h3>
+
+            <p class="description">
+              {{ item.description }}
+            </p>
+
+            <div class="food-footer">
+              <span class="price">
+                ₹{{ item.price }}
+              </span>
+
+              <span class="food-id">
+                ID: {{ item.foodItemId }}
+              </span>
+            </div>
+
+            <a
+  class="details-button"
+  [routerLink]="['/food-items', item.foodItemId]">
+  View Details
+</a>
+<button
+  class="delete-button"
+  (click)="deleteFoodItem(item.foodItemId)">
+  Delete
+</button>
+          </div>
+        </div>
+
+      }
+
+    </div>
+  }
+
+</div>
+
+

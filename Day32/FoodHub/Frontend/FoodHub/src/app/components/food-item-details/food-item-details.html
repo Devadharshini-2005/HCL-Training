@@ -1,0 +1,55 @@
+
+<div class="details-container">
+
+  @if (isLoading) {
+    <p class="status-message">Loading food details...</p>
+  }
+
+  @if (errorMessage) {
+    <p class="error-message">{{ errorMessage }}</p>
+  }
+
+  @if (foodItem) {
+    <div class="details-card">
+
+      <div class="food-image">
+        @if (foodItem.imageUrl) {
+          <img [src]="foodItem.imageUrl" [alt]="foodItem.foodName">
+        } @else {
+          <span>🍽️</span>
+        }
+      </div>
+
+      <div class="food-info">
+        <span class="category">{{ foodItem.categoryName }}</span>
+
+        <h2>{{ foodItem.foodName }}</h2>
+
+        <p class="description">
+          {{ foodItem.description || 'No description available.' }}
+        </p>
+
+        <p><strong>Food ID:</strong> {{ foodItem.foodItemId }}</p>
+
+        <p class="price">₹{{ foodItem.price }}</p>
+
+        <div class="action-buttons">
+
+  <a
+    [routerLink]="['/food-items/edit', foodItem.foodItemId]"
+    class="edit-button">
+    Edit Food Item
+  </a>
+
+  <a routerLink="/" class="back-button">
+    Back to Menu
+  </a>
+
+</div>
+
+      </div>
+
+    </div>
+  }
+
+</div>

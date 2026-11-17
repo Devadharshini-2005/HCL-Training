@@ -1,0 +1,75 @@
+
+<div class="form-container">
+
+  <h2>Edit Food Item</h2>
+
+  @if (isLoading) {
+    <p class="status-message">Loading food item...</p>
+  }
+
+  @if (!isLoading && !errorMessage) {
+
+    <form (ngSubmit)="updateFoodItem()">
+
+      <div class="form-group">
+        <label>Food Name</label>
+        <input
+          type="text"
+          name="foodName"
+          [(ngModel)]="foodItem.foodName"
+          required
+          minlength="2"
+          maxlength="100">
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea
+          name="description"
+          [(ngModel)]="foodItem.description"
+          maxlength="500">
+        </textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Price (₹)</label>
+        <input
+          type="number"
+          name="price"
+          [(ngModel)]="foodItem.price"
+          min="0.01"
+          required>
+      </div>
+
+      <div class="form-group">
+        <label>Image URL</label>
+        <input
+          type="text"
+          name="imageUrl"
+          [(ngModel)]="foodItem.imageUrl">
+      </div>
+
+      <div class="form-group">
+        <label>Category</label>
+        <select
+          name="categoryId"
+          [(ngModel)]="foodItem.categoryId"
+          required>
+          <option [ngValue]="1">Fast Food</option>
+        </select>
+      </div>
+
+      <button type="submit">Update Food Item</button>
+
+    </form>
+  }
+
+  @if (successMessage) {
+    <p class="success-message">{{ successMessage }}</p>
+  }
+
+  @if (errorMessage) {
+    <p class="error-message">{{ errorMessage }}</p>
+  }
+
+</div>
