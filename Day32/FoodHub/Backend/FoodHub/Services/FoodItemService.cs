@@ -157,4 +157,18 @@ public class FoodItemService : IFoodItemService
             CategoryName = foodItem.Category.CategoryName
         };
     }
+
+    // Search food items
+    public async Task<IEnumerable<FoodItemResponseDto>> SearchAsync(string searchTerm)
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
+            throw new ArgumentException("Search term cannot be empty.");
+        }
+
+        var foodItems = await _foodItemRepository.SearchAsync(searchTerm);
+
+        return foodItems.Select(MapToResponseDto);
+    }
+
 }

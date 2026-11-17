@@ -15,4 +15,7 @@ public interface IFoodItemService
     Task UpdateAsync(int id, UpdateFoodItemDto foodItemDto);
 
     Task DeleteAsync(int id);
+
+    Task<IEnumerable<FoodItemResponseDto>> SearchAsync(string searchTerm);
+
 }

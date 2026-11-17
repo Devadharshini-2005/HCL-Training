@@ -214,3 +214,71 @@
 .delete-button:hover {
   background-color: #b02a37;
 }
+.search-container {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+  width: 100%;
+  max-width: 600px;
+}
+
+.search-container input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  outline: none;
+}
+
+.search-container input:focus {
+  border-color: #2563eb;
+}
+
+.search-button {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.clear-button {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.search-button:hover {
+  background-color: #1d4ed8;
+}
+
+.clear-button:hover {
+  background-color: #495057;
+}
+
+@media (max-width: 600px) {
+  .search-container {
+    flex-wrap: wrap;
+  }
+
+  .search-container input {
+    flex-basis: 100%;
+  }
+}
+.loading-message,
+.empty-message {
+  text-align: center;
+  margin: 25px 0;
+  padding: 20px;
+  color: #555;
+}
+
+.empty-message h3 {
+  color: #dc3545;
+  margin-bottom: 8px;
+}

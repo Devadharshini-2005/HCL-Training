@@ -14,4 +14,7 @@ public interface IFoodItemRepository
     Task UpdateAsync(FoodItem foodItem);
 
     Task DeleteAsync(FoodItem foodItem);
+
+    Task<IEnumerable<FoodItem>> SearchAsync(string searchTerm);
+
 }

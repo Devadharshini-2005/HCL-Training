@@ -72,4 +72,13 @@ public class FoodItemsController : ControllerBase
 
         return NoContent();
     }
+
+    // GET: api/fooditems/search?searchTerm=burger
+    [HttpGet("search")]
+    public async Task<IActionResult> Search([FromQuery] string searchTerm)
+    {
+        var foodItems = await _foodItemService.SearchAsync(searchTerm);
+
+        return Ok(foodItems);
+    }
 }

@@ -12,6 +12,45 @@
     </span>
   </div>
 
+  <!-- Search Food Items -->
+<div class="search-container">
+
+  <input
+    type="text"
+    placeholder="Search food items..."
+    [(ngModel)]="searchTerm"
+    (keyup.enter)="searchFoodItems()"
+  />
+
+  <button
+    class="search-button"
+    (click)="searchFoodItems()">
+    Search
+  </button>
+
+  <button
+    class="clear-button"
+    (click)="searchTerm = ''; loadFoodItems()">
+    Clear
+  </button>
+
+</div>
+
+<!-- Search Loading -->
+@if (isSearching) {
+  <p class="loading-message">
+    Searching food items...
+  </p>
+}
+
+<!-- No Search Results -->
+@if (!isSearching && searchTerm.trim() && foodItems.length === 0) {
+  <div class="empty-message">
+    <h3>No food items found</h3>
+    <p>Try searching with a different food name.</p>
+  </div>
+}
+
   @if (isLoading) {
     <p class="status-message">Loading food items...</p>
   }

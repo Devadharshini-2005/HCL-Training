@@ -52,4 +52,15 @@ public class FoodItemRepository : IFoodItemRepository
         _context.FoodItems.Remove(foodItem);
         await _context.SaveChangesAsync();
     }
+
+
+    // Search food items by name
+    public async Task<IEnumerable<FoodItem>> SearchAsync(string searchTerm)
+    {
+        return await _context.FoodItems
+            .Include(f => f.Category)
+            .Where(f => f.FoodName.Contains(searchTerm))
+            .ToListAsync();
+    }
+
 }
