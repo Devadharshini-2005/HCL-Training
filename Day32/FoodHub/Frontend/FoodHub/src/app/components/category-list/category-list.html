@@ -44,27 +44,30 @@
             Category ID: {{ category.categoryId }}
           </span>
 
+          <!-- Available to Admin and Customer -->
           <a
             [routerLink]="['/categories', category.categoryId]"
             class="details-link">
             View Details →
           </a>
 
+          <!-- Admin Only Actions -->
+          @if (isAdmin) {
 
-<a
-  [routerLink]="['/categories/edit', category.categoryId]"
-  class="edit-link">
-  Edit Category
-</a>
-<button
-  type="button"
-  class="delete-button"
-  (click)="deleteCategory(category.categoryId)">
+            <a
+              [routerLink]="['/categories/edit', category.categoryId]"
+              class="edit-link">
+              Edit Category
+            </a>
 
-  Delete Category
+            <button
+              type="button"
+              class="delete-button"
+              (click)="deleteCategory(category.categoryId)">
+              Delete Category
+            </button>
 
-</button>
-
+          }
 
         </div>
 

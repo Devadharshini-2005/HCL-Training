@@ -1,6 +1,7 @@
 ﻿
 using FoodHub.DTOs.FoodItem.Requests;
 using FoodHub.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodHub.Controllers;
@@ -18,6 +19,7 @@ public class FoodItemsController : ControllerBase
 
     // GET: api/fooditems
     [HttpGet]
+    [Authorize(Policy = "AdminOrCustomer")]
     public async Task<IActionResult> GetAll()
     {
         var foodItems = await _foodItemService.GetAllAsync();
@@ -27,6 +29,7 @@ public class FoodItemsController : ControllerBase
 
     // GET: api/fooditems/5
     [HttpGet("{id}")]
+    [Authorize(Policy = "AdminOrCustomer")]
     public async Task<IActionResult> GetById(int id)
     {
         var foodItem = await _foodItemService.GetByIdAsync(id);
@@ -41,6 +44,7 @@ public class FoodItemsController : ControllerBase
 
     // POST: api/fooditems
     [HttpPost]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> Add(
         [FromBody] CreateFoodItemDto foodItemDto)
     {
@@ -55,6 +59,7 @@ public class FoodItemsController : ControllerBase
 
     // PUT: api/fooditems/5
     [HttpPut("{id}")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> Update(
         int id,
         [FromBody] UpdateFoodItemDto foodItemDto)
@@ -66,6 +71,7 @@ public class FoodItemsController : ControllerBase
 
     // DELETE: api/fooditems/5
     [HttpDelete("{id}")]
+    [Authorize(Policy = "AdminOnly")]
     public async Task<IActionResult> Delete(int id)
     {
         await _foodItemService.DeleteAsync(id);
@@ -75,7 +81,9 @@ public class FoodItemsController : ControllerBase
 
     // GET: api/fooditems/search?searchTerm=burger
     [HttpGet("search")]
-    public async Task<IActionResult> Search([FromQuery] string searchTerm)
+    [Authorize(Policy = "AdminOrCustomer")]
+    public async Task<IActionResult> Search(
+        [FromQuery] string searchTerm)
     {
         var foodItems = await _foodItemService.SearchAsync(searchTerm);
 

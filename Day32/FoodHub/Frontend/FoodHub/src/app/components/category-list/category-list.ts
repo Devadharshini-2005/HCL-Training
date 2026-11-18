@@ -1,3 +1,4 @@
+
 import {
   Component,
   OnInit,
@@ -8,6 +9,7 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { Category } from '../../models/category.model';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-category-list',
@@ -20,11 +22,16 @@ export class CategoryList implements OnInit {
 
   private http = inject(HttpClient);
   private cdr = inject(ChangeDetectorRef);
+  private authService = inject(AuthService);
 
   categories: Category[] = [];
 
   isLoading = true;
   errorMessage = '';
+
+  get isAdmin(): boolean {
+    return this.authService.getUserRole() === 'Admin';
+  }
 
   ngOnInit(): void {
     this.loadCategories();
@@ -40,59 +47,47 @@ export class CategoryList implements OnInit {
     ).subscribe({
 
       next: (data) => {
-
-        console.log('Received categories:', data);
-
         this.categories = data;
         this.isLoading = false;
-
         this.cdr.detectChanges();
       },
 
       error: (error) => {
-
         console.error('Category API Error:', error);
-
         this.errorMessage = 'Unable to load categories.';
         this.isLoading = false;
-
         this.cdr.detectChanges();
       }
-
     });
   }
 
   deleteCategory(id: number): void {
 
-  const confirmed = window.confirm(
-    'Are you sure you want to delete this category?'
-  );
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this category?'
+    );
 
-  if (!confirmed) {
-    return;
-  }
-
-  this.http.delete<{ message: string }>(
-    `https://localhost:7180/api/categories/${id}`
-  ).subscribe({
-
-    next: (response) => {
-      alert(response.message);
-
-      // Refresh the category list
-      this.loadCategories();
-
-    },
-
-    error: (error) => {
-      console.error('Delete Category Error:', error);
-
-      alert(
-        error.error?.message ||
-        'Unable to delete category.'
-      );
+    if (!confirmed) {
+      return;
     }
 
-  });
-}
+    this.http.delete<{ message: string }>(
+      `https://localhost:7180/api/categories/${id}`
+    ).subscribe({
+
+      next: (response) => {
+        alert(response.message);
+        this.loadCategories();
+      },
+
+      error: (error) => {
+        console.error('Delete Category Error:', error);
+
+        alert(
+          error.error?.message ||
+          'Unable to delete category.'
+        );
+      }
+    });
+  }
 }

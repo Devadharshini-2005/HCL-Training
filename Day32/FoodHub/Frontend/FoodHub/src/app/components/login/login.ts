@@ -1,7 +1,18 @@
 
-import { Component, inject, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  inject,
+  ChangeDetectorRef
+} from '@angular/core';
+
+import {
+  HttpErrorResponse
+} from '@angular/common/http';
+
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-login',
@@ -12,8 +23,11 @@ import { HttpClient } from '@angular/common/http';
 })
 export class Login {
 
-  private http = inject(HttpClient);
+  private authService = inject(AuthService);
+
   private cdr = inject(ChangeDetectorRef);
+
+  private router = inject(Router);
 
   user = {
     email: '',
@@ -21,30 +35,34 @@ export class Login {
   };
 
   isLoading = false;
+
   successMessage = '';
+
   errorMessage = '';
 
   login(): void {
 
     this.successMessage = '';
+
     this.errorMessage = '';
 
     this.isLoading = true;
 
-    this.http.post<{ message: string }>(
-      'https://localhost:7180/api/auth/login',
-      this.user
-    ).subscribe({
+    this.authService.login(this.user).subscribe({
 
       next: (response) => {
 
         this.successMessage = response.message;
 
         this.isLoading = false;
+
         this.cdr.detectChanges();
+
+        // Navigate to Home after successful login
+        this.router.navigate(['/']);
       },
 
-      error: (error) => {
+      error: (error: HttpErrorResponse) => {
 
         console.error('Login Error:', error);
 
@@ -53,6 +71,7 @@ export class Login {
           'Unable to login. Please try again.';
 
         this.isLoading = false;
+
         this.cdr.detectChanges();
       }
 

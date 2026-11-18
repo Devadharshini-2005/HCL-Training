@@ -1,3 +1,4 @@
+
 <header class="header">
 
   <div class="header-content">
@@ -8,31 +9,59 @@
     </div>
 
     <nav class="navigation">
-      <a routerLink="/" routerLinkActive="active"
+
+      <a routerLink="/"
+         routerLinkActive="active"
          [routerLinkActiveOptions]="{ exact: true }">
         Home
       </a>
 
-      <a routerLink="/food-items/add"
+      <a routerLink="/categories"
          routerLinkActive="active">
-        Add Food
+        Categories
       </a>
 
-      <a routerLink="/categories" routerLinkActive="active">
-  Categories
-</a>
+      @if (userRole === 'Admin') {
 
-<a routerLink="/categories/add" routerLinkActive="active">
-  Add Category
-</a>
+        <a routerLink="/food-items/add"
+           routerLinkActive="active">
+          Add Food
+        </a>
 
-<a routerLink="/register" routerLinkActive="active">
-  Register
-</a>
+        <a routerLink="/categories/add"
+           routerLinkActive="active">
+          Add Category
+        </a>
 
-<a routerLink="/login" routerLinkActive="active">
-  Login
-</a>
+      }
+
+      @if (!isLoggedIn) {
+
+        <a routerLink="/register"
+           routerLinkActive="active">
+          Register
+        </a>
+
+        <a routerLink="/login"
+           routerLinkActive="active">
+          Login
+        </a>
+
+      }
+
+      @if (isLoggedIn) {
+
+        <span class="user-role">
+          {{ userRole }}
+        </span>
+
+        <button type="button"
+                (click)="logout()">
+          Logout
+        </button>
+
+      }
+
     </nav>
 
   </div>

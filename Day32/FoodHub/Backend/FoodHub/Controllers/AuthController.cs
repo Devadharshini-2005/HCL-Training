@@ -37,13 +37,13 @@ public class AuthController : ControllerBase
         });
     }
 
-
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginRequestDto request)
+    public async Task<IActionResult> Login(
+        LoginRequestDto request)
     {
-        var isLoggedIn = await _authService.LoginAsync(request);
+        var token = await _authService.LoginAsync(request);
 
-        if (!isLoggedIn)
+        if (token == null)
         {
             return Unauthorized(new
             {
@@ -53,9 +53,8 @@ public class AuthController : ControllerBase
 
         return Ok(new
         {
-            message = "Login successful."
+            message = "Login successful.",
+            token = token
         });
     }
-
-
 }

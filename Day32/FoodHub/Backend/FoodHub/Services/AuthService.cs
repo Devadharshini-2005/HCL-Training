@@ -4,6 +4,7 @@ using FoodHub.Models;
 using FoodHub.Repositories.Interfaces;
 using FoodHub.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using FoodHub.Constants;
 
 namespace FoodHub.Services;
 
@@ -11,13 +12,16 @@ public class AuthService : IAuthService
 {
     private readonly IAuthRepository _authRepository;
     private readonly IPasswordHasher<User> _passwordHasher;
+    private readonly IJwtTokenService _jwtTokenService;
 
     public AuthService(
         IAuthRepository authRepository,
-        IPasswordHasher<User> passwordHasher)
+        IPasswordHasher<User> passwordHasher,
+        IJwtTokenService jwtTokenService)
     {
         _authRepository = authRepository;
         _passwordHasher = passwordHasher;
+        _jwtTokenService = jwtTokenService;
     }
 
     public async Task<bool> RegisterAsync(RegisterRequestDto request)
@@ -36,7 +40,7 @@ public class AuthService : IAuthService
         {
             FullName = request.FullName.Trim(),
             Email = email,
-            Role = "Customer"
+            Role = UserRoles.Customer
         };
 
         user.PasswordHash = _passwordHasher.HashPassword(
@@ -49,7 +53,7 @@ public class AuthService : IAuthService
         return true;
     }
 
-    public async Task<bool> LoginAsync(LoginRequestDto request)
+    public async Task<string?> LoginAsync(LoginRequestDto request)
     {
         string email = request.Email.Trim().ToLowerInvariant();
 
@@ -57,7 +61,7 @@ public class AuthService : IAuthService
 
         if (user == null)
         {
-            return false;
+            return null;
         }
 
         var result = _passwordHasher.VerifyHashedPassword(
@@ -66,6 +70,13 @@ public class AuthService : IAuthService
             request.Password
         );
 
-        return result != PasswordVerificationResult.Failed;
+        if (result == PasswordVerificationResult.Failed)
+        {
+            return null;
+        }
+
+        string token = _jwtTokenService.GenerateToken(user);
+
+        return token;
     }
 }

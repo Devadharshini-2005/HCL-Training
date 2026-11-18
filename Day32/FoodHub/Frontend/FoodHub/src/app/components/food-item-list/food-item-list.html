@@ -13,43 +13,41 @@
   </div>
 
   <!-- Search Food Items -->
-<div class="search-container">
+  <div class="search-container">
 
-  <input
-    type="text"
-    placeholder="Search food items..."
-    [(ngModel)]="searchTerm"
-    (keyup.enter)="searchFoodItems()"
-  />
+    <input
+      type="text"
+      placeholder="Search food items..."
+      [(ngModel)]="searchTerm"
+      (keyup.enter)="searchFoodItems()"
+    />
 
-  <button
-    class="search-button"
-    (click)="searchFoodItems()">
-    Search
-  </button>
+    <button
+      class="search-button"
+      (click)="searchFoodItems()">
+      Search
+    </button>
 
-  <button
-    class="clear-button"
-    (click)="searchTerm = ''; loadFoodItems()">
-    Clear
-  </button>
+    <button
+      class="clear-button"
+      (click)="searchTerm = ''; loadFoodItems()">
+      Clear
+    </button>
 
-</div>
-
-<!-- Search Loading -->
-@if (isSearching) {
-  <p class="loading-message">
-    Searching food items...
-  </p>
-}
-
-<!-- No Search Results -->
-@if (!isSearching && searchTerm.trim() && foodItems.length === 0) {
-  <div class="empty-message">
-    <h3>No food items found</h3>
-    <p>Try searching with a different food name.</p>
   </div>
-}
+
+  @if (isSearching) {
+    <p class="loading-message">
+      Searching food items...
+    </p>
+  }
+
+  @if (!isSearching && searchTerm.trim() && foodItems.length === 0) {
+    <div class="empty-message">
+      <h3>No food items found</h3>
+      <p>Try searching with a different food name.</p>
+    </div>
+  }
 
   @if (isLoading) {
     <p class="status-message">Loading food items...</p>
@@ -73,8 +71,9 @@
 
           <div class="food-image">
             @if (item.imageUrl) {
-              <img [src]="item.imageUrl"
-                   [alt]="item.foodName">
+              <img
+                [src]="item.imageUrl"
+                [alt]="item.foodName">
             } @else {
               <span>🍽️</span>
             }
@@ -103,15 +102,27 @@
             </div>
 
             <a
-  class="details-button"
-  [routerLink]="['/food-items', item.foodItemId]">
-  View Details
-</a>
-<button
-  class="delete-button"
-  (click)="deleteFoodItem(item.foodItemId)">
-  Delete
-</button>
+              class="details-button"
+              [routerLink]="['/food-items', item.foodItemId]">
+              View Details
+            </a>
+
+            @if (isAdmin) {
+
+              <a
+                class="edit-button"
+                [routerLink]="['/food-items/edit', item.foodItemId]">
+                Edit
+              </a>
+
+              <button
+                class="delete-button"
+                (click)="deleteFoodItem(item.foodItemId)">
+                Delete
+              </button>
+
+            }
+
           </div>
         </div>
 
@@ -121,5 +132,3 @@
   }
 
 </div>
-
-
