@@ -11,6 +11,7 @@ import { CategoryAdd } from './components/category-add/category-add';
 import { CategoryDetails } from './components/category-details/category-details';
 import { CategoryEdit } from './components/category-edit/category-edit';
 
+import { Login } from './components/login/login';
 import { Register } from './components/register/register';
 
 export const routes: Routes = [
@@ -21,6 +22,10 @@ export const routes: Routes = [
   {
     path: 'register',
     component: Register
+  },
+  {
+  path: 'login',
+  component: Login
   },
   {
     path: 'categories',

@@ -22,10 +22,8 @@ public class AuthService : IAuthService
 
     public async Task<bool> RegisterAsync(RegisterRequestDto request)
     {
-        // Normalize email to avoid duplicate registrations
         string email = request.Email.Trim().ToLowerInvariant();
 
-        // Check whether the email already exists
         var existingUser =
             await _authRepository.GetByEmailAsync(email);
 
@@ -34,7 +32,6 @@ public class AuthService : IAuthService
             return false;
         }
 
-        // Create the new user
         var user = new User
         {
             FullName = request.FullName.Trim(),
@@ -42,15 +39,33 @@ public class AuthService : IAuthService
             Role = "Customer"
         };
 
-        // Hash the password before saving
         user.PasswordHash = _passwordHasher.HashPassword(
             user,
             request.Password
         );
 
-        // Save user in the database
         await _authRepository.AddAsync(user);
 
         return true;
+    }
+
+    public async Task<bool> LoginAsync(LoginRequestDto request)
+    {
+        string email = request.Email.Trim().ToLowerInvariant();
+
+        var user = await _authRepository.GetByEmailAsync(email);
+
+        if (user == null)
+        {
+            return false;
+        }
+
+        var result = _passwordHasher.VerifyHashedPassword(
+            user,
+            user.PasswordHash,
+            request.Password
+        );
+
+        return result != PasswordVerificationResult.Failed;
     }
 }

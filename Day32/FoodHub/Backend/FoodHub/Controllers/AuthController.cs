@@ -36,4 +36,26 @@ public class AuthController : ControllerBase
             message = "User registered successfully."
         });
     }
+
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginRequestDto request)
+    {
+        var isLoggedIn = await _authService.LoginAsync(request);
+
+        if (!isLoggedIn)
+        {
+            return Unauthorized(new
+            {
+                message = "Invalid email or password."
+            });
+        }
+
+        return Ok(new
+        {
+            message = "Login successful."
+        });
+    }
+
+
 }
