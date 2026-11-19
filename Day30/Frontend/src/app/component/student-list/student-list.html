@@ -1,0 +1,44 @@
+
+<div class="student-list-container">
+
+  <h2>Student Management</h2>
+
+  @if (students.length > 0) {
+
+    <table class="student-table">
+
+      <thead>
+        <tr>
+          <th>S.No</th>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Course</th>
+          <th>Amount</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (student of students; track $index) {
+
+          <tr>
+            <td>{{ $index + 1 }}</td>
+            <td>{{ student.name | uppercase }}</td>
+            <td>{{ student.age }}</td>
+            <td>{{ student.course }}</td>
+            <td>{{ student.amount | currency:'INR' }}</td>
+            <td>{{ student.date | date:'dd/MM/yyyy' }}</td>
+          </tr>
+
+        }
+      </tbody>
+
+    </table>
+
+  } @else {
+
+    <p>No students registered yet.</p>
+
+  }
+
+</div>
