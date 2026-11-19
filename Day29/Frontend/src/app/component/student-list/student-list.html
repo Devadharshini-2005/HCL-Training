@@ -1,0 +1,21 @@
+<div class="student-list-container">
+
+  <h2>Student Management</h2>
+
+  @if (students.length > 0) {
+
+    @for (student of students; track $index) {
+
+      <app-student-card
+        [student]="student">
+      </app-student-card>
+
+    }
+
+  } @else {
+
+    <p>No students registered yet.</p>
+
+  }
+
+</div>

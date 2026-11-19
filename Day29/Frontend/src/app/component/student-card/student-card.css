@@ -1,0 +1,15 @@
+.student-card {
+  padding: 20px;
+  margin: 15px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: white;
+}
+
+.student-card h3 {
+  color: #1e293b;
+}
+
+.student-card p {
+  color: #555;
+}
