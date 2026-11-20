@@ -1,0 +1,253 @@
+
+<!-- Navbar -->
+<header class="navbar">
+  <a routerLink="/" class="brand">
+    <span class="brand-icon">E</span>
+    <span>Enrollora</span>
+  </a>
+
+  <nav class="nav-links">
+    <a href="#home">Home</a>
+    <a href="#courses">Courses</a>
+    <a href="#features">About</a>
+    <a href="#how-it-works">How It Works</a>
+  </nav>
+
+  <div class="nav-actions">
+    <a routerLink="/login" class="login-btn">Login</a>
+    <a routerLink="/register" class="register-btn">Register</a>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero" id="home">
+  <div class="hero-content">
+    <span class="eyebrow">WELCOME TO ENROLLORA</span>
+
+    <h1>
+      Empower Your Future
+      <span>with the Right Course.</span>
+    </h1>
+
+    <p>
+      Discover courses, build your skills, and manage your academic journey
+      through one simple platform.
+    </p>
+
+    <div class="hero-actions">
+      <button class="primary-btn" (click)="scrollToCourses()">
+        Explore Courses <span>→</span>
+      </button>
+
+      <a routerLink="/register" class="secondary-btn">
+        Get Started
+      </a>
+    </div>
+
+    <div class="hero-highlights">
+      <div>
+        <span class="highlight-icon">✓</span>
+        Easy Enrollment
+      </div>
+      <div>
+        <span class="highlight-icon">✓</span>
+        Track Applications
+      </div>
+      <div>
+        <span class="highlight-icon">✓</span>
+        Student Portal
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="visual-circle"></div>
+
+    <div class="visual-card main-card">
+      <div class="book-illustration">📚</div>
+      <span class="visual-label">Your Learning Journey</span>
+      <h3>Start learning.<br />Start growing.</h3>
+      <div class="visual-progress">
+        <span></span>
+      </div>
+      <small>Your future starts today</small>
+    </div>
+
+    <div class="floating-card top-card">
+      <span class="floating-icon">🎓</span>
+      <div>
+        <strong>Student Portal</strong>
+        <small>Everything in one place</small>
+      </div>
+    </div>
+
+    <div class="floating-card bottom-card">
+      <span class="floating-icon">✨</span>
+      <div>
+        <strong>Explore your potential</strong>
+        <small>Discover new opportunities</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features-section section" id="features">
+  <div class="section-heading">
+    <span class="eyebrow">WHY ENROLLORA?</span>
+    <h2>Your academic journey,<br />made simpler.</h2>
+    <p>Everything you need to discover courses and manage enrollment in one place.</p>
+  </div>
+
+  <div class="features-grid">
+    <article class="feature-card">
+      <div class="feature-icon purple">📘</div>
+      <h3>Discover Courses</h3>
+      <p>Explore available courses and find programs that match your interests.</p>
+    </article>
+
+    <article class="feature-card">
+      <div class="feature-icon peach">📝</div>
+      <h3>Easy Enrollment</h3>
+      <p>Register and apply to your preferred course through a simple process.</p>
+    </article>
+
+    <article class="feature-card">
+      <div class="feature-icon green">📊</div>
+      <h3>Track Progress</h3>
+      <p>Keep track of your enrollment status and application progress.</p>
+    </article>
+
+    <article class="feature-card">
+      <div class="feature-icon blue">🎓</div>
+      <h3>Student Portal</h3>
+      <p>Access your student information and enrollments in one place.</p>
+    </article>
+  </div>
+</section>
+
+<!-- Courses -->
+<section class="courses-section section" id="courses">
+  <div class="section-heading courses-heading">
+    <div>
+      <span class="eyebrow">EXPLORE LEARNING</span>
+      <h2>Find your next course.</h2>
+      <p>Explore some of the courses available on Enrollora.</p>
+    </div>
+
+    <a routerLink="/register" class="text-link">
+      Join Enrollora <span>→</span>
+    </a>
+  </div>
+
+  @if (isLoadingCourses()) {
+    <div class="course-message">
+      Loading available courses...
+    </div>
+  } @else if (courses().length > 0) {
+    <div class="courses-grid">
+      @for (course of courses(); track course.courseId) {
+        <article class="course-card">
+          <div class="course-banner">
+            <span class="course-tag">AVAILABLE COURSE</span>
+            <div class="course-symbol">✦</div>
+          </div>
+
+          <div class="course-content">
+            <h3>{{ course.courseName }}</h3>
+
+            <div class="course-meta">
+              <span>◷ {{ course.duration }}</span>
+              <span>₹{{ course.fees }}</span>
+            </div>
+
+            <div class="seats-info">
+              <span>{{ course.availableSeats }} seats available</span>
+            </div>
+
+            <a routerLink="/register" class="course-link">
+              Get Started <span>→</span>
+            </a>
+          </div>
+        </article>
+      }
+    </div>
+  } @else {
+    <div class="course-message">
+      <div class="empty-icon">📚</div>
+      <h3>Courses are waiting for you</h3>
+      <p>Register or login to explore the Enrollora learning portal.</p>
+      <a routerLink="/register" class="primary-btn">Get Started →</a>
+    </div>
+  }
+</section>
+
+<!-- How it works -->
+<section class="steps-section section" id="how-it-works">
+  <div class="section-heading">
+    <span class="eyebrow">SIMPLE PROCESS</span>
+    <h2>Start in three simple steps.</h2>
+    <p>Your path to course enrollment is simple.</p>
+  </div>
+
+  <div class="steps-grid">
+    <article class="step-card">
+      <span class="step-number">01</span>
+      <div class="step-icon">🔎</div>
+      <h3>Explore</h3>
+      <p>Browse available courses and find one that interests you.</p>
+    </article>
+
+    <article class="step-card">
+      <span class="step-number">02</span>
+      <div class="step-icon">📝</div>
+      <h3>Register & Enroll</h3>
+      <p>Create your account and enroll in the course you prefer.</p>
+    </article>
+
+    <article class="step-card">
+      <span class="step-number">03</span>
+      <div class="step-icon">🚀</div>
+      <h3>Track</h3>
+      <p>Log in and follow your enrollment status from your dashboard.</p>
+    </article>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-content">
+    <span class="eyebrow">YOUR FUTURE STARTS HERE</span>
+    <h2>Ready to take the next step?</h2>
+    <p>Join Enrollora and make your academic journey easier.</p>
+    <a routerLink="/register" class="cta-button">
+      Create Your Account <span>→</span>
+    </a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-top">
+    <a routerLink="/" class="brand footer-brand">
+      <span class="brand-icon">E</span>
+      <span>Enrollora</span>
+    </a>
+
+    <p>Your academic journey starts with the right opportunity.</p>
+  </div>
+
+  <div class="footer-links">
+    <a href="#home">Home</a>
+    <a href="#courses">Courses</a>
+    <a href="#features">About</a>
+    <a href="#how-it-works">How It Works</a>
+    <a routerLink="/login">Login</a>
+    <a routerLink="/register">Register</a>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2026 Enrollora. All rights reserved.</span>
+    <span>Learn · Grow · Achieve</span>
+  </div>
+</footer>
