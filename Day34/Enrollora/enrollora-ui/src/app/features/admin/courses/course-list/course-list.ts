@@ -59,6 +59,13 @@ editCourse = {
     isActive: true
   };
 
+  // Delete Course state
+showDeleteCourseModal = false;
+isDeleting = false;
+deleteError = '';
+
+selectedDeleteCourse: CourseResponse | null = null;
+
   ngOnInit(): void {
     this.loadCourses();
   }
@@ -236,5 +243,50 @@ updateCourse(): void {
     }
   });
 }
+
+openDeleteCourse(course: CourseResponse): void {
+  this.selectedDeleteCourse = course;
+  this.deleteError = '';
+  this.showDeleteCourseModal = true;
+}
+
+closeDeleteCourse(): void {
+  if (this.isDeleting) return;
+
+  this.showDeleteCourseModal = false;
+  this.selectedDeleteCourse = null;
+  this.deleteError = '';
+}
+
+
+confirmDeleteCourse(): void {
+  if (this.isDeleting || !this.selectedDeleteCourse) return;
+
+  this.isDeleting = true;
+  this.deleteError = '';
+
+  const courseId = this.selectedDeleteCourse.courseId;
+
+  this.courseService.deleteCourse(courseId).subscribe({
+    next: () => {
+      this.isDeleting = false;
+      this.showDeleteCourseModal = false;
+      this.selectedDeleteCourse = null;
+
+      // Refresh the course list
+      this.loadCourses();
+    },
+    error: (error) => {
+      console.error('Error deleting course:', error);
+
+      this.isDeleting = false;
+      this.deleteError =
+        error?.error?.message ||
+        error?.error?.title ||
+        'Failed to delete course. Please try again.';
+    }
+  });
+}
+
 
 }

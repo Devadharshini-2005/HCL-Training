@@ -75,4 +75,8 @@ export class CourseService {
   deactivateCourse(id: number): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(`${this.apiUrl}/${id}`);
   }
+
+  deleteCourse(courseId: number) {
+  return this.http.delete(`${this.apiUrl}/${courseId}`);
+}
 }
