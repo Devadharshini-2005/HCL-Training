@@ -98,6 +98,7 @@
               <th>ENROLLMENT</th>
               <th>AVAILABLE SEATS</th>
               <th>STATUS</th>
+              <th>ACTIONS</th>
             </tr>
           </thead>
 
@@ -160,6 +161,18 @@
                     {{ course.isActive ? 'Active' : 'Inactive' }}
                   </span>
                 </td>
+
+                <td>
+  <button
+    type="button"
+    class="btn-edit"
+    (click)="openEditCourse(course)"
+  >
+    <i class="bi bi-pencil"></i>
+    Edit
+  </button>
+</td>
+
               </tr>
             }
           </tbody>
@@ -359,3 +372,163 @@
 }
 
 </div>
+@if (showEditCourseForm) {
+  <div class="course-modal-overlay">
+    <div class="course-modal">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div class="modal-title-section">
+          <div class="modal-icon">
+            <i class="bi bi-pencil-square"></i>
+          </div>
+
+          <div>
+            <h3 class="modal-title">Edit Course</h3>
+            <p>Update course information and details</p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="close-btn"
+          (click)="closeEditCourse()"
+          [disabled]="isUpdating"
+        >
+          &times;
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <form (ngSubmit)="updateCourse()">
+        <div class="modal-body">
+
+          <!-- Course Name -->
+          <div class="form-group">
+            <label for="editCourseName">
+              Course Name <span class="required">*</span>
+            </label>
+
+            <input
+              id="editCourseName"
+              type="text"
+              class="form-control"
+              name="editCourseName"
+              [(ngModel)]="editCourse.courseName"
+              required
+              maxlength="100"
+              placeholder="Enter course name"
+            />
+          </div>
+
+          <!-- Duration and Fees -->
+          <div class="form-row">
+
+            <div class="form-group">
+              <label for="editCourseDuration">
+                Duration <span class="required">*</span>
+              </label>
+
+              <input
+                id="editCourseDuration"
+                type="text"
+                class="form-control"
+                name="editCourseDuration"
+                [(ngModel)]="editCourse.duration"
+                required
+                placeholder="e.g. 6 Months"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="editCourseFees">
+                Course Fees <span class="required">*</span>
+              </label>
+
+              <input
+                id="editCourseFees"
+                type="number"
+                class="form-control"
+                name="editCourseFees"
+                [(ngModel)]="editCourse.fees"
+                min="0"
+                required
+                placeholder="Enter course fees"
+              />
+            </div>
+
+          </div>
+
+          <!-- Capacity -->
+          <div class="form-group">
+            <label for="editCourseCapacity">
+              Capacity <span class="required">*</span>
+            </label>
+
+            <input
+              id="editCourseCapacity"
+              type="number"
+              class="form-control"
+              name="editCourseCapacity"
+              [(ngModel)]="editCourse.capacity"
+              min="1"
+              required
+              placeholder="Enter maximum students"
+            />
+          </div>
+
+          <!-- Active Status -->
+          <div class="active-option">
+            <label class="active-toggle">
+              <input
+                type="checkbox"
+                name="editCourseIsActive"
+                [(ngModel)]="editCourse.isActive"
+              />
+
+              <span class="toggle-text">
+                <strong>Active Course</strong>
+                <small>Allow students to enroll in this course</small>
+              </span>
+            </label>
+          </div>
+
+          <!-- Error -->
+          @if (editFormError) {
+            <div class="form-error">
+              {{ editFormError }}
+            </div>
+          }
+
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-actions">
+          <button
+            type="button"
+            class="btn-cancel"
+            (click)="closeEditCourse()"
+            [disabled]="isUpdating"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="btn-save"
+            [disabled]="isUpdating"
+          >
+            @if (isUpdating) {
+              <span class="save-spinner"></span>
+              Updating...
+            } @else {
+              <i class="bi bi-check-lg"></i>
+              Update Course
+            }
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+}

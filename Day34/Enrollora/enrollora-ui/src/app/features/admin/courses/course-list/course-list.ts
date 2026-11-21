@@ -35,6 +35,21 @@ export class CourseListComponent implements OnInit {
   isSaving = false;
   formError = '';
 
+  // Edit Course form state
+showEditCourseForm = false;
+isUpdating = false;
+editFormError = '';
+
+selectedCourseId: number | null = null;
+
+editCourse = {
+  courseName: '',
+  duration: '',
+  fees: 0,
+  capacity: 0,
+  isActive: true
+};
+
   // Form data (matches API request)
   newCourse = {
     courseName: '',
@@ -153,4 +168,73 @@ export class CourseListComponent implements OnInit {
       }
     });
   }
+
+  openEditCourse(course: CourseResponse): void {
+  this.selectedCourseId = course.courseId;
+
+  this.editCourse = {
+    courseName: course.courseName,
+    duration: course.duration,
+    fees: course.fees,
+    capacity: course.capacity,
+    isActive: course.isActive
+  };
+
+  this.editFormError = '';
+  this.showEditCourseForm = true;
+}
+
+closeEditCourse(): void {
+  if (this.isUpdating) return;
+
+  this.showEditCourseForm = false;
+  this.selectedCourseId = null;
+  this.editFormError = '';
+}
+
+updateCourse(): void {
+  if (this.isUpdating || this.selectedCourseId === null) return;
+
+  this.editFormError = '';
+
+  if (
+    !this.editCourse.courseName.trim() ||
+    !this.editCourse.duration.trim() ||
+    Number(this.editCourse.fees) < 0 ||
+    Number(this.editCourse.capacity) <= 0
+  ) {
+    this.editFormError = 'Please enter valid course details.';
+    return;
+  }
+
+  this.isUpdating = true;
+
+  const request = {
+    courseName: this.editCourse.courseName.trim(),
+    duration: this.editCourse.duration.trim(),
+    fees: Number(this.editCourse.fees),
+    capacity: Number(this.editCourse.capacity),
+    isActive: this.editCourse.isActive
+  };
+
+  this.courseService.updateCourse(this.selectedCourseId, request).subscribe({
+    next: () => {
+      this.isUpdating = false;
+      this.showEditCourseForm = false;
+      this.selectedCourseId = null;
+
+      this.loadCourses();
+    },
+    error: (error) => {
+      console.error('Error updating course:', error);
+
+      this.isUpdating = false;
+      this.editFormError =
+        error?.error?.message ||
+        error?.error?.title ||
+        'Failed to update course. Please try again.';
+    }
+  });
+}
+
 }

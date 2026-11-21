@@ -35,7 +35,7 @@
   margin: 0;
 }
 
-.btn-add {
+.btn-add,.btn-edit {
   background: linear-gradient(135deg, #8b5cf6, #a855f7);
   color: white;
   border: none;
@@ -48,13 +48,13 @@
   transition: 0.2s;
 }
 
-.btn-add span {
+.btn-add span,.btn-edit span {
   font-size: 19px;
   margin-right: 6px;
   vertical-align: -1px;
 }
 
-.btn-add:hover {
+.btn-add:hover,.btn-edit:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 18px rgba(139, 92, 246, 0.3);
 }
