@@ -1,7 +1,13 @@
+
+/* ================================
+   PAGE LAYOUT
+================================ */
+
 .course-page {
   padding: 28px;
   min-height: calc(100vh - 84px);
   color: #29243b;
+  background: #f8f7fc;
 }
 
 .page-header {
@@ -28,6 +34,10 @@
   margin: 0;
 }
 
+/* ================================
+   ALERTS
+================================ */
+
 .alert {
   display: flex;
   align-items: center;
@@ -51,19 +61,144 @@
   border: 1px solid #ffd4cd;
 }
 
-.course-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-}
+/* ================================
+   SEARCH AND SORTING
+================================ */
 
-.course-card {
+.discovery-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 20px;
+  padding: 20px;
+  margin-bottom: 26px;
   background: #fff;
   border: 1px solid #efedf4;
   border-radius: 16px;
-  padding: 20px;
   box-shadow: 0 4px 15px rgba(35, 25, 60, 0.035);
+}
+
+.search-section {
+  flex: 1;
+  min-width: 0;
+}
+
+.search-section label,
+.sort-section label {
+  display: block;
+  margin-bottom: 9px;
+  color: #514963;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.search-controls {
+  display: flex;
+  gap: 9px;
+}
+
+.search-controls input,
+.sort-section select {
+  height: 44px;
+  border: 1px solid #e9e5f0;
+  border-radius: 9px;
+  padding: 0 13px;
+  color: #514963;
+  background: #fff;
+  outline: none;
+  font-size: 13px;
+}
+
+.search-controls input {
+  flex: 1;
+  min-width: 100px;
+}
+
+.search-controls input:focus,
+.sort-section select:focus {
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.search-btn,
+.clear-btn {
+  border: none;
+  border-radius: 9px;
+  padding: 0 18px;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
   transition: 0.2s ease;
+}
+
+.search-btn {
+  background: #8b5cf6;
+  color: #fff;
+}
+
+.search-btn:hover {
+  background: #7545ed;
+}
+
+.clear-btn {
+  background: #f2eff8;
+  color: #635a75;
+}
+
+.clear-btn:hover {
+  background: #e9e3f3;
+}
+
+.sort-section {
+  min-width: 200px;
+}
+
+.sort-section select {
+  width: 100%;
+  cursor: pointer;
+}
+
+/* ================================
+   COURSE SECTION
+================================ */
+
+.results-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 17px;
+}
+
+.results-heading h2 {
+  margin: 0;
+  color: #342c47;
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.results-heading span {
+  color: #898397;
+  font-size: 12px;
+}
+
+/* ================================
+   COURSE GRID AND CARDS
+================================ */
+
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.course-card {
+  min-width: 0;
+  background: #fff;
+  border: 1px solid #efedf4;
+  border-radius: 16px;
+  padding: 21px;
+  box-shadow: 0 4px 15px rgba(35, 25, 60, 0.035);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .course-card:hover {
@@ -80,14 +215,15 @@
 }
 
 .course-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 13px;
   display: grid;
   place-items: center;
   background: linear-gradient(135deg, #eee5ff, #fce7f3);
   color: #8753d9;
-  font-size: 18px;
+  font-size: 19px;
   font-weight: 800;
 }
 
@@ -114,6 +250,8 @@
   font-size: 18px;
   line-height: 1.35;
 }
+
+/* Course information */
 
 .course-details {
   display: grid;
@@ -162,19 +300,49 @@
   border-radius: 10px;
 }
 
-.enroll-btn,
-.retry-btn {
-  width: 100%;
-  border: none;
+/* ================================
+   COURSE ACTION BUTTONS
+================================ */
+
+.course-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 17px;
+}
+
+.details-btn,
+.enroll-btn {
+  flex: 1;
+  min-width: 0;
+  min-height: 42px;
   border-radius: 10px;
-  padding: 11px 16px;
-  margin-top: 16px;
-  background: linear-gradient(135deg, #7545ed, #ec4899);
-  color: #fff;
-  font-size: 13px;
+  padding: 10px 12px;
+  font-size: 12px;
   font-weight: 800;
   cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.details-btn {
+  border: 1px solid #8b5cf6;
+  background: #fff;
+  color: #8151df;
+}
+
+.details-btn:hover {
+  background: #f5f0ff;
+}
+
+.enroll-btn {
+  border: none;
+  background: linear-gradient(135deg, #7545ed, #ec4899);
+  color: #fff;
   box-shadow: 0 6px 16px rgba(117, 69, 237, 0.18);
+}
+
+.enroll-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(117, 69, 237, 0.25);
 }
 
 .enroll-btn:disabled {
@@ -182,6 +350,15 @@
   cursor: not-allowed;
   box-shadow: none;
 }
+
+.modal-enroll {
+  width: 100%;
+  margin-top: 20px;
+}
+
+/* ================================
+   LOADING, EMPTY AND ERROR STATES
+================================ */
 
 .state-card {
   min-height: 280px;
@@ -218,9 +395,15 @@
 }
 
 .retry-btn {
-  width: auto;
+  border: none;
+  border-radius: 10px;
+  padding: 11px 18px;
   margin-top: 5px;
   background: #8b5cf6;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
 }
 
 .loader {
@@ -233,15 +416,25 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
+
+/* ================================
+   PAGINATION
+================================ */
 
 .pagination {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 15px;
-  margin-top: 20px;
+  margin-top: 24px;
+  padding: 15px 18px;
+  background: #fff;
+  border: 1px solid #efedf4;
+  border-radius: 12px;
   color: #625b70;
   font-size: 13px;
 }
@@ -260,6 +453,12 @@
   border-radius: 8px;
   font-size: 12px;
   font-weight: 700;
+  cursor: pointer;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: #f5f0ff;
+  border-color: #8b5cf6;
 }
 
 .pagination button:disabled {
@@ -279,6 +478,95 @@
   font-weight: 800;
 }
 
+/* ================================
+   COURSE DETAILS MODAL
+================================ */
+
+.details-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: rgba(30, 23, 45, 0.55);
+}
+
+.details-modal {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 28px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.18);
+}
+
+.modal-close {
+  position: absolute;
+  top: 13px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: #f3f0f8;
+  color: #635a75;
+  font-size: 23px;
+  cursor: pointer;
+}
+
+.details-modal h2 {
+  margin: 10px 0 18px;
+  color: #342c47;
+  font-size: 23px;
+}
+
+.modal-course-avatar {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #eee5ff, #fce7f3);
+  color: #8753d9;
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.details-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.details-list div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 13px;
+  border-radius: 10px;
+  background: #faf9fc;
+}
+
+.details-list span {
+  color: #9892a5;
+  font-size: 11px;
+}
+
+.details-list strong {
+  color: #514963;
+  font-size: 13px;
+}
+
+/* ================================
+   RESPONSIVE DESIGN
+================================ */
+
 @media (max-width: 1100px) {
   .course-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -290,12 +578,43 @@
     padding: 16px;
   }
 
+  .discovery-panel {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-controls {
+    flex-wrap: wrap;
+  }
+
+  .search-controls input {
+    flex-basis: 100%;
+  }
+
+  .sort-section {
+    width: 100%;
+  }
+
   .course-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .course-actions {
+    flex-direction: column;
+  }
+
+  .details-list {
     grid-template-columns: 1fr;
   }
 
   .pagination {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .results-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
   }
 }

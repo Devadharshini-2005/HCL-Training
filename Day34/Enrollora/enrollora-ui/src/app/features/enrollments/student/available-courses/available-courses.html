@@ -1,3 +1,4 @@
+
 <div class="course-page">
   <div class="page-header">
     <div>
@@ -21,6 +22,46 @@
     </div>
   }
 
+  <!-- Search and sorting -->
+  <div class="discovery-panel">
+    <div class="search-section">
+      <label for="courseSearch">Search Courses</label>
+
+      <div class="search-controls">
+        <input
+          id="courseSearch"
+          type="text"
+          [(ngModel)]="searchText"
+          (keyup.enter)="searchCourses()"
+          placeholder="Search by course name..."
+        />
+
+        <button class="search-btn" (click)="searchCourses()">
+          Search
+        </button>
+
+        <button class="clear-btn" (click)="clearSearch()">
+          Clear
+        </button>
+      </div>
+    </div>
+
+    <div class="sort-section">
+      <label for="courseSort">Sort Courses</label>
+
+      <select
+        id="courseSort"
+        [ngModel]="sortBy()"
+        (ngModelChange)="changeSort($event)"
+      >
+        <option value="name">Course Name (A-Z)</option>
+        <option value="fees-low">Fees: Low to High</option>
+        <option value="fees-high">Fees: High to Low</option>
+        <option value="popular">Most Popular</option>
+      </select>
+    </div>
+  </div>
+
   @if (isLoading()) {
     <div class="state-card">
       <div class="loader"></div>
@@ -33,18 +74,27 @@
       <p>{{ errorMessage() }}</p>
       <button class="retry-btn" (click)="loadCourses()">Try Again</button>
     </div>
-  } @else if (courses().length === 0) {
+  } @else if (displayedCourses().length === 0) {
     <div class="state-card">
       <span class="empty-icon">📚</span>
-      <h3>No available courses</h3>
-      <p>There are no active courses with open seats right now.</p>
+      <h3>No courses found</h3>
+      <p>Try another course name or clear your search.</p>
+      <button class="retry-btn" (click)="clearSearch()">Show All Courses</button>
     </div>
   } @else {
+    <div class="results-heading">
+      <h2>Explore Courses</h2>
+      <span>{{ displayedCourses().length }} courses on this page</span>
+    </div>
+
     <div class="course-grid">
-      @for (course of courses(); track course.courseId) {
+      @for (course of displayedCourses(); track course.courseId) {
         <article class="course-card">
           <div class="course-card-header">
-            <div class="course-avatar">{{ course.courseName.charAt(0).toUpperCase() }}</div>
+            <div class="course-avatar">
+              {{ course.courseName.charAt(0).toUpperCase() }}
+            </div>
+
             <span
               class="availability-badge"
               [class.low]="course.availableSeats <= 5"
@@ -60,6 +110,7 @@
               <span>Duration</span>
               <strong>{{ course.duration }}</strong>
             </div>
+
             <div>
               <span>Fees</span>
               <strong>₹{{ course.fees | number: '1.0-2' }}</strong>
@@ -71,7 +122,10 @@
               <span>Enrollment</span>
               <strong>{{ course.enrolledCount }} / {{ course.capacity }}</strong>
             </div>
-            <span class="available-count">{{ course.availableSeats }} available</span>
+
+            <span class="available-count">
+              {{ course.availableSeats }} available
+            </span>
           </div>
 
           <div class="progress-track">
@@ -83,27 +137,49 @@
             ></div>
           </div>
 
-          <button
-            class="enroll-btn"
-            [disabled]="processingCourseId() !== null || course.availableSeats <= 0"
-            (click)="enroll(course)"
-          >
-            @if (processingCourseId() === course.courseId) {
-              Enrolling...
-            } @else {
-              Enroll Now
-            }
-          </button>
+          <div class="course-actions">
+            <button
+              class="details-btn"
+              (click)="viewCourseDetails(course)"
+            >
+              View Details
+            </button>
+
+            <button
+              class="enroll-btn"
+              [disabled]="
+                processingCourseId() !== null ||
+                course.availableSeats <= 0
+              "
+              (click)="enroll(course)"
+            >
+              @if (processingCourseId() === course.courseId) {
+                Enrolling...
+              } @else {
+                Enroll Now
+              }
+            </button>
+          </div>
         </article>
       }
     </div>
 
     @if (totalRecords() > 0) {
       <div class="pagination">
-        <span>Page {{ pageNumber() }} of {{ totalPages() }}</span>
+        <span>
+          Page {{ pageNumber() }} of {{ totalPages() }}
+        </span>
+
         <div>
-          <button (click)="previousPage()" [disabled]="pageNumber() === 1">← Previous</button>
+          <button
+            (click)="previousPage()"
+            [disabled]="pageNumber() === 1"
+          >
+            ← Previous
+          </button>
+
           <span class="current-page">{{ pageNumber() }}</span>
+
           <button
             (click)="nextPage()"
             [disabled]="pageNumber() >= totalPages()"
@@ -113,5 +189,95 @@
         </div>
       </div>
     }
+  }
+
+  <!-- Course details popup -->
+  @if (isDetailsLoading() || detailsError() || selectedCourse()) {
+    <div class="details-overlay" (click)="closeCourseDetails()">
+      <div
+        class="details-modal"
+        (click)="$event.stopPropagation()"
+      >
+        <button
+          class="modal-close"
+          (click)="closeCourseDetails()"
+          aria-label="Close details"
+        >
+          ×
+        </button>
+
+        @if (isDetailsLoading()) {
+          <div class="state-card">
+            <div class="loader"></div>
+            <p>Loading course details...</p>
+          </div>
+        } @else if (detailsError()) {
+          <div class="state-card error-state">
+            <h3>Could not load details</h3>
+            <p>{{ detailsError() }}</p>
+          </div>
+        } @else if (selectedCourse(); as course) {
+          <span class="eyebrow">COURSE INFORMATION</span>
+          <h2>{{ course.courseName }}</h2>
+
+          <div class="modal-course-avatar">
+            {{ course.courseName.charAt(0).toUpperCase() }}
+          </div>
+
+          <div class="details-list">
+            <div>
+              <span>Course ID</span>
+              <strong>#{{ course.courseId }}</strong>
+            </div>
+
+            <div>
+              <span>Duration</span>
+              <strong>{{ course.duration }}</strong>
+            </div>
+
+            <div>
+              <span>Course Fees</span>
+              <strong>₹{{ course.fees | number: '1.0-2' }}</strong>
+            </div>
+
+            <div>
+              <span>Total Capacity</span>
+              <strong>{{ course.capacity }}</strong>
+            </div>
+
+            <div>
+              <span>Enrolled Students</span>
+              <strong>{{ course.enrolledCount }}</strong>
+            </div>
+
+            <div>
+              <span>Available Seats</span>
+              <strong>{{ course.availableSeats }}</strong>
+            </div>
+
+            <div>
+              <span>Course Status</span>
+              <strong>{{ course.isActive ? 'Active' : 'Inactive' }}</strong>
+            </div>
+          </div>
+
+          <button
+            class="enroll-btn modal-enroll"
+            [disabled]="
+              processingCourseId() !== null ||
+              course.availableSeats <= 0 ||
+              !course.isActive
+            "
+            (click)="enroll(course)"
+          >
+            @if (processingCourseId() === course.courseId) {
+              Enrolling...
+            } @else {
+              Enroll Now
+            }
+          </button>
+        }
+      </div>
+    </div>
   }
 </div>
