@@ -1,3 +1,4 @@
+
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,39 +19,29 @@ export class CourseListComponent implements OnInit {
 
   // Course data
   courses = signal<CourseResponse[]>([]);
+  selectedCourse = signal<CourseResponse | null>(null);
 
   // Loading and error states
   isLoading = signal(false);
   errorMessage = signal('');
+  successMessage = signal('');
+
+  // Search and filter
+  searchText = signal('');
+  selectedStatus = signal('');
 
   // Pagination
   pageNumber = signal(1);
   pageSize = signal(10);
-
+ 
   totalRecords = signal(0);
   totalPages = signal(0);
 
-  // Add Course form state
+  // Add Course form
   showAddCourseForm = false;
   isSaving = false;
   formError = '';
 
-  // Edit Course form state
-showEditCourseForm = false;
-isUpdating = false;
-editFormError = '';
-
-selectedCourseId: number | null = null;
-
-editCourse = {
-  courseName: '',
-  duration: '',
-  fees: 0,
-  capacity: 0,
-  isActive: true
-};
-
-  // Form data (matches API request)
   newCourse = {
     courseName: '',
     duration: '',
@@ -59,35 +50,89 @@ editCourse = {
     isActive: true
   };
 
-  // Delete Course state
-showDeleteCourseModal = false;
-isDeleting = false;
-deleteError = '';
+  // Edit Course form
+  showEditCourseForm = false;
+  isUpdating = false;
+  editFormError = '';
+  selectedCourseId: number | null = null;
 
-selectedDeleteCourse: CourseResponse | null = null;
+  editCourse = {
+    courseName: '',
+    duration: '',
+    fees: 0,
+    capacity: 0,
+    isActive: true
+  };
+
+  // Delete Course
+  showDeleteCourseModal = false;
+  isDeleting = false;
+  deleteError = '';
+  selectedDeleteCourse: CourseResponse | null = null;
+
+  // View Course Details
+  showDetailsModal = false;
+
+  // Deactivate Course
+  isDeactivating = false;
+  deactivateError = '';
 
   ngOnInit(): void {
     this.loadCourses();
   }
 
-  // Load courses from API
+  // Load courses with search and status filters
   loadCourses(): void {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    this.courseService.getCourses(this.pageNumber(), this.pageSize()).subscribe({
-      next: (response) => {
-        this.courses.set(response.items ?? []);
-        this.totalRecords.set(response.totalRecords);
-        this.totalPages.set(response.totalPages);
-        this.isLoading.set(false);
-      },
-      error: (error) => {
-        console.error('Error loading courses:', error);
-        this.errorMessage.set('Unable to load courses.');
-        this.isLoading.set(false);
-      }
-    });
+    const filters: any = {};
+
+    if (this.searchText().trim()) {
+      filters.search = this.searchText().trim();
+    }
+
+    if (this.selectedStatus() === 'active') {
+  filters.isActive = true;
+} else if (this.selectedStatus() === 'inactive') {
+  filters.isActive = false;
+}
+
+    this.courseService
+      .getCourses(this.pageNumber(), this.pageSize(), filters)
+      .subscribe({
+        next: (response) => {
+          this.courses.set(response.items ?? []);
+          this.totalRecords.set(response.totalRecords);
+          this.totalPages.set(response.totalPages);
+          this.isLoading.set(false);
+        },
+        error: (error) => {
+          console.error('Error loading courses:', error);
+          this.errorMessage.set('Unable to load courses.');
+          this.isLoading.set(false);
+        }
+      });
+  }
+
+  // Search courses
+  searchCourses(): void {
+    this.pageNumber.set(1);
+    this.loadCourses();
+  }
+
+  // Apply status filter
+  filterCourses(): void {
+    this.pageNumber.set(1);
+    this.loadCourses();
+  }
+
+  // Clear search and filters
+  clearFilters(): void {
+    this.searchText.set('');
+    this.selectedStatus.set('');
+    this.pageNumber.set(1);
+    this.loadCourses();
   }
 
   // Pagination
@@ -111,7 +156,7 @@ selectedDeleteCourse: CourseResponse | null = null;
     this.showAddCourseForm = true;
   }
 
-  // Close modal
+
   closeAddCourse(): void {
     if (this.isSaving) return;
 
@@ -120,7 +165,7 @@ selectedDeleteCourse: CourseResponse | null = null;
     this.resetCourseForm();
   }
 
-  // Reset form
+
   resetCourseForm(): void {
     this.newCourse = {
       courseName: '',
@@ -131,13 +176,13 @@ selectedDeleteCourse: CourseResponse | null = null;
     };
   }
 
-  // Save course
+  // Add Course
   saveCourse(): void {
     if (this.isSaving) return;
 
     this.formError = '';
 
-    // Validation
+
     if (
       !this.newCourse.courseName.trim() ||
       !this.newCourse.duration.trim() ||
@@ -156,16 +201,17 @@ selectedDeleteCourse: CourseResponse | null = null;
       next: () => {
         this.isSaving = false;
         this.showAddCourseForm = false;
-
+        
         this.resetCourseForm();
 
-        // Refresh the course list from the first page
+        this.successMessage.set('Course created successfully.');
         this.pageNumber.set(1);
         this.loadCourses();
       },
       error: (error) => {
+        
         console.error('Error creating course:', error);
-
+        
         this.isSaving = false;
 
         this.formError =
@@ -176,117 +222,164 @@ selectedDeleteCourse: CourseResponse | null = null;
     });
   }
 
+  // Open Edit Course modal
   openEditCourse(course: CourseResponse): void {
-  this.selectedCourseId = course.courseId;
+    this.selectedCourseId = course.courseId;
 
-  this.editCourse = {
-    courseName: course.courseName,
-    duration: course.duration,
-    fees: course.fees,
-    capacity: course.capacity,
-    isActive: course.isActive
-  };
+    this.editCourse = {
+      courseName: course.courseName,
+      duration: course.duration,
+      fees: course.fees,
+      capacity: course.capacity,
+      isActive: course.isActive
+    };
 
-  this.editFormError = '';
-  this.showEditCourseForm = true;
-}
-
-closeEditCourse(): void {
-  if (this.isUpdating) return;
-
-  this.showEditCourseForm = false;
-  this.selectedCourseId = null;
-  this.editFormError = '';
-}
-
-updateCourse(): void {
-  if (this.isUpdating || this.selectedCourseId === null) return;
-
-  this.editFormError = '';
-
-  if (
-    !this.editCourse.courseName.trim() ||
-    !this.editCourse.duration.trim() ||
-    Number(this.editCourse.fees) < 0 ||
-    Number(this.editCourse.capacity) <= 0
-  ) {
-    this.editFormError = 'Please enter valid course details.';
-    return;
+    this.editFormError = '';
+    this.showEditCourseForm = true;
   }
 
-  this.isUpdating = true;
+  closeEditCourse(): void {
+    if (this.isUpdating) return;
 
-  const request = {
-    courseName: this.editCourse.courseName.trim(),
-    duration: this.editCourse.duration.trim(),
-    fees: Number(this.editCourse.fees),
-    capacity: Number(this.editCourse.capacity),
-    isActive: this.editCourse.isActive
-  };
+    this.showEditCourseForm = false;
+    this.selectedCourseId = null;
+    this.editFormError = '';
+  }
 
-  this.courseService.updateCourse(this.selectedCourseId, request).subscribe({
-    next: () => {
-      this.isUpdating = false;
-      this.showEditCourseForm = false;
-      this.selectedCourseId = null;
+  // Update Course
+  updateCourse(): void {
+    if (this.isUpdating || this.selectedCourseId === null) return;
 
-      this.loadCourses();
-    },
-    error: (error) => {
-      console.error('Error updating course:', error);
+    this.editFormError = '';
 
-      this.isUpdating = false;
-      this.editFormError =
-        error?.error?.message ||
-        error?.error?.title ||
-        'Failed to update course. Please try again.';
+    if (
+      !this.editCourse.courseName.trim() ||
+      !this.editCourse.duration.trim() ||
+      !Number.isFinite(Number(this.editCourse.fees)) ||
+      Number(this.editCourse.fees) < 0 ||
+      !Number.isFinite(Number(this.editCourse.capacity)) ||
+      Number(this.editCourse.capacity) <= 0
+    ) {
+      this.editFormError = 'Please enter valid course details.';
+      return;
     }
-  });
-}
 
-openDeleteCourse(course: CourseResponse): void {
-  this.selectedDeleteCourse = course;
-  this.deleteError = '';
-  this.showDeleteCourseModal = true;
-}
+    this.isUpdating = true;
 
-closeDeleteCourse(): void {
-  if (this.isDeleting) return;
+    const request = {
+      courseName: this.editCourse.courseName.trim(),
+      duration: this.editCourse.duration.trim(),
+      fees: Number(this.editCourse.fees),
+      capacity: Number(this.editCourse.capacity),
+      isActive: this.editCourse.isActive
+    };
 
-  this.showDeleteCourseModal = false;
-  this.selectedDeleteCourse = null;
-  this.deleteError = '';
-}
+    this.courseService.updateCourse(this.selectedCourseId, request)
+      .subscribe({
+        next: () => {
+          this.isUpdating = false;
+          this.showEditCourseForm = false;
+          this.selectedCourseId = null;
 
+          this.successMessage.set('Course updated successfully.');
+          this.loadCourses();
+        },
+        error: (error) => {
+          console.error('Error updating course:', error);
+          this.isUpdating = false;
 
-confirmDeleteCourse(): void {
-  if (this.isDeleting || !this.selectedDeleteCourse) return;
+          this.editFormError =
+            error?.error?.message ||
+            error?.error?.title ||
+            'Failed to update course. Please try again.';
+        }
+      });
+  }
 
-  this.isDeleting = true;
-  this.deleteError = '';
+  // View Course Details
+  viewCourseDetails(course: CourseResponse): void {
+    this.selectedCourse.set(course);
+    this.showDetailsModal = true;
+  }
 
-  const courseId = this.selectedDeleteCourse.courseId;
+  closeDetailsModal(): void {
+    this.showDetailsModal = false;
+    this.selectedCourse.set(null);
+  }
 
-  this.courseService.deleteCourse(courseId).subscribe({
-    next: () => {
-      this.isDeleting = false;
-      this.showDeleteCourseModal = false;
-      this.selectedDeleteCourse = null;
+  // Open Delete Confirmation
+  openDeleteCourse(course: CourseResponse): void {
+    this.selectedDeleteCourse = course;
+    this.deleteError = '';
+    this.showDeleteCourseModal = true;
+  }
 
-      // Refresh the course list
-      this.loadCourses();
-    },
-    error: (error) => {
-      console.error('Error deleting course:', error);
+  closeDeleteCourse(): void {
+    if (this.isDeleting) return;
 
-      this.isDeleting = false;
-      this.deleteError =
-        error?.error?.message ||
-        error?.error?.title ||
-        'Failed to delete course. Please try again.';
-    }
-  });
-}
+    this.showDeleteCourseModal = false;
+    this.selectedDeleteCourse = null;
+    this.deleteError = '';
+  }
 
+  // Permanently Delete Course
+  confirmDeleteCourse(): void {
+    if (this.isDeleting || !this.selectedDeleteCourse) return;
 
+    this.isDeleting = true;
+    this.deleteError = '';
+
+    const courseId = this.selectedDeleteCourse.courseId;
+
+    this.courseService.deleteCourse(courseId).subscribe({
+      next: () => {
+        this.isDeleting = false;
+        this.showDeleteCourseModal = false;
+        this.selectedDeleteCourse = null;
+
+        this.successMessage.set('Course deleted successfully.');
+        this.loadCourses();
+      },
+      error: (error) => {
+        console.error('Error deleting course:', error);
+        this.isDeleting = false;
+
+        this.deleteError =
+          error?.error?.message ||
+          error?.error?.title ||
+          'Failed to delete course. Please try again.';
+      }
+    });
+  }
+
+  // Deactivate Course
+  deactivateCourse(course: CourseResponse): void {
+    if (this.isDeactivating || !course.isActive) return;
+
+    const confirmed = window.confirm(
+      `Are you sure you want to deactivate ${course.courseName}?`
+    );
+
+    if (!confirmed) return;
+
+    this.isDeactivating = true;
+    this.deactivateError = '';
+
+    this.courseService.deactivateCourse(course.courseId).subscribe({
+      next: () => {
+        this.isDeactivating = false;
+        this.successMessage.set('Course deactivated successfully.');
+        this.loadCourses();
+      },
+      error: (error) => {
+        console.error('Error deactivating course:', error);
+        this.isDeactivating = false;
+
+        this.deactivateError =
+          error?.error?.message ||
+          error?.error?.title ||
+          'Failed to deactivate course.';
+      }
+    });
+  }
 }

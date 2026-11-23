@@ -850,3 +850,257 @@
     flex-direction: column-reverse;
   }
 }
+
+
+.course-filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.search-box,
+.filter-box {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.search-box input,
+.filter-box select {
+  padding: 10px 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  min-width: 200px;
+}
+
+.success-message {
+  padding: 12px 16px;
+  margin-bottom: 15px;
+  background: #e8f7ed;
+  color: #18743a;
+  border-radius: 6px;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+}
+
+.modal-content p {
+  margin: 12px 0;
+}
+
+@media (max-width: 600px) {
+  .course-filters,
+  .search-box,
+  .filter-box {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box input,
+  .filter-box select {
+    width: 100%;
+  }
+}
+
+/* Search and filter buttons */
+.search-box button,
+.filter-box button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 7px;
+  background: #8b45ed;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.search-box button:hover,
+.filter-box button:hover {
+  background: #7133ce;
+}
+
+/* Course action buttons */
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.action-buttons button {
+  padding: 7px 11px;
+  border: none;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.action-buttons button:nth-child(1) {
+  background: #e8eaff;
+  color: #4b50b5;
+}
+
+.action-buttons button:nth-child(2) {
+  background: #fff0d9;
+  color: #a45c00;
+}
+
+.action-buttons button:nth-child(3) {
+  background: #fff0e9;
+  color: #d45b24;
+}
+
+.action-buttons button:nth-child(4) {
+  background: #ffe8e8;
+  color: #c62828;
+}
+
+.action-buttons button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Pagination buttons */
+.pagination button {
+  padding: 8px 14px;
+  border: 1px solid #ded5ee;
+  border-radius: 6px;
+  background: white;
+  color: #7133ce;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+/* Modal buttons */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-actions button,
+.modal-content > button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #8745e8;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-actions button:last-child {
+  background: #eeeeee;
+  color: #333;
+}
+
+/* Edit and Add Course Modal */
+.modal-content {
+  background: #ffffff;
+  width: 90%;
+  max-width: 500px;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
+}
+
+.modal-content h2 {
+  color: #29134b;
+  font-size: 23px;
+  margin-bottom: 24px;
+}
+
+/* Form layout */
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal-content form label {
+  color: #403452;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.modal-content form input:not([type="checkbox"]) {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #ded8e8;
+  border-radius: 7px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.modal-content form input:focus {
+  border-color: #9149ed;
+  box-shadow: 0 0 0 3px rgba(145, 73, 237, 0.1);
+}
+
+/* Active checkbox */
+.modal-content form label:has(input[type="checkbox"]) {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 5px;
+}
+
+/* Modal buttons */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  padding: 11px 20px;
+  border: none;
+  border-radius: 7px;
+  background: #9149ed;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-actions button:last-child {
+  background: #f0edf4;
+  color: #453653;
+}
+
+.modal-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
