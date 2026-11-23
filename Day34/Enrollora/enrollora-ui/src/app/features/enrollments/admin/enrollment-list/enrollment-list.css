@@ -194,3 +194,143 @@
     justify-content: space-between;
   }
 }
+
+/* Enrollment Search and Filters */
+.enrollment-filters {
+  background: white;
+  padding: 22px;
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(40, 20, 70, 0.06);
+  margin-bottom: 24px;
+}
+
+.filter-heading {
+  margin-bottom: 18px;
+}
+
+.filter-heading h5 {
+  font-size: 16px;
+  font-weight: 800;
+  color: #332849;
+  margin: 0;
+}
+
+.filter-heading i {
+  color: #7544d8;
+  margin-right: 7px;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.filter-group label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #554967;
+}
+
+.filter-group .form-control,
+.filter-group .form-select {
+  min-height: 42px;
+  border-radius: 9px;
+  border-color: #e6e0ed;
+  font-size: 13px;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.filter-actions button {
+  border-radius: 9px;
+  font-size: 13px;
+  padding: 9px 15px;
+}
+
+/* Enrollment Details */
+.enrollment-details {
+  background: white;
+  padding: 22px;
+  border-radius: 16px;
+  margin-top: 22px;
+  box-shadow: 0 4px 18px rgba(40, 20, 70, 0.06);
+}
+
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #eeeaf3;
+  padding-bottom: 15px;
+  margin-bottom: 18px;
+}
+
+.details-header h5 {
+  font-size: 17px;
+  font-weight: 800;
+  color: #332849;
+  margin-bottom: 5px;
+}
+
+.details-header p {
+  color: #91899d;
+  font-size: 13px;
+  margin: 0;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.details-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-wrap: anywhere;
+}
+
+.details-item span {
+  color: #91899d;
+  font-size: 12px;
+}
+
+.details-item strong {
+  color: #332849;
+  font-size: 14px;
+}
+
+@media (max-width: 900px) {
+  .filter-grid,
+  .details-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .filter-grid,
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-actions {
+    flex-direction: column;
+  }
+
+  .filter-actions button {
+    width: 100%;
+  }
+}
+

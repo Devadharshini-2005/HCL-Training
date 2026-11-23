@@ -1,4 +1,6 @@
+
 <div class="enrollment-page">
+
   <!-- Page Header -->
   <div class="page-header">
     <div>
@@ -22,6 +24,114 @@
     </div>
   </div>
 
+  <!-- Search and Filters -->
+  <div class="enrollment-filters">
+
+    <div class="filter-heading">
+      <h5><i class="bi bi-funnel"></i> Search and Filters</h5>
+    </div>
+
+    <div class="filter-grid">
+
+      <!-- Search -->
+      <div class="filter-group">
+        <label for="enrollmentSearch">Search Student</label>
+        <input
+          id="enrollmentSearch"
+          type="text"
+          class="form-control"
+          [(ngModel)]="searchText"
+          placeholder="Enter student name or email"
+          (keyup.enter)="applyFilters()"
+        />
+      </div>
+
+      <!-- Student Filter -->
+      <div class="filter-group">
+        <label for="studentFilter">Filter by Student</label>
+        <select
+          id="studentFilter"
+          class="form-select"
+          [(ngModel)]="selectedStudentId"
+        >
+          <option [ngValue]="null">All Students</option>
+          @for (student of students(); track student.studentId) {
+            <option [ngValue]="student.studentId">
+              {{ student.name }} ({{ student.studentId }})
+            </option>
+          }
+        </select>
+      </div>
+
+      <!-- Course Filter -->
+      <div class="filter-group">
+        <label for="courseFilter">Filter by Course</label>
+        <select
+          id="courseFilter"
+          class="form-select"
+          [(ngModel)]="selectedCourseId"
+        >
+          <option [ngValue]="null">All Courses</option>
+          @for (course of courses(); track course.courseId) {
+            <option [ngValue]="course.courseId">
+              {{ course.courseName }}
+            </option>
+          }
+        </select>
+      </div>
+
+      <!-- Status Filter -->
+      <div class="filter-group">
+        <label for="statusFilter">Enrollment Status</label>
+        <select
+          id="statusFilter"
+          class="form-select"
+          [(ngModel)]="selectedStatus"
+        >
+          <option [ngValue]="null">All Statuses</option>
+          <option [ngValue]="0">Active</option>
+          <option [ngValue]="1">Cancelled</option>
+        </select>
+      </div>
+
+      <!-- From Date -->
+      <div class="filter-group">
+        <label for="fromDate">From Date</label>
+        <input
+          id="fromDate"
+          type="date"
+          class="form-control"
+          [(ngModel)]="fromDate"
+        />
+      </div>
+
+      <!-- To Date -->
+      <div class="filter-group">
+        <label for="toDate">To Date</label>
+        <input
+          id="toDate"
+          type="date"
+          class="form-control"
+          [(ngModel)]="toDate"
+        />
+      </div>
+
+    </div>
+
+    <div class="filter-actions">
+      <button class="btn btn-primary" (click)="applyFilters()">
+        <i class="bi bi-search"></i>
+        Apply Filters
+      </button>
+
+      <button class="btn btn-outline-secondary" (click)="clearFilters()">
+        <i class="bi bi-arrow-counterclockwise"></i>
+        Clear Filters
+      </button>
+    </div>
+
+  </div>
+
   <!-- Loading -->
   @if (isLoading()) {
     <div class="state-message">
@@ -34,26 +144,37 @@
   @if (errorMessage()) {
     <div class="alert alert-danger">
       {{ errorMessage() }}
-      <button class="btn btn-sm btn-outline-danger ms-2" (click)="loadEnrollments()">Retry</button>
+      <button
+        class="btn btn-sm btn-outline-danger ms-2"
+        (click)="loadEnrollments()"
+      >
+        Retry
+      </button>
     </div>
   }
 
   <!-- Enrollment Table -->
   @if (!isLoading() && !errorMessage()) {
+
     <div class="table-container">
       <table class="table align-middle">
+
         <thead>
           <tr>
             <th>Student</th>
             <th>Course</th>
             <th>Enrollment Date</th>
             <th>Status</th>
+            <th>Action</th>
           </tr>
         </thead>
 
         <tbody>
           @for (enrollment of enrollments(); track enrollment.enrollmentId) {
+
             <tr>
+
+              <!-- Student -->
               <td>
                 <div class="student-info">
                   <div class="student-avatar">
@@ -67,21 +188,29 @@
                     <div class="student-email">
                       {{ enrollment.studentEmail }}
                     </div>
+                    <small class="course-id">
+                      Student #{{ enrollment.studentId }}
+                    </small>
                   </div>
                 </div>
               </td>
 
+              <!-- Course -->
               <td>
                 <span class="course-name">
                   {{ enrollment.courseName }}
                 </span>
-                <small class="course-id"> Course #{{ enrollment.courseId }} </small>
+                <small class="course-id">
+                  Course #{{ enrollment.courseId }}
+                </small>
               </td>
 
+              <!-- Date -->
               <td>
                 {{ enrollment.enrolledAt | date: 'dd MMM yyyy' }}
               </td>
 
+              <!-- Status -->
               <td>
                 <span
                   class="status-badge"
@@ -91,25 +220,113 @@
                   {{ enrollment.status === 1 ? 'Active' : 'Cancelled' }}
                 </span>
               </td>
+
+              <!-- Details Action -->
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-primary"
+                  (click)="viewDetails(enrollment)"
+                >
+                  <i class="bi bi-eye"></i>
+                  Details
+                </button>
+              </td>
+
             </tr>
 
           } @empty {
             <tr>
-              <td colspan="4" class="empty-state">
+              <td colspan="5" class="empty-state">
                 <i class="bi bi-inbox"></i>
                 <p>No enrollments found.</p>
               </td>
             </tr>
           }
         </tbody>
+
       </table>
     </div>
 
+    <!-- Individual Enrollment Details -->
+    @if (selectedEnrollment(); as enrollment) {
+
+      <div class="enrollment-details">
+
+        <div class="details-header">
+          <div>
+            <h5>Enrollment Details</h5>
+            <p>Enrollment #{{ enrollment.enrollmentId }}</p>
+          </div>
+
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close details"
+            (click)="selectedEnrollment.set(null)"
+          ></button>
+        </div>
+
+        <div class="details-grid">
+
+          <div class="details-item">
+            <span>Enrollment ID</span>
+            <strong>{{ enrollment.enrollmentId }}</strong>
+          </div>
+
+          <div class="details-item">
+            <span>Enrollment Date</span>
+            <strong>{{ enrollment.enrolledAt | date: 'medium' }}</strong>
+          </div>
+
+          <div class="details-item">
+            <span>Student ID</span>
+            <strong>{{ enrollment.studentId }}</strong>
+          </div>
+
+          <div class="details-item">
+            <span>Student Name</span>
+            <strong>{{ enrollment.studentName }}</strong>
+          </div>
+
+          <div class="details-item">
+            <span>Student Email</span>
+            <strong>{{ enrollment.studentEmail }}</strong>
+          </div>
+
+          <div class="details-item">
+            <span>Course ID</span>
+            <strong>{{ enrollment.courseId }}</strong>
+          </div>
+
+          <div class="details-item">
+            <span>Course Name</span>
+            <strong>{{ enrollment.courseName }}</strong>
+          </div>
+
+          <div class="details-item">
+            <span>Enrollment Status</span>
+            <strong
+              [class.text-success]="enrollment.status === 1"
+              [class.text-danger]="enrollment.status !== 1"
+            >
+              {{ enrollment.status === 1 ? 'Active' : 'Cancelled' }}
+            </strong>
+          </div>
+
+        </div>
+      </div>
+    }
+
     <!-- Pagination -->
     <div class="pagination-container">
-      <span> Showing {{ enrollments().length }} of {{ totalRecords() }} enrollments </span>
+
+      <span>
+        Showing {{ enrollments().length }} of {{ totalRecords() }} enrollments
+      </span>
 
       <div class="pagination-actions">
+
         <button
           class="btn btn-outline-secondary"
           [disabled]="pageNumber() === 1"
@@ -118,7 +335,9 @@
           Previous
         </button>
 
-        <span> Page {{ pageNumber() }} of {{ totalPages() }} </span>
+        <span>
+          Page {{ pageNumber() }} of {{ totalPages() }}
+        </span>
 
         <button
           class="btn btn-outline-secondary"
@@ -127,7 +346,10 @@
         >
           Next
         </button>
+
       </div>
     </div>
+
   }
+
 </div>
