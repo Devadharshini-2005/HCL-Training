@@ -1,4 +1,5 @@
-import { Component, OnInit, inject } from '@angular/core';
+
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -15,17 +16,18 @@ import { StudentResponse, UpdateStudentRequest } from '../../admin/students/stud
 export class Profile implements OnInit {
   private studentService = inject(StudentService);
 
-  profile: StudentResponse | null = null;
+  // Signals
+  profile = signal<StudentResponse | null>(null);
 
-  isLoading = false;
-  isEditing = false;
-  isSaving = false;
+  isLoading = signal(false);
+  isEditing = signal(false);
+  isSaving = signal(false);
 
-  errorMessage = '';
-  successMessage = '';
+  errorMessage = signal('');
+  successMessage = signal('');
+  formError = signal('');
 
-  formError = '';
-
+  // Form model (kept as a normal object for ngModel)
   editProfile: UpdateStudentRequest = {
     name: '',
     email: '',
@@ -39,51 +41,61 @@ export class Profile implements OnInit {
   }
 
   loadProfile(): void {
-    this.isLoading = true;
-    this.errorMessage = '';
+    this.isLoading.set(true);
+    this.errorMessage.set('');
 
     this.studentService.getMyProfile().subscribe({
       next: (response) => {
-        this.profile = response;
-        this.isLoading = false;
+        console.log('Profile API response:', response);
+
+        this.profile.set(response);
+
+        console.log('Assigned profile:', this.profile());
+
+        this.isLoading.set(false);
       },
       error: (error) => {
         console.error('Error loading profile:', error);
-        this.errorMessage =
-          error?.error?.message || 'Unable to load your profile.';
-        this.isLoading = false;
+
+        this.errorMessage.set(
+          error?.error?.message || 'Unable to load your profile.'
+        );
+
+        this.isLoading.set(false);
       },
     });
   }
 
   startEditing(): void {
-    if (!this.profile) return;
+    const student = this.profile();
+
+    if (!student) return;
 
     this.editProfile = {
-      name: this.profile.name,
-      email: this.profile.email,
-      department: this.profile.department,
-      age: this.profile.age,
-      cgpa: this.profile.cgpa,
+      name: student.name,
+      email: student.email,
+      department: student.department,
+      age: student.age,
+      cgpa: student.cgpa,
     };
 
-    this.formError = '';
-    this.successMessage = '';
-    this.isEditing = true;
+    this.formError.set('');
+    this.successMessage.set('');
+    this.isEditing.set(true);
   }
 
   cancelEditing(): void {
-    if (this.isSaving) return;
+    if (this.isSaving()) return;
 
-    this.isEditing = false;
-    this.formError = '';
+    this.isEditing.set(false);
+    this.formError.set('');
   }
 
   saveProfile(): void {
-    if (this.isSaving) return;
+    if (this.isSaving()) return;
 
-    this.formError = '';
-    this.successMessage = '';
+    this.formError.set('');
+    this.successMessage.set('');
 
     if (
       !this.editProfile.name.trim() ||
@@ -93,7 +105,7 @@ export class Profile implements OnInit {
       this.editProfile.cgpa < 0 ||
       this.editProfile.cgpa > 10
     ) {
-      this.formError = 'Please enter valid profile details.';
+      this.formError.set('Please enter valid profile details.');
       return;
     }
 
@@ -105,22 +117,25 @@ export class Profile implements OnInit {
       cgpa: Number(this.editProfile.cgpa),
     };
 
-    this.isSaving = true;
+    this.isSaving.set(true);
 
     this.studentService.updateMyProfile(request).subscribe({
       next: (response) => {
-        this.profile = response;
-        this.isSaving = false;
-        this.isEditing = false;
-        this.successMessage = 'Profile updated successfully.';
+        this.profile.set(response);
+        this.isSaving.set(false);
+        this.isEditing.set(false);
+        this.successMessage.set('Profile updated successfully.');
       },
       error: (error) => {
         console.error('Error updating profile:', error);
-        this.isSaving = false;
-        this.formError =
+
+        this.isSaving.set(false);
+
+        this.formError.set(
           error?.error?.message ||
           error?.error?.title ||
-          'Failed to update profile. Please try again.';
+          'Failed to update profile. Please try again.'
+        );
       },
     });
   }
