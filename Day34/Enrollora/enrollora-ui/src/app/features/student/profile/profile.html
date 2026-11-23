@@ -1,0 +1,234 @@
+<div class="profile-page">
+
+  <!-- Page Header -->
+  <div class="profile-header">
+    <div>
+      <h1>My Profile</h1>
+      <p>View and manage your personal information.</p>
+    </div>
+
+    @if (profile && !isEditing) {
+      <button class="edit-btn" (click)="startEditing()">
+        <i class="bi bi-pencil"></i>
+        Edit Profile
+      </button>
+    }
+  </div>
+
+  <!-- Loading -->
+  @if (isLoading) {
+    <div class="profile-loading">
+      <div class="spinner"></div>
+      <p>Loading your profile...</p>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (errorMessage) {
+    <div class="alert-error">
+      {{ errorMessage }}
+      <button type="button" (click)="loadProfile()">Retry</button>
+    </div>
+  }
+
+  <!-- Success -->
+  @if (successMessage) {
+    <div class="alert-success">
+      <i class="bi bi-check-circle"></i>
+      {{ successMessage }}
+    </div>
+  }
+
+  @if (profile && !isLoading && !isEditing) {
+    <!-- Profile Card -->
+    <div class="profile-card">
+
+      <div class="profile-banner">
+        <div class="profile-avatar">
+          {{ profile.name.charAt(0).toUpperCase() }}
+        </div>
+
+        <div class="profile-identity">
+          <h2>{{ profile.name }}</h2>
+          <p>{{ profile.email }}</p>
+          <span class="profile-badge">Student</span>
+        </div>
+      </div>
+
+      <div class="profile-details">
+        <div class="detail-item">
+          <span class="detail-label">Full Name</span>
+          <span class="detail-value">{{ profile.name }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-label">Email Address</span>
+          <span class="detail-value">{{ profile.email }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-label">Department</span>
+          <span class="detail-value">{{ profile.department }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-label">Age</span>
+          <span class="detail-value">{{ profile.age }} years</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-label">CGPA</span>
+          <span class="detail-value">{{ profile.cgpa }}</span>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-label">Registration Date</span>
+          <span class="detail-value">
+            {{ profile.registeredAt | date:'mediumDate' }}
+          </span>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-label">Student Status</span>
+          <span class="detail-value status-value">
+            @switch (profile.status) {
+              @case (0) { Pending }
+              @case (1) { Approved }
+              @case (2) { Rejected }
+              @default { Unknown }
+            }
+          </span>
+        </div>
+      </div>
+
+    </div>
+  }
+
+  <!-- Edit Profile Form -->
+  @if (profile && isEditing) {
+    <div class="profile-card edit-card">
+
+      <div class="edit-heading">
+        <div class="edit-avatar">
+          <i class="bi bi-person-gear"></i>
+        </div>
+        <div>
+          <h2>Edit Personal Details</h2>
+          <p>Update your information below.</p>
+        </div>
+      </div>
+
+      <form (ngSubmit)="saveProfile()">
+
+        <div class="form-grid">
+
+          <!-- Name -->
+          <div class="form-group">
+            <label for="profileName">Full Name</label>
+            <input
+              id="profileName"
+              type="text"
+              name="name"
+              [(ngModel)]="editProfile.name"
+              required
+              maxlength="100"
+              placeholder="Enter your name"
+            />
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label for="profileEmail">Email Address</label>
+            <input
+              id="profileEmail"
+              type="email"
+              name="email"
+              [(ngModel)]="editProfile.email"
+              required
+              placeholder="Enter your email"
+            />
+          </div>
+
+          <!-- Department -->
+          <div class="form-group">
+            <label for="profileDepartment">Department</label>
+            <input
+              id="profileDepartment"
+              type="text"
+              name="department"
+              [(ngModel)]="editProfile.department"
+              required
+              placeholder="Enter your department"
+            />
+          </div>
+
+          <!-- Age -->
+          <div class="form-group">
+            <label for="profileAge">Age</label>
+            <input
+              id="profileAge"
+              type="number"
+              name="age"
+              [(ngModel)]="editProfile.age"
+              min="1"
+              max="100"
+              required
+              placeholder="Enter your age"
+            />
+          </div>
+
+          <!-- CGPA -->
+          <div class="form-group">
+            <label for="profileCgpa">CGPA (out of 10)</label>
+            <input
+              id="profileCgpa"
+              type="number"
+              name="cgpa"
+              [(ngModel)]="editProfile.cgpa"
+              min="0"
+              max="10"
+              step="0.01"
+              required
+              placeholder="Enter your CGPA"
+            />
+          </div>
+
+        </div>
+
+        <!-- Form Error -->
+        @if (formError) {
+          <div class="alert-error">
+            {{ formError }}
+          </div>
+        }
+
+        <!-- Actions -->
+        <div class="form-actions">
+          <button
+            type="button"
+            class="cancel-btn"
+            (click)="cancelEditing()"
+            [disabled]="isSaving"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="save-btn"
+            [disabled]="isSaving"
+          >
+            @if (isSaving) {
+              <span class="spinner small-spinner"></span>
+              Saving...
+            } @else {
+              <i class="bi bi-check-lg"></i>
+              Save Changes
+            }
+          </button>
+        </div>
+
+      </form>
+    </div>
+  }
+</div>

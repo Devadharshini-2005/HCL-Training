@@ -71,6 +71,11 @@ export const routes: Routes = [
       ),
     children: [
       {
+  path: 'profile',
+  loadComponent: () =>
+    import('./features/student/profile/profile').then((m) => m.Profile),
+},
+      {
         path: 'dashboard',
         loadComponent: () =>
           import('./features/student/dashboard/dashboard').then((m) => m.Dashboard),
