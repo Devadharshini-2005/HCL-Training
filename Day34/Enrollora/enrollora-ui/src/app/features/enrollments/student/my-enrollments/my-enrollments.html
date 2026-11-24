@@ -8,6 +8,13 @@
     </div>
   </div>
 
+  <!-- Cancellation success message -->
+  @if (cancellationSuccess()) {
+    <div class="alert success-alert">
+      {{ cancellationSuccess() }}
+    </div>
+  }
+
   @if (isLoading()) {
     <div class="state-card">
       <div class="loader"></div>
@@ -69,11 +76,17 @@
                 <td>
                   <span
                     class="status-badge"
-                    [class.active]="enrollment.status === 1"
-                    [class.cancelled]="enrollment.status !== 1"
+                    [class.active]="enrollment.status === 0"
+                    [class.cancelled]="enrollment.status === 1"
                   >
                     {{ statusLabel(enrollment.status) }}
                   </span>
+
+                  @if (hasPendingRequest(enrollment.enrollmentId)) {
+                    <small class="pending-request-label">
+                      Cancellation pending
+                    </small>
+                  }
                 </td>
 
                 <td>
@@ -84,6 +97,21 @@
                   >
                     View Details
                   </button>
+
+                  @if (enrollment.status === 0) {
+                    <button
+                      type="button"
+                      class="cancellation-btn"
+                      (click)="openCancellationForm(enrollment)"
+                      [disabled]="hasPendingRequest(enrollment.enrollmentId)"
+                    >
+                      {{
+                        hasPendingRequest(enrollment.enrollmentId)
+                          ? 'Request Pending'
+                          : 'Request Cancellation'
+                      }}
+                    </button>
+                  }
                 </td>
               </tr>
             }
@@ -121,6 +149,7 @@
   }
 </div>
 
+<!-- Enrollment Details Modal -->
 @if (selectedEnrollment(); as enrollment) {
   <div class="modal-overlay" (click)="closeDetails()">
     <div
@@ -180,8 +209,8 @@
           <strong>
             <span
               class="status-badge"
-              [class.active]="enrollment.status === 1"
-              [class.cancelled]="enrollment.status !== 1"
+              [class.active]="enrollment.status === 0"
+              [class.cancelled]="enrollment.status === 1"
             >
               {{ statusLabel(enrollment.status) }}
             </span>
@@ -196,6 +225,94 @@
           (click)="closeDetails()"
         >
           Close
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Cancellation Request Modal -->
+@if (showCancellationForm() && selectedCancellationEnrollment(); as enrollment) {
+  <div class="modal-overlay" (click)="closeCancellationForm()">
+    <div
+      class="modal-card cancellation-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="cancellation-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow">MY LEARNING</span>
+          <h2 id="cancellation-title">Request Cancellation</h2>
+        </div>
+
+        <button
+          type="button"
+          class="modal-close-btn"
+          aria-label="Close cancellation form"
+          (click)="closeCancellationForm()"
+        >
+          &times;
+        </button>
+      </div>
+
+      <div class="cancellation-form-body">
+        <div class="selected-course">
+          <strong>{{ enrollment.courseName }}</strong>
+          <small>Enrollment #{{ enrollment.enrollmentId }}</small>
+        </div>
+
+        <p>
+          Please provide a reason for requesting cancellation.
+          Your request will be reviewed by the administrator.
+        </p>
+
+        <label for="cancellationReason">
+          Cancellation Reason
+        </label>
+
+        <textarea
+          id="cancellationReason"
+          rows="5"
+          maxlength="1000"
+          placeholder="Enter your reason..."
+          [ngModel]="cancellationReason()"
+          (ngModelChange)="cancellationReason.set($event)"
+        ></textarea>
+
+        <div class="character-count">
+          {{ cancellationReason().length }}/1000 characters
+        </div>
+
+        @if (cancellationError()) {
+          <div class="alert error-alert">
+            {{ cancellationError() }}
+          </div>
+        }
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="modal-cancel-btn"
+          (click)="closeCancellationForm()"
+          [disabled]="isSubmittingCancellation()"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="cancellation-submit-btn"
+          (click)="submitCancellationRequest()"
+          [disabled]="isSubmittingCancellation() || !cancellationReason().trim()"
+        >
+          {{
+            isSubmittingCancellation()
+              ? 'Submitting...'
+              : 'Submit Request'
+          }}
         </button>
       </div>
     </div>

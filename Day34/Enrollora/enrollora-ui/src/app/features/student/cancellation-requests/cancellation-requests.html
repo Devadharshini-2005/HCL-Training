@@ -1,0 +1,261 @@
+
+<section class="cancellation-requests-container">
+
+  <div class="page-header">
+    <div>
+      <h2>Cancellation Requests</h2>
+      <p>Track the status of your course cancellation requests.</p>
+    </div>
+  </div>
+
+  <!-- Success Message -->
+  <div class="alert success" *ngIf="successMessage()">
+    {{ successMessage() }}
+  </div>
+
+  <!-- Error Message -->
+  <div class="alert error" *ngIf="errorMessage()">
+    {{ errorMessage() }}
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-state" *ngIf="isLoading()">
+    Loading cancellation requests...
+  </div>
+
+  <!-- Request List -->
+  <ng-container *ngIf="!isLoading()">
+
+    <div class="table-container" *ngIf="requests().length > 0; else emptyState">
+
+      <table>
+        <thead>
+          <tr>
+            <th>Course</th>
+            <th>Reason</th>
+            <th>Requested Date</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let request of requests()">
+            <td>{{ request.courseName }}</td>
+
+            <td class="reason-cell">
+              {{ request.reason }}
+            </td>
+
+            <td>
+              {{ request.requestedAt | date:'dd MMM yyyy' }}
+            </td>
+
+            <td>
+              <span
+                class="status-badge"
+                [ngClass]="getStatusClass(request.status)">
+                {{ getStatusLabel(request.status) }}
+              </span>
+            </td>
+
+            <td>
+              <button
+                type="button"
+                class="view-button"
+                (click)="viewDetails(request)">
+                View Details
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination -->
+      <div class="pagination" *ngIf="totalPages() > 1">
+
+        <button
+          type="button"
+          (click)="changePage(currentPage() - 1)"
+          [disabled]="currentPage() === 1">
+          Previous
+        </button>
+
+        <span>
+          Page {{ currentPage() }} of {{ totalPages() }}
+        </span>
+
+        <button
+          type="button"
+          (click)="changePage(currentPage() + 1)"
+          [disabled]="currentPage() === totalPages()">
+          Next
+        </button>
+
+      </div>
+
+      <p class="record-count">
+        Total requests: {{ totalRecords() }}
+      </p>
+
+    </div>
+
+    <!-- Empty State -->
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <h3>No Cancellation Requests</h3>
+        <p>You have not submitted any cancellation requests yet.</p>
+      </div>
+    </ng-template>
+
+  </ng-container>
+
+  <!-- Cancellation Request Form -->
+  <div class="modal-overlay" *ngIf="showRequestForm()">
+
+    <div class="modal">
+
+      <div class="modal-header">
+        <h3>Request Course Cancellation</h3>
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="closeRequestForm()">
+          &times;
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <p>
+          Please provide a reason for cancelling this enrollment.
+        </p>
+
+        <label for="cancellationReason">
+          Cancellation Reason
+        </label>
+
+        <textarea
+          id="cancellationReason"
+          rows="5"
+          maxlength="1000"
+          placeholder="Enter your reason..."
+          [ngModel]="reason()"
+          (ngModelChange)="reason.set($event)">
+        </textarea>
+
+        <div class="character-count">
+          {{ reason().length }}/1000 characters
+        </div>
+
+        <div class="alert error" *ngIf="errorMessage()">
+          {{ errorMessage() }}
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="closeRequestForm()"
+          [disabled]="isSubmitting()">
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          class="submit-button"
+          (click)="submitCancellationRequest()"
+          [disabled]="isSubmitting() || !reason().trim()">
+
+          {{ isSubmitting() ? 'Submitting...' : 'Submit Request' }}
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Request Details Modal -->
+  <div class="modal-overlay" *ngIf="showDetails() && selectedRequest()">
+
+    <div class="modal">
+
+      <div class="modal-header">
+        <h3>Cancellation Request Details</h3>
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="closeDetails()">
+          &times;
+        </button>
+      </div>
+
+      <div class="modal-body" *ngIf="selectedRequest() as request">
+
+        <div class="detail-row">
+          <strong>Course Name</strong>
+          <span>{{ request.courseName }}</span>
+        </div>
+
+        <div class="detail-row">
+          <strong>Request ID</strong>
+          <span>{{ request.cancellationRequestId }}</span>
+        </div>
+
+        <div class="detail-row">
+          <strong>Enrollment ID</strong>
+          <span>{{ request.enrollmentId }}</span>
+        </div>
+
+        <div class="detail-row">
+          <strong>Reason</strong>
+          <span>{{ request.reason }}</span>
+        </div>
+
+        <div class="detail-row">
+          <strong>Requested Date</strong>
+          <span>{{ request.requestedAt | date:'dd MMM yyyy, hh:mm a' }}</span>
+        </div>
+
+        <div class="detail-row">
+          <strong>Status</strong>
+          <span
+            class="status-badge"
+            [ngClass]="getStatusClass(request.status)">
+            {{ getStatusLabel(request.status) }}
+          </span>
+        </div>
+
+        <div class="detail-row" *ngIf="request.reviewedAt">
+          <strong>Reviewed Date</strong>
+          <span>{{ request.reviewedAt | date:'dd MMM yyyy, hh:mm a' }}</span>
+        </div>
+
+        <div class="detail-row" *ngIf="request.adminRemarks">
+          <strong>Admin Remarks</strong>
+          <span>{{ request.adminRemarks }}</span>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="cancel-button"
+          (click)="closeDetails()">
+          Close
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
