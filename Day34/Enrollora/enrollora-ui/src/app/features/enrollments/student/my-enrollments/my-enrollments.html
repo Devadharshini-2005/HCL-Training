@@ -1,3 +1,4 @@
+
 <div class="enrollment-page">
   <div class="page-header">
     <div>
@@ -17,7 +18,9 @@
       <span>⚠</span>
       <h3>Could not load enrollments</h3>
       <p>{{ errorMessage() }}</p>
-      <button class="retry-btn" (click)="loadEnrollments()">Try Again</button>
+      <button class="retry-btn" (click)="loadEnrollments()">
+        Try Again
+      </button>
     </div>
   } @else if (enrollments().length === 0) {
     <div class="state-card">
@@ -34,23 +37,35 @@
               <th>Course</th>
               <th>Enrollment Date</th>
               <th>Status</th>
+              <th>Action</th>
             </tr>
           </thead>
+
           <tbody>
-            @for (enrollment of enrollments(); track enrollment.enrollmentId) {
+            @for (
+              enrollment of enrollments();
+              track enrollment.enrollmentId
+            ) {
               <tr>
                 <td>
                   <div class="course-info">
                     <div class="course-avatar">
                       {{ enrollment.courseName.charAt(0).toUpperCase() }}
                     </div>
+
                     <div>
                       <strong>{{ enrollment.courseName }}</strong>
-                      <small>Enrollment #{{ enrollment.enrollmentId }}</small>
+                      <small>
+                        Enrollment #{{ enrollment.enrollmentId }}
+                      </small>
                     </div>
                   </div>
                 </td>
-                <td>{{ enrollment.enrolledAt | date: 'dd MMM yyyy' }}</td>
+
+                <td>
+                  {{ enrollment.enrolledAt | date: 'dd MMM yyyy' }}
+                </td>
+
                 <td>
                   <span
                     class="status-badge"
@@ -60,6 +75,16 @@
                     {{ statusLabel(enrollment.status) }}
                   </span>
                 </td>
+
+                <td>
+                  <button
+                    type="button"
+                    class="details-btn"
+                    (click)="viewDetails(enrollment)"
+                  >
+                    View Details
+                  </button>
+                </td>
               </tr>
             }
           </tbody>
@@ -68,11 +93,22 @@
 
       <div class="pagination">
         <span>
-          Showing {{ enrollments().length }} of {{ totalRecords() }} enrollments
+          Showing {{ enrollments().length }} of
+          {{ totalRecords() }} enrollments
         </span>
+
         <div>
-          <button (click)="previousPage()" [disabled]="pageNumber() === 1">Previous</button>
-          <span class="current-page">{{ pageNumber() }} / {{ totalPages() }}</span>
+          <button
+            (click)="previousPage()"
+            [disabled]="pageNumber() === 1"
+          >
+            Previous
+          </button>
+
+          <span class="current-page">
+            {{ pageNumber() }} / {{ totalPages() }}
+          </span>
+
           <button
             (click)="nextPage()"
             [disabled]="pageNumber() >= totalPages()"
@@ -84,3 +120,84 @@
     </div>
   }
 </div>
+
+@if (selectedEnrollment(); as enrollment) {
+  <div class="modal-overlay" (click)="closeDetails()">
+    <div
+      class="modal-card"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="enrollment-details-title"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow">ENROLLMENT INFORMATION</span>
+          <h2 id="enrollment-details-title">Enrollment Details</h2>
+        </div>
+
+        <button
+          type="button"
+          class="modal-close-btn"
+          aria-label="Close details"
+          (click)="closeDetails()"
+        >
+          &times;
+        </button>
+      </div>
+
+      <div class="modal-course-heading">
+        <div class="course-avatar">
+          {{ enrollment.courseName.charAt(0).toUpperCase() }}
+        </div>
+
+        <div>
+          <h3>{{ enrollment.courseName }}</h3>
+          <p>Enrollment #{{ enrollment.enrollmentId }}</p>
+        </div>
+      </div>
+
+      <div class="details-grid">
+        <div class="detail-item">
+          <span>Enrollment ID</span>
+          <strong>#{{ enrollment.enrollmentId }}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Course ID</span>
+          <strong>{{ enrollment.courseId }}</strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Enrollment Date</span>
+          <strong>
+            {{ enrollment.enrolledAt | date: 'dd MMMM yyyy' }}
+          </strong>
+        </div>
+
+        <div class="detail-item">
+          <span>Enrollment Status</span>
+          <strong>
+            <span
+              class="status-badge"
+              [class.active]="enrollment.status === 1"
+              [class.cancelled]="enrollment.status !== 1"
+            >
+              {{ statusLabel(enrollment.status) }}
+            </span>
+          </strong>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="modal-done-btn"
+          (click)="closeDetails()"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+}

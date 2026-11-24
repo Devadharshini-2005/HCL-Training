@@ -1,3 +1,4 @@
+
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, inject, signal } from '@angular/core';
@@ -16,8 +17,11 @@ export class MyEnrollments implements OnInit {
   private readonly enrollmentService = inject(EnrollmentService);
 
   enrollments = signal<EnrollmentResponse[]>([]);
+  selectedEnrollment = signal<EnrollmentResponse | null>(null);
+
   isLoading = signal(false);
   errorMessage = signal('');
+
   pageNumber = signal(1);
   pageSize = signal(10);
   totalRecords = signal(0);
@@ -42,10 +46,14 @@ export class MyEnrollments implements OnInit {
         },
         error: (error: HttpErrorResponse) => {
           const body = error.error;
+
           this.errorMessage.set(
-            body?.detail || body?.message || body?.title ||
+            body?.detail ||
+            body?.message ||
+            body?.title ||
             'Unable to load your enrollments.',
           );
+
           this.isLoading.set(false);
         },
       });
@@ -53,6 +61,14 @@ export class MyEnrollments implements OnInit {
 
   statusLabel(status: number): string {
     return status === 1 ? 'Active' : 'Cancelled';
+  }
+
+  viewDetails(enrollment: EnrollmentResponse): void {
+    this.selectedEnrollment.set(enrollment);
+  }
+
+  closeDetails(): void {
+    this.selectedEnrollment.set(null);
   }
 
   previousPage(): void {
