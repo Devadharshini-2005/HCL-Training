@@ -22,7 +22,13 @@ export interface StudentFilter {
 
 export interface UpdateStudentRequest {
   name: string;
-  email: string;
+  department: string;
+  age: number;
+  cgpa: number;
+}
+
+export interface UpdateMyProfileRequest {
+  name: string;
   department: string;
   age: number;
   cgpa: number;

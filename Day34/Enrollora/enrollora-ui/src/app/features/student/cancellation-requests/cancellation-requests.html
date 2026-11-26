@@ -23,6 +23,78 @@
     Loading cancellation requests...
   </div>
 
+  <!-- Cancellation Request Filters -->
+<div class="filter-section">
+
+  <!-- Search -->
+  <div class="filter-control search-control">
+    <input
+      type="text"
+      placeholder="Search course name..."
+      [ngModel]="searchTerm()"
+      (ngModelChange)="onSearchChange($event)">
+  </div>
+
+  <!-- Course Filter -->
+  <div class="filter-control">
+    <select
+      [ngModel]="selectedCourseId()"
+      (ngModelChange)="onCourseChange($event)">
+
+      <option value="">All Courses</option>
+
+      <option
+        *ngFor="let course of courses()"
+        [value]="course.courseId">
+        {{ course.courseName }}
+      </option>
+
+    </select>
+  </div>
+
+  <!-- Status Filter -->
+  <div class="filter-control">
+    <select
+      [ngModel]="selectedStatus()"
+      (ngModelChange)="onStatusChange($event)">
+
+      <option value="">All Statuses</option>
+      <option value="0">Pending</option>
+      <option value="1">Approved</option>
+      <option value="2">Rejected</option>
+
+    </select>
+  </div>
+
+  <!-- From Date -->
+  <div class="filter-control">
+    <input
+      type="date"
+      aria-label="From date"
+      [ngModel]="fromDate()"
+      (ngModelChange)="onFromDateChange($event)">
+  </div>
+
+  <!-- To Date -->
+  <div class="filter-control">
+    <input
+      type="date"
+      aria-label="To date"
+      [ngModel]="toDate()"
+      (ngModelChange)="onToDateChange($event)"
+      [min]="fromDate() || null">
+  </div>
+
+  <!-- Clear Filters -->
+  <button
+    type="button"
+    class="clear-button"
+    (click)="clearFilters()">
+    Clear Filters
+  </button>
+
+</div>
+
   <!-- Request List -->
   <ng-container *ngIf="!isLoading()">
 

@@ -1,9 +1,13 @@
+
 import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { DatePipe, DecimalPipe } from '@angular/common';
 import { StudentService } from '../student.service';
-import { StudentResponse, StudentFilter, UpdateStudentRequest } from '../student.models';
-import { FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
+import {
+  StudentResponse,
+  StudentFilter,
+  UpdateStudentRequest,
+} from '../student.models';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
@@ -49,24 +53,25 @@ export class StudentList implements OnInit {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.studentService.getStudents(this.pageNumber, this.pageSize, this.filters).subscribe({
-      next: (response) => {
-        this.students = response.items;
-        this.totalRecords = response.totalRecords;
-        this.totalPages = response.totalPages;
-        this.pageNumber = response.pageNumber;
-        this.pageSize = response.pageSize;
-        this.isLoading = false;
-        this.cdr.markForCheck();
-      },
-
-      error: (error) => {
-        console.error('Failed to load students:', error);
-        this.errorMessage = 'Unable to load students.';
-        this.isLoading = false;
-        this.cdr.markForCheck();
-      },
-    });
+    this.studentService
+      .getStudents(this.pageNumber, this.pageSize, this.filters)
+      .subscribe({
+        next: (response) => {
+          this.students = response.items;
+          this.totalRecords = response.totalRecords;
+          this.totalPages = response.totalPages;
+          this.pageNumber = response.pageNumber;
+          this.pageSize = response.pageSize;
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        },
+        error: (error) => {
+          console.error('Failed to load students:', error);
+          this.errorMessage = 'Unable to load students.';
+          this.isLoading = false;
+          this.cdr.markForCheck();
+        },
+      });
   }
 
   approveStudent(id: number): void {
@@ -166,16 +171,23 @@ export class StudentList implements OnInit {
   isEditModalOpen = false;
   editingStudentId: number | null = null;
 
+  // Email is excluded because the backend does not support email updates.
   studentForm = new FormGroup({
     name: new FormControl('', Validators.required),
 
-    email: new FormControl('', [Validators.required, Validators.email]),
-
     department: new FormControl('', Validators.required),
 
-    age: new FormControl(18, [Validators.required, Validators.min(17), Validators.max(60)]),
+    age: new FormControl(18, [
+      Validators.required,
+      Validators.min(17),
+      Validators.max(60),
+    ]),
 
-    cgpa: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(10)]),
+    cgpa: new FormControl(0, [
+      Validators.required,
+      Validators.min(0),
+      Validators.max(10),
+    ]),
   });
 
   editStudent(id: number): void {
@@ -186,7 +198,6 @@ export class StudentList implements OnInit {
       next: (student) => {
         this.studentForm.patchValue({
           name: student.name,
-          email: student.email,
           department: student.department,
           age: student.age,
           cgpa: student.cgpa,
@@ -201,9 +212,9 @@ export class StudentList implements OnInit {
   closeEditModal(): void {
     this.isEditModalOpen = false;
     this.editingStudentId = null;
+
     this.studentForm.reset({
       name: '',
-      email: '',
       department: '',
       age: 18,
       cgpa: 0,
@@ -212,6 +223,7 @@ export class StudentList implements OnInit {
 
   updateStudent(): void {
     if (this.studentForm.invalid || this.editingStudentId === null) {
+      this.studentForm.markAllAsTouched();
       return;
     }
 
@@ -219,23 +231,24 @@ export class StudentList implements OnInit {
 
     const studentData: UpdateStudentRequest = {
       name: formValue.name!,
-      email: formValue.email!,
       department: formValue.department!,
       age: formValue.age!,
       cgpa: formValue.cgpa!,
     };
 
-    this.studentService.updateStudent(this.editingStudentId, studentData).subscribe({
-      next: (updatedStudent) => {
-        console.log('Student updated:', updatedStudent);
+    this.studentService
+      .updateStudent(this.editingStudentId, studentData)
+      .subscribe({
+        next: (updatedStudent) => {
+          console.log('Student updated:', updatedStudent);
 
-        this.closeEditModal();
-        this.loadStudents();
-      },
-      error: (error) => {
-        console.error('Failed to update student:', error);
-      },
-    });
+          this.closeEditModal();
+          this.loadStudents();
+        },
+        error: (error) => {
+          console.error('Failed to update student:', error);
+        },
+      });
   }
 
   deleteStudent(id: number): void {

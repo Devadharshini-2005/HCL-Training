@@ -4,10 +4,15 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { CancellationRequestService } from './cancellation-request.service';
+
 import {
   CancellationRequestResponse,
+  CancellationRequestFilter,
   CancellationStatus,
 } from './cancellation-request.models';
+
+import { CourseResponse } from '../../admin/courses/course.models';
+import { CourseService } from '../../admin/courses/course.service';
 
 @Component({
   selector: 'app-cancellation-requests',
@@ -18,6 +23,16 @@ import {
 })
 export class CancellationRequests implements OnInit {
   private readonly cancellationService = inject(CancellationRequestService);
+
+  private readonly courseService = inject(CourseService);
+
+courses = signal<CourseResponse[]>([]);
+
+searchTerm = signal('');
+selectedCourseId = signal<number | null>(null);
+selectedStatus = signal<CancellationStatus | null>(null);
+fromDate = signal('');
+toDate = signal('');
 
   requests = signal<CancellationRequestResponse[]>([]);
   isLoading = signal(false);
@@ -40,16 +55,39 @@ export class CancellationRequests implements OnInit {
   reason = signal('');
 
   ngOnInit(): void {
-    this.loadRequests();
-  }
+  this.loadCourses();
+  this.loadRequests();
+}
+
+loadCourses(): void {
+  this.courseService.getCourses(1, 100).subscribe({
+    next: (response) => {
+      this.courses.set(response.items);
+    },
+    error: (error) => {
+      console.error('Error loading courses:', error);
+    },
+  });
+}
 
   loadRequests(): void {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    this.cancellationService
-      .getMyCancellationRequests(this.currentPage(), this.pageSize)
-      .subscribe({
+    const filters: CancellationRequestFilter = {
+  search: this.searchTerm().trim() || undefined,
+  courseId: this.selectedCourseId() ?? undefined,
+  status: this.selectedStatus() ?? undefined,
+  fromDate: this.fromDate() || undefined,
+  toDate: this.toDate() || undefined,
+};
+
+this.cancellationService
+  .getMyCancellationRequests(
+    this.currentPage(),
+    this.pageSize,
+    filters,
+  ).subscribe({
         next: (response) => {
           this.requests.set(response.items);
           this.totalPages.set(response.totalPages);
@@ -182,4 +220,54 @@ export class CancellationRequests implements OnInit {
   nextPage(): void {
     this.changePage(this.currentPage() + 1);
   }
+
+  onSearchChange(value: string): void {
+  this.searchTerm.set(value);
+  this.currentPage.set(1);
+  this.loadRequests();
+}
+
+onCourseChange(value: string): void {
+  this.selectedCourseId.set(
+    value === '' ? null : Number(value),
+  );
+
+  this.currentPage.set(1);
+  this.loadRequests();
+}
+
+onStatusChange(value: string): void {
+  this.selectedStatus.set(
+    value === ''
+      ? null
+      : Number(value) as CancellationStatus,
+  );
+
+  this.currentPage.set(1);
+  this.loadRequests();
+}
+
+onFromDateChange(value: string): void {
+  this.fromDate.set(value);
+  this.currentPage.set(1);
+  this.loadRequests();
+}
+
+onToDateChange(value: string): void {
+  this.toDate.set(value);
+  this.currentPage.set(1);
+  this.loadRequests();
+}
+
+clearFilters(): void {
+  this.searchTerm.set('');
+  this.selectedCourseId.set(null);
+  this.selectedStatus.set(null);
+  this.fromDate.set('');
+  this.toDate.set('');
+
+  this.currentPage.set(1);
+  this.loadRequests();
+}
+
 }

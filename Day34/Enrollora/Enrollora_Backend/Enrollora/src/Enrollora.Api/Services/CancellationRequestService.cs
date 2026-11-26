@@ -77,15 +77,43 @@ public sealed class CancellationRequestService(
         IQueryable<CancellationRequest> q, CancellationQuery query, CancellationToken ct)
     {
         query.Normalize();
+
+        // Search by student name, email, or course name
         if (!string.IsNullOrWhiteSpace(query.Search))
         {
             var term = query.Search.Trim();
-            q = q.Where(x => x.Student.Name.Contains(term) || x.Student.Email.Contains(term));
+
+            q = q.Where(x =>
+                x.Student.Name.Contains(term) ||
+                x.Student.Email.Contains(term) ||
+                x.Enrollment.Course.CourseName.Contains(term));
         }
-        if (query.CourseId.HasValue) q = q.Where(x => x.Enrollment.CourseId == query.CourseId);
-        if (query.Status.HasValue) q = q.Where(x => x.Status == query.Status);
-        if (query.FromDate.HasValue) q = q.Where(x => x.RequestedAt >= query.FromDate);
-        if (query.ToDate.HasValue) q = q.Where(x => x.RequestedAt <= query.ToDate);
+
+        // Filter by course
+        if (query.CourseId.HasValue)
+        {
+            q = q.Where(x => x.Enrollment.CourseId == query.CourseId.Value);
+        }
+
+        // Filter by cancellation status
+        if (query.Status.HasValue)
+        {
+            q = q.Where(x => x.Status == query.Status.Value);
+        }
+
+        // Filter from date
+        if (query.FromDate.HasValue)
+        {
+            var startDate = query.FromDate.Value.Date;
+            q = q.Where(x => x.RequestedAt >= startDate);
+        }
+
+        // Filter until the end of the selected date
+        if (query.ToDate.HasValue)
+        {
+            var endDateExclusive = query.ToDate.Value.Date.AddDays(1);
+            q = q.Where(x => x.RequestedAt < endDateExclusive);
+        }
 
         q = query.SortOrder == "desc"
             ? q.OrderByDescending(x => x.RequestedAt)

@@ -7,7 +7,7 @@ import { environment } from '../../../../environments/environment';
 import { StudentFilter, StudentResponse } from './student.models';
 import { PagedResult } from '../../../shared/models/paged-result.model';
 import { ApiMessage } from '../../../core/auth/auth.models';
-import { UpdateStudentRequest } from './student.models';
+import { UpdateMyProfileRequest } from './student.models';
 
 @Injectable({
   providedIn: 'root',
@@ -60,7 +60,7 @@ export class StudentService {
     return this.http.put<ApiMessage>(`${this.apiUrl}/${id}/reject`, {});
   }
 
-  updateStudent(id: number, studentData: UpdateStudentRequest): Observable<StudentResponse> {
+  updateStudent(id: number, studentData: UpdateMyProfileRequest): Observable<StudentResponse> {
     return this.http.put<StudentResponse>(`${this.apiUrl}/${id}`, studentData);
   }
 
@@ -75,11 +75,12 @@ getMyProfile(): Observable<StudentResponse> {
 
 // Update logged-in student's profile
 updateMyProfile(
-  studentData: UpdateStudentRequest
+  request: UpdateMyProfileRequest
 ): Observable<StudentResponse> {
   return this.http.put<StudentResponse>(
     `${this.apiUrl}/me`,
-    studentData
+    request
   );
 }
+
 }

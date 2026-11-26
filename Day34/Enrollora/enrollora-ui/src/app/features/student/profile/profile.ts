@@ -4,7 +4,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { StudentService } from '../../admin/students/student.service';
-import { StudentResponse, UpdateStudentRequest } from '../../admin/students/student.models';
+import {
+  StudentResponse,
+  UpdateMyProfileRequest,
+} from '../../admin/students/student.models';
 
 @Component({
   selector: 'app-student-profile',
@@ -16,7 +19,6 @@ import { StudentResponse, UpdateStudentRequest } from '../../admin/students/stud
 export class Profile implements OnInit {
   private studentService = inject(StudentService);
 
-  // Signals
   profile = signal<StudentResponse | null>(null);
 
   isLoading = signal(false);
@@ -27,10 +29,9 @@ export class Profile implements OnInit {
   successMessage = signal('');
   formError = signal('');
 
-  // Form model (kept as a normal object for ngModel)
-  editProfile: UpdateStudentRequest = {
+  // Editable fields (email is read-only)
+  editProfile = {
     name: '',
-    email: '',
     department: '',
     age: 0,
     cgpa: 0,
@@ -46,12 +47,7 @@ export class Profile implements OnInit {
 
     this.studentService.getMyProfile().subscribe({
       next: (response) => {
-        console.log('Profile API response:', response);
-
         this.profile.set(response);
-
-        console.log('Assigned profile:', this.profile());
-
         this.isLoading.set(false);
       },
       error: (error) => {
@@ -73,7 +69,6 @@ export class Profile implements OnInit {
 
     this.editProfile = {
       name: student.name,
-      email: student.email,
       department: student.department,
       age: student.age,
       cgpa: student.cgpa,
@@ -99,7 +94,6 @@ export class Profile implements OnInit {
 
     if (
       !this.editProfile.name.trim() ||
-      !this.editProfile.email.trim() ||
       !this.editProfile.department.trim() ||
       this.editProfile.age <= 0 ||
       this.editProfile.cgpa < 0 ||
@@ -109,9 +103,8 @@ export class Profile implements OnInit {
       return;
     }
 
-    const request: UpdateStudentRequest = {
+    const request: UpdateMyProfileRequest = {
       name: this.editProfile.name.trim(),
-      email: this.editProfile.email.trim(),
       department: this.editProfile.department.trim(),
       age: Number(this.editProfile.age),
       cgpa: Number(this.editProfile.cgpa),

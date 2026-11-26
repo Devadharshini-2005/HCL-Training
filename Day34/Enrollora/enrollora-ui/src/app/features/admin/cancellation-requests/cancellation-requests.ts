@@ -3,7 +3,8 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
-
+import { CourseResponse } from '../courses/course.models';
+import { CourseService } from '../courses/course.service';
 import { CancellationRequestService } from './cancellation-request.service';
 
 import {
@@ -21,7 +22,9 @@ import {
 })
 export class CancellationRequests implements OnInit {
   private readonly cancellationService = inject(CancellationRequestService);
+private readonly courseService = inject(CourseService);
 
+courses = signal<CourseResponse[]>([]);
   requests = signal<CancellationRequestResponse[]>([]);
 
   isLoading = signal(false);
@@ -34,8 +37,10 @@ export class CancellationRequests implements OnInit {
   totalRecords = signal(0);
 
   searchTerm = signal('');
-  selectedStatus = signal<number | null>(null);
-
+  selectedStatus = signal<CancellationStatus | null>(null);
+selectedCourseId = signal<number | null>(null);
+fromDate = signal('');
+toDate = signal('');
   selectedRequest = signal<CancellationRequestResponse | null>(null);
   showDetails = signal(false);
 
@@ -48,19 +53,20 @@ export class CancellationRequests implements OnInit {
   private readonly searchSubject = new Subject<string>();
 
   ngOnInit(): void {
-    this.loadRequests();
+  this.loadRequests();
+  this.loadCourses();
 
-    this.searchSubject
-      .pipe(
-        debounceTime(400),
-        distinctUntilChanged(),
-      )
-      .subscribe((search) => {
-        this.searchTerm.set(search);
-        this.currentPage.set(1);
-        this.loadRequests();
-      });
-  }
+  this.searchSubject
+    .pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+    )
+    .subscribe((search) => {
+      this.searchTerm.set(search);
+      this.currentPage.set(1);
+      this.loadRequests();
+    });
+}
 
   // Load all cancellation requests
   loadRequests(): void {
@@ -68,9 +74,12 @@ export class CancellationRequests implements OnInit {
     this.errorMessage.set('');
 
     const filters: CancellationRequestFilter = {
-      search: this.searchTerm().trim() || undefined,
-      status: this.selectedStatus() ?? undefined,
-    };
+  search: this.searchTerm().trim() || undefined,
+  status: this.selectedStatus() ?? undefined,
+  courseId: this.selectedCourseId() ?? undefined,
+  fromDate: this.fromDate() || undefined,
+  toDate: this.toDate() || undefined,
+};
 
     this.cancellationService
       .getAllCancellationRequests(
@@ -100,6 +109,38 @@ export class CancellationRequests implements OnInit {
       });
   }
 
+  loadCourses(): void {
+  this.courseService.getCourses(1, 100).subscribe({
+    next: (response) => {
+      this.courses.set(response.items);
+    },
+    error: (error) => {
+      console.error('Error loading courses:', error);
+    },
+  });
+}
+
+onCourseChange(value: string): void {
+  this.selectedCourseId.set(
+    value === '' ? null : Number(value),
+  );
+
+  this.currentPage.set(1);
+  this.loadRequests();
+}
+
+onFromDateChange(value: string): void {
+  this.fromDate.set(value);
+  this.currentPage.set(1);
+  this.loadRequests();
+}
+
+onToDateChange(value: string): void {
+  this.toDate.set(value);
+  this.currentPage.set(1);
+  this.loadRequests();
+}
+
   // Search
   onSearchChange(value: string): void {
     this.searchSubject.next(value);
@@ -107,21 +148,25 @@ export class CancellationRequests implements OnInit {
 
   // Filter by status
   onStatusChange(value: string): void {
-    this.selectedStatus.set(
-      value === '' ? null : Number(value),
-    );
+  this.selectedStatus.set(
+    value === '' ? null : Number(value) as CancellationStatus,
+  );
 
-    this.currentPage.set(1);
-    this.loadRequests();
-  }
+  this.currentPage.set(1);
+  this.loadRequests();
+}
 
   // Clear filters
-  clearFilters(): void {
-    this.searchTerm.set('');
-    this.selectedStatus.set(null);
-    this.currentPage.set(1);
-    this.loadRequests();
-  }
+ clearFilters(): void {
+  this.searchTerm.set('');
+  this.selectedStatus.set(null);
+  this.selectedCourseId.set(null);
+  this.fromDate.set('');
+  this.toDate.set('');
+
+  this.currentPage.set(1);
+  this.loadRequests();
+}
 
   // View details
   viewDetails(request: CancellationRequestResponse): void {
