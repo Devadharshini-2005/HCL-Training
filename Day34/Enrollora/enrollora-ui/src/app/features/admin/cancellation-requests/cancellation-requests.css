@@ -1,0 +1,589 @@
+
+/* ================================
+   Main Container
+================================ */
+
+.cancellation-requests-container {
+  padding: 24px;
+  width: 100%;
+  box-sizing: border-box;
+  color: #1e293b;
+}
+
+/* ================================
+   Page Header
+================================ */
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.page-header h1 {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: #172554;
+}
+
+.page-header p {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ================================
+   Alerts
+================================ */
+
+.alert {
+  padding: 13px 16px;
+  border-radius: 8px;
+  margin-bottom: 18px;
+  font-size: 14px;
+}
+
+.alert-success {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+
+.alert-error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+/* ================================
+   Filter Section
+================================ */
+
+.filter-section {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 18px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  margin-bottom: 22px;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 220px;
+}
+
+.search-box input,
+.status-filter select {
+  width: 100%;
+  height: 42px;
+  padding: 0 13px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  outline: none;
+  font-size: 14px;
+  color: #334155;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.search-box input:focus,
+.status-filter select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.status-filter {
+  width: 180px;
+}
+
+.clear-button {
+  height: 42px;
+  padding: 0 18px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #475569;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.clear-button:hover {
+  background: #f1f5f9;
+}
+
+/* ================================
+   Table
+================================ */
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 850px;
+}
+
+.table-container thead {
+  background: #f8fafc;
+}
+
+.table-container th {
+  padding: 16px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.table-container td {
+  padding: 16px;
+  font-size: 14px;
+  color: #334155;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.table-container tbody tr:hover {
+  background: #f8fafc;
+}
+
+.table-container tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* ================================
+   Student Information
+================================ */
+
+.student-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.student-info strong {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.student-info small {
+  color: #64748b;
+  font-size: 12px;
+}
+
+/* ================================
+   Reason
+================================ */
+
+.reason-cell {
+  max-width: 220px;
+  overflow-wrap: anywhere;
+}
+
+/* ================================
+   Status Badges
+================================ */
+
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-badge.approved {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-badge.rejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* ================================
+   View Button
+================================ */
+
+.view-button {
+  padding: 8px 14px;
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.view-button:hover {
+  background: #dbeafe;
+}
+
+/* ================================
+   Loading and Empty State
+================================ */
+
+.loading-state,
+.empty-state {
+  padding: 45px 20px;
+  text-align: center;
+  color: #64748b;
+  background: #ffffff;
+}
+
+.empty-state h3 {
+  color: #334155;
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* ================================
+   Pagination
+================================ */
+
+.pagination-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  padding: 18px 4px;
+}
+
+.record-count {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pagination span {
+  color: #475569;
+  font-size: 13px;
+}
+
+.pagination button {
+  padding: 8px 14px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: #eff6ff;
+  border-color: #93c5fd;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ================================
+   Modal Overlay
+================================ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.6);
+  overflow-y: auto;
+}
+
+/* ================================
+   Modal
+================================ */
+
+.modal-overlay .modal {
+  display: block;
+  position: relative;
+  width: 100%;
+  max-width: 650px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  margin: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 19px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.close-button {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #64748b;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background: #f1f5f9;
+  color: #1e293b;
+}
+
+.modal-body {
+  padding: 22px 24px;
+}
+
+/* ================================
+   Detail Rows
+================================ */
+
+.detail-row {
+  display: grid;
+  grid-template-columns: 155px 1fr;
+  gap: 15px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+}
+
+.detail-row strong {
+  color: #475569;
+  font-weight: 600;
+}
+
+.detail-row span {
+  color: #1e293b;
+  overflow-wrap: anywhere;
+}
+
+/* ================================
+   Admin Review Section
+================================ */
+
+.review-section {
+  margin-top: 22px;
+  padding: 18px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.review-section label {
+  display: block;
+  margin-bottom: 10px;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.review-section textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  box-sizing: border-box;
+  resize: vertical;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  outline: none;
+  font-family: inherit;
+  font-size: 14px;
+  color: #334155;
+}
+
+.review-section textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.review-section small {
+  display: block;
+  margin-top: 7px;
+  text-align: right;
+  color: #64748b;
+  font-size: 12px;
+}
+
+/* ================================
+   Modal Footer
+================================ */
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 18px 24px;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Approve */
+
+.approve-button {
+  padding: 10px 18px;
+  background: #16a34a;
+  color: #ffffff;
+  border: none;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.approve-button:hover:not(:disabled) {
+  background: #15803d;
+}
+
+/* Reject */
+
+.reject-button {
+  padding: 10px 18px;
+  background: #dc2626;
+  color: #ffffff;
+  border: none;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.reject-button:hover:not(:disabled) {
+  background: #b91c1c;
+}
+
+/* Close */
+
+.cancel-button {
+  padding: 10px 18px;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cancel-button:hover:not(:disabled) {
+  background: #e2e8f0;
+}
+
+.approve-button:disabled,
+.reject-button:disabled,
+.cancel-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ================================
+   Responsive Design
+================================ */
+
+@media (max-width: 768px) {
+  .cancellation-requests-container {
+    padding: 16px;
+  }
+
+  .page-header h1 {
+    font-size: 22px;
+  }
+
+  .filter-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box,
+  .status-filter {
+    width: 100%;
+  }
+
+  .pagination-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .modal-overlay {
+    padding: 10px;
+  }
+
+  .detail-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .modal-footer {
+    justify-content: stretch;
+  }
+
+  .modal-footer button {
+    flex: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-header,
+  .modal-body,
+  .modal-footer {
+    padding: 16px;
+  }
+
+  .modal-header h3 {
+    font-size: 16px;
+  }
+
+  .pagination {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

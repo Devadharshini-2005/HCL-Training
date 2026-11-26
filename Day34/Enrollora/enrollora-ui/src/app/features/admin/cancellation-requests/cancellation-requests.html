@@ -1,0 +1,308 @@
+
+<div class="cancellation-requests-container">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1>Cancellation Requests</h1>
+      <p>Review and manage student cancellation requests.</p>
+    </div>
+  </div>
+
+  <!-- Success Message -->
+  <div class="alert alert-success" *ngIf="successMessage()">
+    {{ successMessage() }}
+  </div>
+
+  <!-- Error Message -->
+  <div class="alert alert-error" *ngIf="errorMessage()">
+    {{ errorMessage() }}
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-section">
+
+    <div class="search-box">
+      <input
+        type="text"
+        placeholder="Search student, email or course..."
+        [ngModel]="searchTerm()"
+        (ngModelChange)="onSearchChange($event)">
+    </div>
+
+    <div class="status-filter">
+      <select
+        [ngModel]="selectedStatus()"
+        (ngModelChange)="onStatusChange($event)">
+
+        <option value="">All Statuses</option>
+        <option value="0">Pending</option>
+        <option value="1">Approved</option>
+        <option value="2">Rejected</option>
+
+      </select>
+    </div>
+
+    <button
+      type="button"
+      class="clear-button"
+      (click)="clearFilters()">
+      Clear Filters
+    </button>
+
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-state" *ngIf="isLoading()">
+    Loading cancellation requests...
+  </div>
+
+  <!-- Requests Table -->
+  <div class="table-container" *ngIf="!isLoading()">
+
+    <table *ngIf="requests().length > 0; else emptyState">
+
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Course</th>
+          <th>Reason</th>
+          <th>Requested Date</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let request of requests()">
+
+          <td>
+            <div class="student-info">
+              <strong>{{ request.studentName }}</strong>
+              <small>{{ request.studentEmail }}</small>
+            </div>
+          </td>
+
+          <td>{{ request.courseName }}</td>
+
+          <td class="reason-cell">
+            {{ request.reason }}
+          </td>
+
+          <td>
+            {{ request.requestedAt | date:'dd MMM yyyy' }}
+          </td>
+
+          <td>
+            <span
+              class="status-badge"
+              [ngClass]="getStatusClass(request.status)">
+              {{ getStatusLabel(request.status) }}
+            </span>
+          </td>
+
+          <td>
+            <button
+              type="button"
+              class="view-button"
+              (click)="viewDetails(request)">
+              View Details
+            </button>
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <!-- Empty State -->
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <h3>No Cancellation Requests Found</h3>
+        <p>There are no cancellation requests matching your filters.</p>
+      </div>
+    </ng-template>
+
+  </div>
+
+  <!-- Pagination -->
+  <div
+    class="pagination-section"
+    *ngIf="!isLoading() && totalRecords() > 0">
+
+    <span class="record-count">
+      Total Records: {{ totalRecords() }}
+    </span>
+
+    <div class="pagination">
+
+      <button
+        type="button"
+        (click)="previousPage()"
+        [disabled]="currentPage() <= 1">
+        Previous
+      </button>
+
+      <span>
+        Page {{ currentPage() }} of {{ totalPages() }}
+      </span>
+
+      <button
+        type="button"
+        (click)="nextPage()"
+        [disabled]="currentPage() >= totalPages()">
+        Next
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- Request Details Modal -->
+<div
+  class="modal-overlay"
+  *ngIf="showDetails() && selectedRequest()">
+
+  <div class="modal">
+
+    <div class="modal-header">
+      <h3>Cancellation Request Details</h3>
+
+      <button
+        type="button"
+        class="close-button"
+        (click)="closeDetails()">
+        &times;
+      </button>
+    </div>
+
+    <div
+      class="modal-body"
+      *ngIf="selectedRequest() as request">
+
+      <div class="detail-row">
+        <strong>Request ID</strong>
+        <span>{{ request.cancellationRequestId }}</span>
+      </div>
+
+      <div class="detail-row">
+        <strong>Enrollment ID</strong>
+        <span>{{ request.enrollmentId }}</span>
+      </div>
+
+      <div class="detail-row">
+        <strong>Student Name</strong>
+        <span>{{ request.studentName }}</span>
+      </div>
+
+      <div class="detail-row">
+        <strong>Student Email</strong>
+        <span>{{ request.studentEmail }}</span>
+      </div>
+
+      <div class="detail-row">
+        <strong>Course Name</strong>
+        <span>{{ request.courseName }}</span>
+      </div>
+
+      <div class="detail-row">
+        <strong>Cancellation Reason</strong>
+        <span>{{ request.reason }}</span>
+      </div>
+
+      <div class="detail-row">
+        <strong>Requested Date</strong>
+        <span>
+          {{ request.requestedAt | date:'dd MMM yyyy, hh:mm a' }}
+        </span>
+      </div>
+
+      <div class="detail-row">
+        <strong>Status</strong>
+        <span
+          class="status-badge"
+          [ngClass]="getStatusClass(request.status)">
+          {{ getStatusLabel(request.status) }}
+        </span>
+      </div>
+
+      <div class="detail-row" *ngIf="request.reviewedAt">
+        <strong>Reviewed Date</strong>
+        <span>
+          {{ request.reviewedAt | date:'dd MMM yyyy, hh:mm a' }}
+        </span>
+      </div>
+
+      <div class="detail-row" *ngIf="request.adminRemarks">
+        <strong>Admin Remarks</strong>
+        <span>{{ request.adminRemarks }}</span>
+      </div>
+
+      <div
+        class="review-section"
+        *ngIf="isPending(request.status)">
+
+        <label for="adminRemarks">
+          Admin Remarks (Optional)
+        </label>
+
+        <textarea
+          id="adminRemarks"
+          rows="4"
+          maxlength="1000"
+          placeholder="Enter remarks for this decision..."
+          [ngModel]="reviewRemarks()"
+          (ngModelChange)="reviewRemarks.set($event)"
+          [disabled]="isReviewing()">
+        </textarea>
+
+        <small>{{ reviewRemarks().length }}/1000 characters</small>
+
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+
+      <ng-container *ngIf="selectedRequest() as request">
+
+        <ng-container *ngIf="isPending(request.status)">
+
+          <button
+            type="button"
+            class="reject-button"
+            (click)="reviewRequest('reject')"
+            [disabled]="isReviewing()">
+            {{ isReviewing() ? 'Processing...' : 'Reject Request' }}
+          </button>
+
+          <button
+            type="button"
+            class="approve-button"
+            (click)="reviewRequest('approve')"
+            [disabled]="isReviewing()">
+            {{ isReviewing() ? 'Processing...' : 'Approve Request' }}
+          </button>
+
+        </ng-container>
+
+      </ng-container>
+
+      <button
+        type="button"
+        class="cancel-button"
+        (click)="closeDetails()"
+        [disabled]="isReviewing()">
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
